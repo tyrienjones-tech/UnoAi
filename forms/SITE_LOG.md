@@ -259,5 +259,56 @@ Continuing to hold for operator decisions on items 1 and 2 above.
 - Pre-commit hook activated; will fire on `git commit`.
 - Next step: `git add .`, observe staged set, run `gitleaks protect --staged` as a manual rehearsal, then `git commit -m "Migrate handover package + LICENSE + SvelteKit scaffold"` (no Co-Authored-By footer per Open Question 2 resolution), then `git push origin main`.
 
+---
+
+### 2026-04-27 23:53 — Reaper-1 (MS-003 B8 complete — pushed to GitHub)
+- **Phase:** 0b — Builder scaffolding (complete pending DONE-003 sign-off)
+- **Working on:** MS-003 B8 commit + push.
+- **Files staged:** 42 files via `git add .`.
+- **Pre-commit gitleaks rehearsal:** `gitleaks protect --staged --config .gitleaks.toml --redact --verbose` — 0 commits scanned, 345.90 KB scanned in 222ms, **no leaks found**.
+- **Commit:** `git commit -m "Migrate handover package + LICENSE + SvelteKit scaffold"` (no Co-Authored-By footer per MS-003 Open Question 2 resolution).
+  - Pre-commit hook (`.githooks/pre-commit`) fired automatically and ran gitleaks again — clean.
+  - Commit SHA: `0cf45cd`.
+  - Diff stats: **42 files changed, 8174 insertions(+), 1 deletion(-)**. The single deletion is the auto-init's 31-byte placeholder README being replaced with the migrated UnoAi README.
+- **Push:** `git push origin main` — `372902c..0cf45cd  main -> main` — exit 0.
+- **Remote state confirmed:** `git ls-remote origin main` returns `0cf45cd7c85d2b329ee57eb4c65113c995a8ffa6 refs/heads/main` ✓.
+- **Repo URL:** <https://github.com/tyrienjones-tech/UnoAi> — public, viewable.
+- **Commit URL:** <https://github.com/tyrienjones-tech/UnoAi/commit/0cf45cd>.
+
+**git log --oneline (final state):**
+```
+0cf45cd Migrate handover package + LICENSE + SvelteKit scaffold   ← MS-003
+372902c Initial commit                                              ← GitHub auto-init (fossil)
+```
+
+**Pre-commit hook output verbatim (proof the hook works):**
+```
+[pre-commit] gitleaks scanning staged content...
+    ○
+    │╲
+    │ ○
+    ○ ░
+    ░    gitleaks
+INF  0 commits scanned.
+INF  scanned ~345897 bytes (345.90 KB) in 222ms
+INF  no leaks found
+[pre-commit] gitleaks: clean.
+[main 0cf45cd] Migrate handover package + LICENSE + SvelteKit scaffold
+ 42 files changed, 8174 insertions(+), 1 deletion(-)
+```
+
+**Commits this session:** 1 (`0cf45cd`).
+**Forms filed this session (cumulative):** MS-003, DEC-013 update, DEC-023, DEC-024, DEC-025, RFI-009, RFI-003 closure, INC-005. DONE-003 to follow.
+
+**Blockers:** none. MS-003 is complete pending DONE-003 sign-off.
+
+**Items deferred to future MSes (per MS-003 B9):**
+- Cloudflare Pages link — pending operator account creation.
+- RFI-009 (TLD selection) — pending operator availability check on `unoai.com` / `unoai.app`.
+- LICENSE-text re-verification — operator may want to compare the curl-fetched `polyformproject/polyform-licenses@1.0.0/PolyForm-Noncommercial-1.0.0.md` text against an independent source for legal due diligence (the file in the repo is byte-exact to the GitHub mirror). Documented as a low-priority follow-up; not blocking Phase 0b completion.
+
+**Old folder retention reminder:** `C:\Users\Tyrien\Desktop\Chat2U\` is unchanged from MS-002 closing state. Per MS-003 instruction, retention decision is operator's after DONE-003 sign-off.
+
+
 
 

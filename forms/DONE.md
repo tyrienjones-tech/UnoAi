@@ -164,3 +164,151 @@ RFI-009+ orphans   → 0
 **Sign-off notes:**
 [Operator fills. Likely no visual proof needed per MS-002 (doc work only). Any caveats / follow-ups go here.]
 
+---
+
+### DONE-003 — Phase 0b kickoff complete (MS-003 closed)
+- **Date:** 2026-04-27
+- **Agent:** Reaper-1
+- **Phase:** 0b — Builder scaffolding (complete pending operator sign-off)
+- **Method statement:** MS-003
+
+**Acceptance criteria (copied from MS-003):**
+- `C:\Users\Tyrien\Desktop\UnoAi\` exists with all 4 root docs + LICENSE + CONTRIBUTING + .gitignore + scaffold output + `forms/` (7 templates with accumulated entries). ✓ Plus B7.5 additions: `.gitleaks.toml`, `.githooks/pre-commit`.
+- `C:\Users\Tyrien\Desktop\Chat2U\` unchanged from MS-002 closing state (rollback path preserved). ✓
+- All `Chat2U` references in forward-looking docs replaced with `UnoAi`. All `Companion` proper-noun product references replaced with `UnoAi`. Role-descriptor "companion" / "AI companion" preserved. Historical-record entries preserved verbatim. ✓
+- `forms/DECISION.md` includes DEC-023 (product name lock; closes RFI-003) + DEC-024 (gitleaks hook required) + DEC-025 (sensitive-content list). DEC-013 body updated from engineer-pre-fill to scaffold-time-actuals. ✓
+- `forms/RFI.md` shows RFI-003 ANSWERED via DEC-023 + Builder-note flagging RFI-009 follow-up. RFI-009 filed (TLD selection). ✓
+- `forms/INCIDENT.md` includes INC-005 (migration + auto-init-commit finding). ✓
+- `LICENSE` content matches operator-supplied PolyForm NC text verbatim with copyright header prepended. ✓
+- `CONTRIBUTING.md` content per MS-003 B3 verbatim with `[security contact TBD]`. ✓ Plus added "Repo setup" section for the hooks-path activation per B7.5.
+- `.gitignore` content per MS-003 B4 baseline + sv's SvelteKit additions union. ✓
+- `npm install` completes without errors. ✓ (242 packages, 3 low-severity transitive vulns; non-blocking)
+- `npm run dev` starts a dev server; default Svelte page renders. ✓ (Vite 8.0.10, ready in 3.1s on `localhost:5173/`)
+- Commit pushed to `https://github.com/tyrienjones-tech/UnoAi`; visible on GitHub. ✓
+
+**Builder-produced proof:**
+
+*Git state (post-push):*
+```
+$ git log --oneline
+0cf45cd Migrate handover package + LICENSE + SvelteKit scaffold   ← MS-003
+372902c Initial commit                                              ← GitHub auto-init (fossil; per B8 Decision 1 layer-on-top resolution)
+
+$ git ls-remote origin main
+0cf45cd7c85d2b329ee57eb4c65113c995a8ffa6  refs/heads/main
+```
+
+*Commit URLs (visible since DEC-017 / public repo):*
+- Repo: <https://github.com/tyrienjones-tech/UnoAi>
+- This commit: <https://github.com/tyrienjones-tech/UnoAi/commit/0cf45cd>
+
+*Commit diff stats:*
+```
+[main 0cf45cd] Migrate handover package + LICENSE + SvelteKit scaffold
+ 42 files changed, 8174 insertions(+), 1 deletion(-)
+```
+The single deletion is the auto-init's 31-byte placeholder README being replaced with the migrated UnoAi README. The 8174 insertions break down approximately:
+- `package-lock.json` ~5,500 lines (typical npm lockfile)
+- Migrated handover docs (4 root + 7 forms with cumulative MS-001 + MS-002 + MS-003 entries) ~2,000 lines
+- `LICENSE` 81 lines (PolyForm NC + copyright)
+- Scaffold configs + `src/` + `static/` ~600 lines
+
+*npm run dev startup output:*
+```
+> unoai@0.0.1 dev
+> vite dev
+vite 11:39:14 PM (client) Forced re-optimization of dependencies
+  VITE v8.0.10  ready in 3136 ms
+  Local:   http://localhost:5173/
+  Network: use --host to expose
+```
+
+*Pre-commit hook output verbatim (proves the hook ran during commit):*
+```
+[pre-commit] gitleaks scanning staged content...
+    o
+    | \
+    |  o
+    o  .
+    .    gitleaks
+INF  0 commits scanned.
+INF  scanned ~345897 bytes (345.90 KB) in 222ms
+INF  no leaks found
+[pre-commit] gitleaks: clean.
+```
+
+*Final form tallies:*
+- `forms/DECISION.md`: DEC-001..DEC-025 (25 real entries), no gaps, no duplicates outside example block.
+- `forms/RFI.md`: RFI-001..RFI-009 (9 real entries). RFI-003 ANSWERED via DEC-023; RFI-009 OPEN (TLD).
+- `forms/INCIDENT.md`: INC-001..INC-005 (5 real entries).
+- `forms/METHOD_STATEMENT.md`: MS-001 + MS-002 + MS-003 (all approved + completed).
+- `forms/DONE.md`: DONE-002 + DONE-003 (this entry).
+- `forms/SITE_LOG.md`: 6 session entries spanning MS-001 → MS-003 close.
+
+*gitleaks verification (3 working-tree scans + 1 protect-staged + 1 hook-fired during commit, all clean):*
+- Initial detect (git history, pre-MS-003): 1 commit, 29 bytes, no leaks.
+- Working-tree detect (pre-edits): 165 KB, no leaks.
+- Working-tree detect (post-edits with new sensitive-content section): 174 KB, no leaks.
+- Pre-commit `protect --staged` rehearsal: 345.90 KB, no leaks.
+- `git commit` triggered hook: same scan, clean.
+
+*DEC-013 update confirmation:*
+DEC-013 now contains the engineer-pre-fill-vs-scaffold-actuals comparison table, the verbatim reproducibility command from sv's "to skip prompts next time" output, the Tailwind v4 deviation note (operator-approved at B8 Decision 2), the file inventory of scaffold-added files, the README + .gitignore restoration notes, and the npm install / dev-server result. See `forms/DECISION.md` line 162.
+
+*DEC-023 / DEC-024 / DEC-025 / RFI-009 / INC-005 confirmation:*
+- DEC-023 at `forms/DECISION.md` line 313 — Product name UnoAi; closes RFI-003.
+- DEC-024 at `forms/DECISION.md` line 322 — gitleaks pre-commit hook required.
+- DEC-025 at `forms/DECISION.md` line 345 — Sensitive-content list.
+- RFI-009 at `forms/RFI.md` line 195 — Domain TLD for unoai.[?]; OPEN.
+- INC-005 at `forms/INCIDENT.md` line 209 — Migration + auto-init-commit finding.
+
+*Line counts (post-MS-003):*
+| File | Lines |
+|---|---|
+| README.md | 60 |
+| LICENSE | 81 |
+| CONTRIBUTING.md | 25 |
+| PROJECT.md | 162 |
+| PLAN.md | 232 |
+| PROCEDURES.md | 165 (was 141; +24 for Procedure 8) |
+| .gitignore | 38 |
+| .gitleaks.toml | 88 |
+| .githooks/pre-commit | 53 |
+| forms/SITE_LOG.md | 314 |
+| forms/METHOD_STATEMENT.md | 360 |
+| forms/DONE.md | 166 + this entry |
+| forms/DECISION.md | 367 (was 284; +83 for DEC-013 update + DEC-023 + DEC-024 + DEC-025) |
+| forms/CHANGE_ORDER.md | 86 (unchanged) |
+| forms/RFI.md | 211 (was 195; +16 for RFI-003 closure note + RFI-009) |
+| forms/INCIDENT.md | 241 (was 206; +35 for INC-005) |
+| package.json | 48 |
+
+**What to look for in the proof:**
+- Repo URL renders the migrated README (UnoAi marketing surface stub at top, Self-hosting section, agents section below) — not the auto-init "Name is place holder."
+- LICENSE file shows PolyForm Noncommercial 1.0.0 text with the copyright header.
+- `git log --oneline` on a fresh clone shows two commits: the auto-init `372902c` fossil and our `0cf45cd`.
+- The commit message has no Co-Authored-By Claude footer (per MS-003 Open Question 2).
+- `package.json` shows `"name": "unoai"` (not `"chat2u"`, not `"companion"`), `tailwindcss ^4.2.2`, `@sveltejs/adapter-cloudflare ^7.2.8`, `svelte ^5.55.2`. Zero `*` or `latest` version specifiers.
+- Pre-commit hook lives at `.githooks/pre-commit` and activates per-clone via the documented `git config core.hooksPath .githooks`.
+
+**Operator-captured proof (operator fills at sign-off):**
+- Visit <https://github.com/tyrienjones-tech/UnoAi> — confirm landing page renders the UnoAi README, LICENSE link visible, file list shows PROJECT.md / PLAN.md / PROCEDURES.md / forms/ / src/ / package.json / etc.
+- Visit <https://github.com/tyrienjones-tech/UnoAi/commit/0cf45cd> — confirm message, file count, no AI co-author footer.
+- Optionally: pull the repo on a fresh clone, run `npm install` + `npm run dev`, verify it works for an independent observer.
+
+**Anything skipped or deferred:**
+- **Cloudflare Pages link** — DEFERRED (per MS-003 B9). Operator account creation is the prerequisite. Will be a separate small MS once the account exists; Builder's call whether to roll into Phase 1 prep or file as MS-003.5.
+- **RFI-009 (TLD selection: `unoai.com` vs `unoai.app`)** — OPEN. Pending operator availability check. Phase 0a DNS configuration is blocked by this.
+- **`Chat2U/` rollback folder retention** — operator decision post-DONE-003 sign-off (delete vs keep).
+- **LICENSE legal-due-diligence re-verification** — Builder fetched from `polyformproject/polyform-licenses` GitHub mirror branch `1.0.0` via curl. If operator wants independent comparison with SPDX text repo, Builder can run a `diff`. Low-priority follow-up; not blocking Phase 0b.
+
+**Linked incidents:** INC-005 (migration + auto-init finding).
+
+**Linked DECs filed in MS-003:** DEC-013 (updated to actuals), DEC-023 (UnoAi name), DEC-024 (gitleaks hook), DEC-025 (sensitive-content list).
+
+**Linked RFIs:** RFI-003 (closed via DEC-023), RFI-009 (newly filed, OPEN).
+
+**Operator sign-off:** pending.
+**Sign-off notes:**
+[Operator fills. Visit GitHub repo + commit URL to confirm visible state. Caveats or post-DONE-003 follow-ups go here, including the `Chat2U/` rollback-folder retention call.]
+
