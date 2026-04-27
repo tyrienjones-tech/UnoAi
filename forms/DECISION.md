@@ -365,3 +365,22 @@ These are locked at project start. Override only via a new DECISION entry that e
 - **Reason:** this list is the canonical reference for both PROJECT.md banned-moves and `.gitleaks.toml` rule design. Keeping it in DECISION.md means future agents see the same scope the hook enforces. Updates to this list are DEC-supersedes-DEC.
 - **Reversibility:** none — once a secret has been published to GitHub, even briefly, it must be rotated. The list is additive; future patterns get appended via new DECs that supersede DEC-025.
 - **Affects:** `.gitleaks.toml` ruleset, PROJECT.md "Sensitive content — never committed" section, every commit forever, all phases.
+
+### DEC-026 — Session lifecycle locked
+- **Date:** 2026-04-28
+- **Decided by:** operator
+- **Decision:** Every session begins with a SITE_LOG sign-in entry, ends with a sign-out entry, and updates `state/current.md` if state changed. The validator script `scripts/validate.sh` enforces structural integrity on every commit (numbering, cross-references, state counters, session lifecycle). Procedure 9 captures the rule.
+- **Components:**
+  - **`forms/SITE_LOG.md` templates:** session-start and session-end heading-line format `### YYYY-MM-DD HH:MM session (start|end)` parsed by validator regex `^### \d{4}-\d{2}-\d{2} \d{2}:\d{2} session (start|end)$`. Strict format; deviation hard-fails.
+  - **`state/current.md`:** persistent state file tracking current phase, latest entry counters (MS / DEC / RFI / INC), open RFIs, pending operator actions, last verified working state, running engineer working agreements, banned-moves mirror. Updated at session sign-out when state changes. Format-spec comment at top of file documents the strict line format for the four `Latest XXX:` counter lines.
+  - **`scripts/validate.sh`:** pure-bash validator (no external deps). Runs 8 checks: (1)–(4) sequential numbering for DEC / RFI / INC / MS with no gaps or duplicates; (5) every `Closes: RFI-NNN` resolves to a real RFI; (6) every `Supersedes: DEC-NNN` resolves to a real prior DEC; (7) `state/current.md` `Latest XXX:` counters match actual highest-numbered entries; (8) session-start entries have matching session-end entries from prior sessions (allows exactly one open session — the current one).
+  - **Pre-commit hook:** `.githooks/pre-commit` runs gitleaks then validator; both must exit 0 for commit to proceed.
+- **Hard-fail on state-counter parse error (per Reaper R8 acknowledgment):** intentional, not a bug. If a future agent reformats a `Latest XXX:` line such that the validator regex doesn't match, the validator hard-fails with a specific error naming the unparseable line. Soft-fail would dilute the discipline — the failure mode this hard-fail is *designed* to catch is exactly that someone manually edited the counter line in a way the parser can't read. Format-spec comment in `state/current.md` documents the expected line format so future agents know not to reformat.
+- **Reproduction notes for future agents:**
+  - Sign-in template: `forms/SITE_LOG.md` top section. Heading-line regex documented inline.
+  - Validator regex source-of-truth: comments in `scripts/validate.sh` header.
+  - Hook order: gitleaks → validator. Fail-fast on secrets first (cheaper than rerunning structural checks).
+- **Validator size:** ~180 lines of bash, ~20% over operator's ~150-line guidance. Overage is mostly mandatory header documentation (per R8 + R9). Operator-flagged at MS-004 approval as a design-review trigger; surfaced explicitly in DONE-004 for review at sign-off. Compression option exists (~155 lines achievable by trimming header comments) if operator prefers; otherwise the script ships as-is.
+- **Reason:** AI agents are stateless across sessions. Trust-based procedure breaks under reset, fatigue, or agent change. INC-003 (DECs reference RFIs not in source) and INC-004 (sweep-miss across files) named the failure pattern twice; mechanical lifecycle is the only thing that survives long-term solo + AI development.
+- **Reversibility:** cheap to remove the validator if it gets in the way (`git config --unset core.hooksPath` and delete `scripts/validate.sh`); expensive to recover from procedural drift the validator would have caught.
+- **Affects:** every session, every commit, all phases going forward. All future DECs / RFIs / INCs / MSes are validator-checked. All future commits run gitleaks + validator before proceeding.

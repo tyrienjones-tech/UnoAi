@@ -358,3 +358,143 @@ These are the five items in the Builder's reply preceding this MS — restated h
 - **Tailwind v3 vs v4:** Approved v3 default; v4 only if adapter-cloudflare/Svelte 5 docs require it.
 - **First-commit-defines-patterns:** Approved Builder pause+RFI before B8 push if scaffold output has `*` or `latest` version specifiers, or other commit-history smells.
 
+---
+
+### MS-004 — Session lifecycle and state persistence
+- **Date:** 2026-04-28
+- **Agent:** Reaper-1
+- **Phase:** 0b → enforcement layer (post-Phase-0b, pre-Phase-1)
+- **Task:** Make procedural discipline mechanical, not trust-based. Add `state/current.md` (recoverable state from cold start), session sign-in / sign-out templates in SITE_LOG, Procedure 9, validator script that runs in pre-commit hook, and a synthetic-session test proving the validator catches violations.
+- **Linked RFIs / decisions:**
+  - **New:** DEC-026 (session lifecycle locked).
+  - **Adds enforcement to:** Procedure 1 (induction), Procedure 4 (decision log numbering), Procedure 6 (RFI cross-references), Procedure 7 (incident numbering). Currently trust-based; becomes mechanically checked.
+  - **Builds on:** DEC-024 (gitleaks pre-commit hook). Same hook, new check.
+  - **Closes pattern named in:** INC-003 (DECs reference RFIs not in source), INC-004 (sweep-miss across files).
+- **Operator approval:** pending.
+
+**Open items (Builder-runtime, no decisions needed unless operator overrides):**
+
+1. **Validator language: bash.** Builder picks bash for consistency with the existing `.githooks/pre-commit` (already bash), the bash shell I'm running in, and gitleaks integration. PowerShell would create a two-language hook chain. Bash works on operator's Windows via Git Bash and on any future macOS/Linux clone. If operator wants PowerShell instead, say so.
+2. **Code-block detection for skipping example entries.** All form templates have example entries inside ``` fences (`MS-005` example, `INC-001` example, `RFI-001` example, `DONE-004` example). The validator must skip these or it will report false numbering errors. Builder approach: track ``` toggle in bash (~10 lines), only count `### XXX-NNN` headings outside fenced blocks.
+3. **MS-004 sign-in is bootstrap-recursive.** Procedure 9 mandates sign-in-before-work, but the SITE_LOG templates don't exist until B1 lands. Builder approach: B1 (templates) is the first work item; the retroactive MS-004 sign-in entry is filed immediately after, with a one-line note explaining that this single session bootstrapped the lifecycle. Future sessions sign in before any work.
+4. **Hook order: gitleaks → validator.** Both must pass for commit. gitleaks first (fail fast on secrets) before structural checks.
+5. **Validator size budget.** Operator's ~150-line cap is tight for 8 checks. Builder estimate: ~150 lines achievable with concise bash. If budget is busted, will pause and RFI rather than ship a half-working check.
+
+**Plan (numbered, terse):**
+
+*Bootstrap (Scope G + B):*
+1. Write B1 templates at top of `forms/SITE_LOG.md` (session-start + session-end blocks).
+2. File retroactive MS-004 session-start entry in SITE_LOG using the new template, with a Builder-note explaining the bootstrap recursion (single legitimate exception, future sessions follow Procedure 9 strictly).
+
+*Scope A — state/current.md:*
+3. Create `state/` directory at repo root.
+4. Create `state/current.md` populated with actual current values per the operator's template, with the START/END marker lines removed.
+
+*Scope C — Procedure 9:*
+5. Append Procedure 9 to `PROCEDURES.md` after Procedure 8.
+6. Update `PROCEDURES.md` summary table with row 9.
+7. Update `PROCEDURES.md` opening sentence "Eight procedures" → "Nine procedures."
+8. Update `README.md` "the eight rules" → "the nine rules" in 2 places (header at line 12 + file-map comment).
+9. Update `README.md` agent-onboarding step list: insert validator-run step between "Skim PLAN.md" and "File a SITE_LOG entry." Renumber subsequent steps.
+
+*Scope D — validator:*
+10. Create `scripts/` directory at repo root.
+11. Write `scripts/validate.sh` with all 8 checks (numbering for DEC/RFI/INC/MS, cross-references for Closes-RFI / Supersedes-DEC, state counters, session lifecycle).
+12. `chmod +x scripts/validate.sh`.
+13. Update `.githooks/pre-commit` to run `scripts/validate.sh` after gitleaks. Both must exit 0 for commit to proceed.
+
+*Scope F — DEC-026:*
+14. File DEC-026 in `forms/DECISION.md` (session lifecycle locked).
+15. Update `state/current.md` "Latest DEC" counter to DEC-026.
+
+*Scope E — synthetic test:*
+16. Run `scripts/validate.sh` on clean state. Expect PASS.
+17. Test 5 violations one at a time:
+    a. Add fake DEC-100 (numbering gap) → expect FAIL with "DEC numbering gap" message → revert.
+    b. Add `Closes: RFI-999` to a DEC → expect FAIL "DEC-NNN references RFI-999 which does not exist" → revert.
+    c. Edit `state/current.md` Latest DEC counter to wrong number → expect FAIL "state/current.md Latest DEC counter (DEC-XXX) does not match actual highest DEC (DEC-026)" → revert.
+    d. Add second session-start without preceding session-end → expect FAIL "open session-start without matching session-end" → revert.
+    e. Add duplicate DEC number → expect FAIL "duplicate DEC-NNN entry" → revert.
+18. Document each FAIL output verbatim in DONE-004 proof.
+19. Final clean-state validator run. Expect PASS.
+
+*Sign out + commit:*
+20. File MS-004 session-end entry in SITE_LOG using the new template.
+21. Update `state/current.md`: Latest MS = MS-004 (complete), Latest DEC = DEC-026, Latest INC = INC-005 (unchanged), Latest RFI = RFI-009 (unchanged), Phase status, Pending operator actions list, etc.
+22. `git add . && git commit -m "MS-004: session lifecycle + validator + state persistence"` (no Co-Authored-By footer; pre-commit hook fires both gitleaks and validator).
+23. `git push origin main`.
+24. File DONE-004 with proof: validator PASS output, 5 FAIL outputs, state/current.md committed, sign-in/sign-out entries proving end-to-end lifecycle, hook output showing both checks ran.
+
+**Files to be touched:**
+- `Desktop/UnoAi/state/` — created.
+- `Desktop/UnoAi/state/current.md` — created with populated values.
+- `Desktop/UnoAi/scripts/` — created.
+- `Desktop/UnoAi/scripts/validate.sh` — created (~150 lines max).
+- `Desktop/UnoAi/.githooks/pre-commit` — modified (add validator after gitleaks).
+- `Desktop/UnoAi/forms/SITE_LOG.md` — modified (templates at top + sign-in/sign-out entries for this session).
+- `Desktop/UnoAi/forms/DECISION.md` — modified (DEC-026 appended).
+- `Desktop/UnoAi/forms/METHOD_STATEMENT.md` — modified (this MS-004 entry; approval status update post-approval).
+- `Desktop/UnoAi/forms/DONE.md` — modified (DONE-004 appended).
+- `Desktop/UnoAi/PROCEDURES.md` — modified (Procedure 9 + summary table + "Nine procedures" header).
+- `Desktop/UnoAi/README.md` — modified ("nine rules" sweep + agent-onboarding step list).
+
+**Files NOT touched (per scope):**
+- `forms/CHANGE_ORDER.md` — no change.
+- `forms/RFI.md` — no change (no new RFIs from this MS).
+- `forms/INCIDENT.md` — no change unless violation testing or sign-in lifecycle finds one.
+- `PROJECT.md` — no change (lifecycle is procedural, not banned-moves; PROCEDURES.md is the right venue).
+- `PLAN.md` — no change (lifecycle is meta-process, not phase work).
+- `LICENSE`, `CONTRIBUTING.md`, `.gitignore`, `.gitleaks.toml` — no change.
+- The SvelteKit scaffold tree (`src/`, `static/`, `package.json`, etc.) — no change. This MS doesn't touch product code.
+- Existing SITE_LOG entries from MS-001/002/003 — preserved verbatim, not retroactively rewritten.
+
+**Expected diff size:** ~400 lines net added across 8 files. No dependencies. No code (just the validator script, which is shell, not product code).
+
+**Risks identified:**
+
+- **R1. Bootstrap recursion (G1).** MS-004's session-start happens AFTER the templates exist, retroactively. This is a one-time legitimate exception. Validator will pass after sign-in is filed because it'll see exactly one open session (MS-004's start) and zero unmatched ends. Mitigation: explicit Builder-note in the sign-in entry naming the bootstrap.
+
+- **R2. Code-block detection edge cases.** If a future agent writes `### DEC-NNN` inside a markdown blockquote (without ``` fences) or in some other non-standard place, the validator might miscount. Mitigation: tight ``` toggle, plus the "real entries are below `## Entries` marker" pattern is consistent across all form files. Builder will additionally check that the count of `### DEC-NNN` headings *outside* ``` matches the count parsed inside the ``Entries`` section as a sanity belt-and-suspenders.
+
+- **R3. Validator size budget.** ~150 lines is tight. Mitigation: lean output, factor common helpers (one `extract_real_numbers` function reused for DEC/RFI/INC/MS). If budget is busted, pause and RFI per rules of engagement.
+
+- **R4. Synthetic-violation reverts.** E1 says "create violation, run validator, confirm FAIL, revert." If I forget to revert one and commit it, the violation lands. Mitigation: do all 5 tests in one Bash session with explicit revert after each, then a final `git diff` sanity check before commit to confirm working tree is clean of test artifacts.
+
+- **R5. Validator running before B1 templates exist.** If the validator's session-lifecycle check expects sign-in entries to exist and they don't (because B1 hasn't landed), the first run fails. Mitigation: B1 + sign-in are the FIRST work items; validator is wired into hook only after both exist; first manual validator run happens AFTER all B1/A/C/F items land.
+
+- **R6. Pre-commit hook now does two heavy operations.** gitleaks scan + validator each take a few hundred ms. On large repos this could become noticeable; for UnoAi (~350 KB scanned) it's <500ms total. Acceptable.
+
+- **R7. MS template / form templates contain example entries with realistic-looking numbers (`MS-005`, `INC-001`, `RFI-001`, `DONE-004`).** The validator must skip these. Already named in Open Item 2. Code-block detection handles it.
+
+- **R8. State-counter check fragility.** state/current.md's "Latest DEC: DEC-XXX" line is human-readable. If the format drifts (e.g. operator reformats the line), the validator breaks. Mitigation: validator uses a forgiving regex (`Latest DEC:\s*DEC-(\d+)`); if no match found, validator reports "state/current.md format unrecognized — counter check skipped" rather than a hard fail. Soft-fail on parse error means counter check is best-effort, not blocking.
+
+  Actually — making it a soft-fail dilutes the discipline. Per operator's intent (mechanical enforcement), the counter check should hard-fail if the format isn't parseable. Builder will hard-fail but include a clear error message naming the line that didn't match. If operator wants soft-fail, override at approval.
+
+- **R9. Sign-in/sign-out heading format.** Operator specified `### YYYY-MM-DD HH:MM session start` and `### YYYY-MM-DD HH:MM session end`. Validator regex needs to match these patterns precisely. Builder's regex: `^### \d{4}-\d{2}-\d{2} \d{2}:\d{2} session (start|end)$`. Stricter than operator's spec on whitespace; Builder will document the regex in the validator and in the sign-in template instructions so future sessions don't drift.
+
+**Acceptance criteria (will be copied verbatim into DONE-004):**
+- `state/current.md` exists, committed, populated with actual current values per the operator's template (Phase, Active MS, Counters, Open RFIs, Pending operator actions, Last verified working state, Engineer working agreements 1–6, Banned moves mirror).
+- `forms/SITE_LOG.md` has the session-start and session-end templates at the top, clearly labelled, above the existing entries. Existing MS-001/002/003 entries preserved verbatim.
+- MS-004's own sign-in and sign-out entries are present in SITE_LOG using the new templates. Sign-in carries the bootstrap-note. Sign-out shows validator PASS.
+- `PROCEDURES.md` has Procedure 9. Header reads "Nine procedures." Summary table has 9 rows.
+- `README.md` reads "the nine rules" in both line 12 and file-map. Agent-onboarding step list includes a validator-run step before SITE_LOG.
+- `forms/DECISION.md` has DEC-026 (session lifecycle locked).
+- `scripts/validate.sh` exists, executable, runs from repo root, performs all 8 checks.
+- `.githooks/pre-commit` runs gitleaks then validator. Both must PASS for commit.
+- Synthetic-violation test: 5 violations each tested individually; validator FAIL output captured for each; final clean run is PASS.
+- Single test commit (this MS's commit) fires both gitleaks and validator; both clean.
+- `git push origin main` succeeds.
+- DONE-004 contains: validator PASS output, 5 FAIL outputs verbatim with each issue specifically named, hook output from the actual MS-004 commit showing both checks ran, file list of the new state/ and scripts/ trees.
+
+**Operator approval:** APPROVED 2026-04-28.
+**Approval notes:**
+- **Decision 1 (validator language: bash):** Approved. Two-language chain is exactly the kind of accidental complexity to avoid.
+- **Decision 2 (code-block detection):** Approved. Standard pattern, ~10 lines. Necessary correctness, not feature creep.
+- **Decision 3 (bootstrap recursion):** Approved. Sign-in note must explicitly say "MS-004 sign-in filed retroactively after B1 created the templates — first and only session this bootstrap exception applies. All future sessions sign in first, then work."
+- **Decision 4 (hook order: gitleaks → validator):** Approved. Fail-fast on secrets first.
+- **Decision 5 (state/current.md hard-fail on parse error):** Approved as feature, not bug. Document the exact line format expected in `state/current.md` as a comment at the top of the file.
+- **R3 acknowledgment:** ~150-line cap is a signal not a hard limit. If busted, RFI before shipping half-working — design review trigger.
+- **R8 acknowledgment:** Hard-fail named as intentional in DEC-026 body. Trade-off documented.
+- **R9 acknowledgment:** Document the heading-line format in BOTH the template (in SITE_LOG.md) AND in PROJECT.md's "For agents working on this project" section so future agents copy it correctly. Regex must appear as a comment in the validator script.
+  - **Builder interpretation note:** the "For agents..." section currently lives in `README.md`, not `PROJECT.md`. Builder will document in README's existing section. See SITE_LOG sign-in entry for transparency note.
+- **H1 (added scope):** Add a one-paragraph organizing-principle section to top of `PROJECT.md` before the existing content: *"This project is built by AI agents with a human operator in the loop. Procedures, file structure, and documentation conventions are optimized for stateless agents recovering context from cold start, not for human developers retaining context across sessions. Read PROCEDURES.md before any session work."* Easy fit; folded into MS-004.

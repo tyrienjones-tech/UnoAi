@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-# UnoAi pre-commit hook — secrets discipline (per DEC-024 + Procedure 8)
+# UnoAi pre-commit hook — runs both DEC-024 (secrets) and DEC-026 (structure).
 #
-# Runs gitleaks on staged content. Fails the commit if any rule matches.
+# Order:
+#   1. gitleaks scan staged content (DEC-024 / Procedure 8)
+#   2. scripts/validate.sh structural-integrity check (DEC-026 / Procedure 9)
+# Both must exit 0 for the commit to proceed.
 #
 # Setup (one-time per clone):
 #   git config core.hooksPath .githooks
@@ -11,7 +14,8 @@
 #
 # Builder discipline: never use --no-verify silently. If gitleaks is wrong,
 # extend .gitleaks.toml allowlist OR rotate the secret OR update INCIDENT log
-# with redacted detail.
+# with redacted detail. If the validator is wrong, fix the structural drift
+# OR update scripts/validate.sh AND its tests.
 
 set -e
 
@@ -50,4 +54,27 @@ if ! gitleaks protect --staged --config .gitleaks.toml --redact --verbose; then
 fi
 
 echo "[pre-commit] gitleaks: clean."
+
+# Step 2: structural-integrity validator (DEC-026 / Procedure 9).
+if [ ! -f "scripts/validate.sh" ]; then
+  echo "[pre-commit] FAIL: scripts/validate.sh missing at repo root." >&2
+  echo "  Per DEC-026, the structural validator is required. The commit is blocked." >&2
+  exit 1
+fi
+
+echo "[pre-commit] running scripts/validate.sh..."
+if ! bash scripts/validate.sh; then
+  echo "" >&2
+  echo "[pre-commit] FAIL: structural validator flagged an integrity issue." >&2
+  echo "" >&2
+  echo "Required actions (per DEC-026):" >&2
+  echo "  1. Read the validator output above — each FAIL line names the specific issue." >&2
+  echo "  2. Fix the underlying drift (numbering gap, missing cross-reference, stale state counter, missing session-end, etc.)." >&2
+  echo "  3. Re-run 'bash scripts/validate.sh' until VALIDATOR: PASS." >&2
+  echo "  4. Do NOT --no-verify. The drift is real; bypassing it leaves it for the next session." >&2
+  echo "" >&2
+  echo "Commit blocked." >&2
+  exit 1
+fi
+
 exit 0

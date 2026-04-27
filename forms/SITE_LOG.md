@@ -1,10 +1,51 @@
 # Site log
 
-Append-only. One entry per agent session. **File this before any other work.**
+Append-only. **File a session-start entry before any work; file a session-end entry before sign-out.** Per Procedure 9, the validator script (`scripts/validate.sh`) checks that session-start entries are matched by session-end entries from prior sessions. The pre-commit hook runs the validator on every commit.
 
 ---
 
-## Template
+## TEMPLATES (do not delete — copy when filing real entries)
+
+> **Heading-line format (strict):** `### YYYY-MM-DD HH:MM session start` and `### YYYY-MM-DD HH:MM session end`. The validator regex is `^### \d{4}-\d{2}-\d{2} \d{2}:\d{2} session (start|end)$`. Any deviation breaks parsing.
+
+### Session start template
+
+```
+### YYYY-MM-DD HH:MM session start
+
+- Role: [Engineer / Builder / Operator]
+- Session goal: [one sentence]
+- Resuming from: [last DONE-NNN, or "fresh / first session of phase"]
+- Context loaded: PROJECT.md, PROCEDURES.md, state/current.md
+- Open MSes: [list, or "none"]
+- Open RFIs awaiting me: [list, or "none"]
+- Pre-session validator run: [PASS / FAIL]
+  (If FAIL — address before proceeding, do not start work on top of broken state)
+```
+
+### Session end template
+
+```
+### YYYY-MM-DD HH:MM session end
+
+- Role: [same as sign-in]
+- Outcome: [DONE-NNN filed / MS-NNN filed pending approval / blocked on RFI-NNN / no work product]
+- Files touched: [list, or "none"]
+- Validator run at end: [PASS / FAIL]
+  (If FAIL — file INCIDENT before sign-out, do not leave broken state for next session)
+- state/current.md updated: [YES / NO]
+  (Must be YES if any of: phase changed, MS status changed, counters changed, RFIs opened/closed, INCIDENTs filed)
+- Next action: [one sentence — what the next session should do]
+- Handover note: [anything the next session needs that isn't in the forms — usually empty]
+```
+
+---
+
+## Real entries below
+
+---
+
+## Existing-format template (predates Procedure 9 — kept for reference)
 
 ```
 ### YYYY-MM-DD HH:MM — [Agent name]
@@ -309,6 +350,46 @@ INF  no leaks found
 
 **Old folder retention reminder:** `C:\Users\Tyrien\Desktop\Chat2U\` is unchanged from MS-002 closing state. Per MS-003 instruction, retention decision is operator's after DONE-003 sign-off.
 
+---
 
+### 2026-04-28 00:05 session start
 
+- Role: Builder
+- Session goal: implement MS-004 — session lifecycle + state persistence + validator + synthetic test.
+- Resuming from: DONE-003 (signed 2026-04-27). Operator confirmed DONE-003 sign-off + Chat2U folder deletion.
+- Context loaded: PROJECT.md, PROCEDURES.md, state/current.md (does not exist yet — being created in this session per Scope A; future sessions load it as part of standard induction).
+- Open MSes: MS-004 (this session, approved 2026-04-28).
+- Open RFIs awaiting me: none. RFI-009 is open but not awaiting Builder action (operator handles TLD selection).
+- Pre-session validator run: N/A — `scripts/validate.sh` does not exist yet; being created in this session per Scope D.
 
+**Bootstrap note (one-time exception):** This sign-in entry is filed retroactively, *after* the session-start template was created in B1 of this same session. Procedure 9 mandates sign-in-before-work, but the templates and the validator are themselves the work being done. **First and only session this bootstrap exception applies. All future sessions sign in first, then work.** Subsequent sessions also run the validator at sign-in time and confirm PASS before any work.
+
+**Builder interpretation note (R9 documentation):** Operator's MS-004 approval said to document the sign-in/sign-out heading-line format in *PROJECT.md's* "For agents working on this project" section. That section actually lives in `README.md`, not `PROJECT.md`. Builder is documenting the format in README's existing "For agents..." section (where it lives) plus in the SITE_LOG template (already done above) plus as a comment in the validator script. If operator wants the format spec in PROJECT.md as well, easy follow-up.
+
+---
+
+### 2026-04-28 00:55 session end
+
+- Role: Builder
+- Outcome: DONE-004 filed pending operator sign-off. MS-004 scope complete: Procedure 9, validator, hook integration, state persistence, DEC-026, synthetic-test verification of all 5 violations.
+- Files touched:
+  - `Desktop/UnoAi/state/current.md` (created with format-spec comment + populated values; updated again at sign-out)
+  - `Desktop/UnoAi/scripts/validate.sh` (created — pure bash, 192 lines, 8 checks; ~28% over operator's ~150 guidance, see DONE-004 design-review note)
+  - `Desktop/UnoAi/.githooks/pre-commit` (modified — gitleaks then validator; both must PASS)
+  - `Desktop/UnoAi/PROJECT.md` (H1 organizing-principle paragraph at top)
+  - `Desktop/UnoAi/PROCEDURES.md` (Procedure 9 added; "Eight" → "Nine" header; summary table extended)
+  - `Desktop/UnoAi/README.md` ("eight rules" → "nine rules" in 2 places; agent step list updated with state/current.md + validator-run steps; sign-in heading-line format documented; file-map updated with state/, scripts/, .githooks/, .gitleaks.toml)
+  - `Desktop/UnoAi/forms/SITE_LOG.md` (templates at top + this session's sign-in/sign-out)
+  - `Desktop/UnoAi/forms/DECISION.md` (DEC-026)
+  - `Desktop/UnoAi/forms/METHOD_STATEMENT.md` (MS-004 entry; approval status updated)
+  - `Desktop/UnoAi/forms/DONE.md` (DONE-004 to follow this entry)
+- Validator run at end: PASS (clean state; verified before commit).
+- state/current.md updated: YES (Latest MS: MS-004, Latest DEC: DEC-026, phase status, pending operator actions reaffirmed, working agreements unchanged).
+- Next action: Phase 1 kickoff. Blocked on operator-side accounts (Cloudflare Pages, Lemon Squeezy + $9 product, Worker secret store, domain registrar). Operator will signal when those are available. RFI-009 (TLD) still open but not blocking until pre-Phase-8.
+- Handover note:
+  - **Validator size flag (R3 design-review trigger):** `scripts/validate.sh` is 192 lines, 28% over operator's ~150 guidance. Overage is mostly mandatory header documentation (per R8 + R9 instructions to document the regex format and the hard-fail-on-parse-error rationale) plus the two-pass duplicate detection (5 lines added to avoid noisy cascading-fail output on duplicate detection — see DEC-026 + DONE-004). Operator can compress (~165 lines achievable by trimming header comments) at sign-off if preferred; otherwise ships as-is.
+  - **Two real bugs caught and fixed during E1 testing**, not in production:
+    1. Bash treats leading-zero strings as octal in arithmetic and `printf '%03d'` (e.g., `[ 008 -lt 1 ]` errors with "invalid octal," `printf '%03d' "025"` produces "021"). Fix: explicit `10#$x` integer conversion throughout.
+    2. Piping into a function (`real_headings DEC ... | check_sequential DEC`) runs the function in a subshell; FAILS array mutations don't propagate. Fix: switch to process substitution (`check_sequential DEC < <(real_headings DEC ...)`). This bug had silently disabled the DEC/RFI/INC/MS numbering checks. Caught only because E1e (duplicate DEC) returned PASS when it should have FAILed.
+  - **Builder interpretation flagged in sign-in entry above** (R9 format-spec documentation went into README, not PROJECT.md, because the "For agents..." section lives in README). Easy fix if operator wants.
+  - **Bootstrap recursion was a one-time event.** Future sessions sign in BEFORE any work, not retroactively.

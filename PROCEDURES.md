@@ -1,6 +1,6 @@
 # Procedures
 
-Eight procedures govern this project. Each maps to a form template in `/forms/`, except Procedure 8 (secrets discipline) which is enforced by the `gitleaks` pre-commit hook rather than a paper form. Every procedure exists because of a specific failure mode it prevents — the *why* is as important as the *what*.
+Nine procedures govern this project. Each maps to a form template in `/forms/`, except Procedure 8 (secrets discipline) which is enforced by the `gitleaks` pre-commit hook and Procedure 9 (session lifecycle) which is enforced jointly by the SITE_LOG sign-in/sign-out templates and the `scripts/validate.sh` validator script run at every commit. Every procedure exists because of a specific failure mode it prevents — the *why* is as important as the *what*.
 
 ---
 
@@ -149,6 +149,28 @@ Wait for the answer. No work proceeds on the blocked task until answered.
 
 ---
 
+## Procedure 9 — Session lifecycle
+
+**When:** every session, regardless of role.
+
+**What:**
+
+1. **Sign in.** File a "session start" entry in `forms/SITE_LOG.md` using the template (heading line: `### YYYY-MM-DD HH:MM session start`). Include role, session goal, what you're resuming from, context loaded (PROJECT.md / PROCEDURES.md / state/current.md), open MSes, open RFIs awaiting you, and the result of the pre-session validator run. **PASS before starting work.**
+2. **Work.** File MS / DEC / RFI / INCIDENT / DONE entries as normal during the session. Each entry includes the session start timestamp in its body for trail reconstruction.
+3. **Sign out.** File a "session end" entry in `forms/SITE_LOG.md` using the template (heading line: `### YYYY-MM-DD HH:MM session end`). Include role, outcome, files touched, validator run at end (PASS or FAIL), state/current.md updated yes/no, next action, handover note. **Update `state/current.md` if anything changed** (phase, MS status, counters, RFIs opened/closed, INCIDENTs filed).
+
+A session that ends without a sign-out entry is a procedural incident. The next session's first action (after their own sign-in) is to file an INCIDENT for the missing sign-out and reconstruct what was done.
+
+A session that starts without a sign-in is a procedural incident. Catch it immediately, file the INCIDENT, then file the proper sign-in retroactively.
+
+**Form:** this procedure uses `forms/SITE_LOG.md` (sign-in / sign-out) and `state/current.md` (persistent state). No new form template — the SITE_LOG templates and the validator are the form.
+
+**Enforcement:** `scripts/validate.sh` runs as the second step of the pre-commit hook (after gitleaks). The validator hard-fails if a session-start has no matching session-end from a prior session, or if state counters drift from actual entry counts, or on numbering gaps / cross-reference breaks.
+
+**Why:** AI agents are stateless across sessions. The lifecycle gives every session a known start state and a known end state, so handovers don't degrade. Trust-based procedure breaks under fatigue, time pressure, or agent reset; mechanical lifecycle enforcement does not.
+
+---
+
 ## Summary
 
 | Trigger | Form | Procedure |
@@ -161,5 +183,6 @@ Wait for the answer. No work proceeds on the blocked task until answered.
 | Don't know the answer | RFI | 6. Request for information |
 | Something broke | INCIDENT | 7. Incident log |
 | Every commit (automatic) | (gitleaks hook) | 8. Secrets discipline |
+| Session sign-in / sign-out | SITE_LOG + state/current.md | 9. Session lifecycle |
 
 If a procedure feels like overhead, that's the procedure working. Without it, the project drifts in ways nobody notices until later.
