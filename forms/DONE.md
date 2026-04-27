@@ -312,3 +312,186 @@ DEC-013 now contains the engineer-pre-fill-vs-scaffold-actuals comparison table,
 **Sign-off notes:**
 [Operator fills. Visit GitHub repo + commit URL to confirm visible state. Caveats or post-DONE-003 follow-ups go here, including the `Chat2U/` rollback-folder retention call.]
 
+---
+
+### DONE-004 — Session lifecycle + validator + state persistence (MS-004 closed)
+- **Date:** 2026-04-28
+- **Agent:** Reaper-1
+- **Phase:** 0b enforcement layer (complete pending sign-off)
+- **Method statement:** MS-004
+- **Session start:** 2026-04-28 00:05 (see SITE_LOG)
+- **Session end:** 2026-04-28 00:55 (see SITE_LOG)
+
+**Acceptance criteria (copied from MS-004):**
+- `state/current.md` exists, committed, populated with actual current values per the operator's template. ✓
+- `forms/SITE_LOG.md` has session-start and session-end templates at the top, clearly labelled, above existing entries. Existing MS-001/002/003 entries preserved verbatim. ✓
+- MS-004's own sign-in and sign-out entries are present in SITE_LOG using the new templates. Sign-in carries the bootstrap-note. Sign-out shows validator PASS. ✓
+- `PROCEDURES.md` has Procedure 9. Header reads "Nine procedures." Summary table has 9 rows. ✓
+- `README.md` reads "the nine rules" in 2 places. Agent step list includes a validator-run step before SITE_LOG (now step 5; SITE_LOG sign-in is step 6). ✓
+- `forms/DECISION.md` has DEC-026 (session lifecycle locked). ✓
+- `scripts/validate.sh` exists, executable, runs from repo root, performs all 8 checks. ✓
+- `.githooks/pre-commit` runs gitleaks then validator. Both must PASS for commit. ✓
+- Synthetic-violation test: 5 violations each tested individually; validator FAIL output captured for each; final clean run is PASS. ✓
+- Single test commit (this MS's commit) fires both gitleaks and validator; both clean. ✓
+- `git push origin main` succeeds. ✓
+- DONE-004 contains: validator PASS output, 5 FAIL outputs verbatim with each issue specifically named, hook output from the actual MS-004 commit showing both checks ran, file list of the new state/ and scripts/ trees. ✓ (this entry)
+
+**Builder-produced proof:**
+
+*Git state (post-push):*
+```
+$ git log --oneline (final)
+ed87926 MS-004: session lifecycle + validator + state persistence    ← MS-004
+bf2d661 Update README.md                                              ← operator's self-hosting wording amendment
+15b7751 MS-003 close-out: DONE-003 + final SITE_LOG entry
+0cf45cd Migrate handover package + LICENSE + SvelteKit scaffold
+372902c Initial commit
+```
+
+Note: Builder's MS-004 commit was rebased on top of operator's `bf2d661` README amendment after a fetch revealed the divergence at push time. Rebase succeeded with zero conflicts (different regions of README — operator changed self-hosting paragraphs at lines 12–17, Builder changed header / step list / file map at lines 1–60). Validator re-run post-rebase: PASS.
+
+- Repo: <https://github.com/tyrienjones-tech/UnoAi>
+- This commit: <https://github.com/tyrienjones-tech/UnoAi/commit/ed87926>
+- Operator's amendment: <https://github.com/tyrienjones-tech/UnoAi/commit/bf2d661>
+
+*Validator + gitleaks hook output during commit:*
+```
+[pre-commit] gitleaks scanning staged content...
+INF  0 commits scanned.
+INF  scanned ~42016 bytes (42.02 KB) in 189ms
+INF  no leaks found
+[pre-commit] gitleaks: clean.
+[pre-commit] running scripts/validate.sh...
+VALIDATOR: PASS
+[main be931d4] MS-004: session lifecycle + validator + state persistence
+ 9 files changed, 583 insertions(+), 13 deletions(-)
+ create mode 100644 scripts/validate.sh
+ create mode 100644 state/current.md
+```
+(SHA `be931d4` pre-rebase; rebase produced final SHA `ed87926`.)
+
+*Synthetic-violation test outputs (verbatim, all 5 violations from E1):*
+
+```
+==========================================
+VALIDATOR (clean state, expect PASS)
+==========================================
+VALIDATOR: PASS
+[exit 0]
+
+==========================================
+E1a — DEC numbering gap (added fake DEC-100)
+==========================================
+VALIDATOR: FAIL
+  - DEC: numbering gap — expected DEC-027, found DEC-100
+  - state/current.md 'Latest DEC' counter (DEC-026) does not match actual highest entry (DEC-100)
+[exit 1]
+
+==========================================
+E1b — Closes: RFI-999 missing target
+==========================================
+VALIDATOR: FAIL
+  - DEC cross-reference: DEC-027 has 'Closes: RFI-999' which does not exist in forms/RFI.md
+[exit 1]
+
+==========================================
+E1c — state/current.md counter mismatch
+==========================================
+VALIDATOR: FAIL
+  - state/current.md 'Latest DEC' counter (DEC-099) does not match actual highest entry (DEC-026)
+[exit 1]
+
+==========================================
+E1d — duplicate session-start (no matching end)
+==========================================
+VALIDATOR: FAIL
+  - SITE_LOG session lifecycle: 2 session-start entries without matching session-end (expected at most 1 open session — the current one)
+[exit 1]
+
+==========================================
+E1e — duplicate DEC number (DEC-013 twice)
+==========================================
+VALIDATOR: FAIL
+  - DEC: duplicate entry DEC-013
+[exit 1]
+
+==========================================
+VALIDATOR (final clean state, expect PASS)
+==========================================
+VALIDATOR: PASS
+[exit 0]
+```
+
+*File-by-file change summary (against pre-MS-004 state):*
+
+| File | Change |
+|---|---|
+| `state/current.md` | Created. ~50 lines. Includes format-spec comment for the 4 `Latest XXX:` counter lines. |
+| `scripts/validate.sh` | Created. 192 lines (28% over operator's ~150 guidance — see design-review note below). |
+| `.githooks/pre-commit` | Modified. Added validator step after gitleaks. Both must pass for commit. |
+| `forms/SITE_LOG.md` | Templates added at top + sign-in/sign-out entries for this session. Existing MS-001/002/003 entries preserved. |
+| `forms/DECISION.md` | DEC-026 appended. |
+| `forms/METHOD_STATEMENT.md` | MS-004 entry filed pre-work; approval status updated post-approval. |
+| `forms/DONE.md` | DONE-004 appended (this entry). |
+| `PROCEDURES.md` | Procedure 9 added; "Eight procedures" → "Nine procedures"; summary table extended. |
+| `PROJECT.md` | H1 organizing-principle paragraph at top. |
+| `README.md` | "eight rules" → "nine rules" (2 places); agent step list updated with `state/current.md` + validator-run steps; sign-in heading-line format documented; file-map updated with `state/`, `scripts/`, `.githooks/`, `.gitleaks.toml`, `CONTRIBUTING.md`. |
+
+**Validator-size design-review trigger (per operator's R3 acknowledgment):**
+
+`scripts/validate.sh` is 192 lines, ~28% over the ~150-line guidance. Operator's MS-004 approval said "If the budget busts, RFI before shipping half-working — design review trigger." The script ships not as half-working — final clean run is PASS, all 5 synthetic violations correctly caught — but the size deserves explicit operator review. The overage breaks down approximately:
+
+- ~32 lines of header documentation (mandated per R8 + R9: documents the regex format, the hard-fail-on-parse-error rationale, the integer-literal note about bash octal-leading-zero parsing).
+- ~15 lines of helper functions (`fail`, `fmt`, `real_headings`, `walk_dec_xrefs`).
+- ~25 lines of `check_sequential` (two-pass: duplicates via `uniq -d`, then gaps via `uniq` walk; this two-pass design was added after E1e's first run produced cascading-fail noise, see "Two real bugs caught" below).
+- ~110 lines of the 8 actual checks + output formatting.
+
+Compression to ~165 lines achievable by trimming header comments. Builder's recommendation: ship as-is, since the documentation is what the R8/R9 instructions explicitly required. Operator can override at sign-off and Builder will compress.
+
+**Two real bugs caught and fixed during E1 testing (would have shipped silent failures otherwise):**
+
+1. **Bash octal leading-zero parsing.** `[ 008 -lt 1 ]` errors with `value too great for base (error token is "008")`; `printf '%03d' "025"` produces `"021"` because `025` parsed as octal = 21 decimal. Fix: explicit `10#$x` integer conversion at every numeric comparison and printf call. Caught when first clean-state run reported `actual highest entry (DEC-021)` instead of `DEC-025`.
+
+2. **Subshell variable isolation in piped function calls.** `real_headings DEC ... | check_sequential DEC` runs `check_sequential` in a subshell; FAILS array mutations don't propagate to the parent. Result: DEC/RFI/INC/MS numbering checks were silently disabled. Caught only because E1e (duplicate DEC-013) returned PASS instead of FAIL — the cross-reference and state-counter checks were running fine because they didn't pipe. Fix: switch to process substitution (`check_sequential DEC < <(real_headings DEC ...)`).
+
+Both bugs are documented in DEC-026 reproduction notes and in `scripts/validate.sh` header comments so future agents debugging the script start with the trade-offs explicit.
+
+**Lifecycle end-to-end proof (this session was the first real-world test):**
+
+- Sign-in: `### 2026-04-28 00:05 session start` filed in SITE_LOG.md retroactively after B1 created the templates. Bootstrap-note explicit: "first and only session this exception applies."
+- Work: B1 + state/ + H1 + Procedure 9 + README + validator + hook + DEC-026 + 5 synthetic violations.
+- Sign-out: `### 2026-04-28 00:55 session end` filed in SITE_LOG.md before commit. Validator PASS. state/current.md updated.
+- Commit: pre-commit hook fired gitleaks + validator; both PASS. Local commit `be931d4`.
+- Push: rejected on first attempt (operator's `bf2d661` amendment had landed). Rebase produced `ed87926`. Push succeeded.
+- DONE-004: this entry. State/current.md remains accurate (Latest MS counter = MS-004, Latest DEC = DEC-026).
+
+**Anything skipped or deferred:**
+
+- **Operator's README amendment (`bf2d661`)** changed `## Self-hosting` heading to plain `Self-hosting` (heading marker dropped). Builder did NOT modify operator's commit. Flagging for operator awareness — could be intentional or accidental during the edit. If accidental, single-character fix in a follow-up commit.
+- **R9 documentation in PROJECT.md** — operator's MS-004 approval said document the heading-line format in PROJECT.md's "For agents..." section. That section actually lives in README.md, not PROJECT.md. Builder documented in README's section. Mentioned in SITE_LOG sign-in entry for transparency.
+- **Validator-script compression** — see design-review note above. Optional Builder follow-up if operator wants to trim.
+
+**What to look for in the proof:**
+- The repo at GitHub shows 5 commits on `main` (auto-init + handover + close-out + operator-amendment + MS-004).
+- Pre-commit hook output verbatim above shows both gitleaks AND validator ran, both passed.
+- 5 synthetic violations produced 5 distinct FAIL outputs naming the specific issue. Final clean run passed.
+- `state/current.md` Latest MS counter = MS-004, Latest DEC = DEC-026. Validator's check 7 confirmed match.
+- `forms/SITE_LOG.md` has both new templates AND the MS-004 sign-in/sign-out using the new format.
+- `PROCEDURES.md` summary table now has 9 rows with Procedure 9 enforcing session lifecycle via `state/current.md` + `scripts/validate.sh`.
+
+**Operator-captured proof (operator fills at sign-off):**
+- Run `bash scripts/validate.sh` from repo root; confirm `VALIDATOR: PASS`.
+- Visually inspect `state/current.md`; confirm values match reality (counters, phase, pending operator actions).
+- Visit <https://github.com/tyrienjones-tech/UnoAi/commit/ed87926>; confirm commit shows the 9-file change set, no Co-Authored-By footer.
+- Optional: trigger a hook test by editing a doc and `git commit`; confirm hook prints `[pre-commit] gitleaks: clean.` then `VALIDATOR: PASS` before the commit lands.
+
+**Linked incidents:** none. Two validator bugs caught during testing were fixed in-session before any commit; they were debugging events, not procedural-drift incidents per Procedure 7. Documented in DEC-026 reproduction notes for the trail.
+
+**Linked DECs filed in MS-004:** DEC-026 (session lifecycle locked).
+
+**Linked RFIs:** none from this MS. RFI-009 (TLD) remains OPEN; RFI-003 closed in MS-003.
+
+**Operator sign-off:** pending.
+**Sign-off notes:**
+[Operator fills. Run `bash scripts/validate.sh` once locally and confirm PASS. Decide: (a) accept the 192-line validator as-is, or (b) ask Builder to compress to ~165 lines by trimming header comments. Optional: confirm whether the README `## Self-hosting` → `Self-hosting` heading-marker change in bf2d661 was intentional.]
+
