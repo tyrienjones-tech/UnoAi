@@ -10,9 +10,11 @@ Browser-based AI companion. Buy once, BYOK, conversations stay on your device.
 
 ---
 
-## Self-hosting
+Self-hosting
 
-The source is public so you can verify what it does. If you'd rather build and run it yourself than pay $9 for the hosted version, you can. PolyForm Noncommercial license permits personal self-hosting. See [LICENSE](./LICENSE) for full terms.
+The source is public — verify what it does, fork it, run it yourself if you want. PolyForm Noncommercial license permits personal self-hosting (see LICENSE).
+
+The $9 hosted version is for people who'd rather skip the setup. You're paying for the hosting, the updates, and the work of keeping it running — not the code itself.
 
 If you self-host, you are responsible for your own deployment, your own users, and your own legal compliance. The hosted version's terms and protections do not transfer to self-hosted instances.
 
