@@ -1,0 +1,88 @@
+# UnoAi gitleaks configuration
+# See https://github.com/gitleaks/gitleaks for ruleset reference.
+#
+# Per DEC-024: this file MUST exist; the pre-commit hook fails closed if absent.
+# Per DEC-025: sensitive content list (Anthropic / OpenAI / Cloudflare / Lemon
+# Squeezy / Ed25519 private keys / GitHub PATs / .env / personal email / user
+# data / any secret token).
+#
+# This config extends gitleaks' default ruleset (no `extend.useDefault = false`)
+# with project-specific rules below. The default ruleset already covers most of
+# the listed providers (Anthropic, OpenAI, Cloudflare, GitHub PATs, generic API
+# keys, JWTs, private keys, .env contents).
+
+title = "UnoAi gitleaks config"
+
+[extend]
+# Use gitleaks' built-in ruleset as the base. Project-specific rules below
+# add coverage that the defaults miss.
+useDefault = true
+
+# ---------------------------------------------------------------------------
+# Project-specific rules (per DEC-025)
+# ---------------------------------------------------------------------------
+
+[[rules]]
+id = "lemon-squeezy-api-key"
+description = "Lemon Squeezy API key (JWT-style, prefix-bearing)"
+regex = '''ls_(api|store)_[A-Za-z0-9]{40,}'''
+keywords = ["ls_api_", "ls_store_"]
+
+[[rules]]
+id = "lemon-squeezy-webhook-secret"
+description = "Lemon Squeezy webhook signing secret (custom assignment patterns)"
+regex = '''(?i)(lemon[_-]?squeezy[_-]?webhook[_-]?(secret|signing[_-]?secret))\s*[:=]\s*['"]?[A-Za-z0-9_\-]{20,}['"]?'''
+keywords = ["lemon_squeezy", "lemonSqueezy"]
+
+[[rules]]
+id = "ed25519-private-key-pem"
+description = "Ed25519 private key in PEM format"
+regex = '''-----BEGIN (PRIVATE KEY|OPENSSH PRIVATE KEY|ED25519 PRIVATE KEY)-----'''
+keywords = ["BEGIN PRIVATE KEY", "BEGIN OPENSSH PRIVATE KEY", "BEGIN ED25519 PRIVATE KEY"]
+
+[[rules]]
+id = "ed25519-private-key-jwk"
+description = "Ed25519 private key in JWK form (heuristic — 'd' field with Ed25519-sized base64url)"
+regex = '''"kty"\s*:\s*"OKP"[\s\S]{0,200}?"crv"\s*:\s*"Ed25519"[\s\S]{0,200}?"d"\s*:\s*"[A-Za-z0-9_-]{42,44}"'''
+keywords = ["Ed25519", "OKP"]
+
+[[rules]]
+id = "anthropic-api-key-strict"
+description = "Anthropic API key (sk-ant-* prefix, defensive — gitleaks default also covers)"
+regex = '''sk-ant-[A-Za-z0-9_\-]{20,}'''
+keywords = ["sk-ant-"]
+
+[[rules]]
+id = "operator-personal-email"
+description = "Operator's personal email used for ops accounts (per DEC-025) — flag any commit reference to prevent leaks. Replace with role-based ops alias before commit."
+regex = '''tyrienjones@gmail\.com'''
+keywords = ["tyrienjones@gmail"]
+
+# ---------------------------------------------------------------------------
+# Allowlist
+# ---------------------------------------------------------------------------
+
+[allowlist]
+description = "Paths and patterns excluded from secret scanning"
+
+# Documentation references to credential formats (e.g. "API keys look like
+# sk-ant-...") in markdown should not flag. Allow all forms/*.md, README, etc.
+# only when the content is clearly illustrative (placeholder), not a real
+# secret. Markdown files with `sk-ant-XXXXX...` placeholders are fine; real
+# secrets in markdown are not — the regex rules above will still catch
+# realistic-looking strings.
+paths = [
+  '''node_modules/''',
+  '''package-lock\.json''',
+  '''\.svelte-kit/''',
+  '''build/''',
+  '''dist/''',
+  '''\.wrangler/''',
+]
+
+# Literal placeholder strings that intentionally look like keys but are documented examples.
+regexes = [
+  '''sk-ant-PLACEHOLDER''',
+  '''sk-PLACEHOLDER''',
+  '''ls_api_PLACEHOLDER''',
+]

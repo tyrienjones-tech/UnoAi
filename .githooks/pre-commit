@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# UnoAi pre-commit hook — secrets discipline (per DEC-024 + Procedure 8)
+#
+# Runs gitleaks on staged content. Fails the commit if any rule matches.
+#
+# Setup (one-time per clone):
+#   git config core.hooksPath .githooks
+#
+# Bypass (for emergencies only — file an INCIDENT if used):
+#   git commit --no-verify
+#
+# Builder discipline: never use --no-verify silently. If gitleaks is wrong,
+# extend .gitleaks.toml allowlist OR rotate the secret OR update INCIDENT log
+# with redacted detail.
+
+set -e
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "[pre-commit] FAIL: gitleaks not on PATH." >&2
+  echo "  Install:" >&2
+  echo "    Windows : download gitleaks_*_windows_x64.zip from" >&2
+  echo "              https://github.com/gitleaks/gitleaks/releases" >&2
+  echo "              then place gitleaks.exe in a directory on PATH." >&2
+  echo "    macOS   : brew install gitleaks" >&2
+  echo "    Linux   : see https://github.com/gitleaks/gitleaks#installing" >&2
+  echo "" >&2
+  echo "  Per DEC-024, the secrets-scan hook is required. The commit is blocked." >&2
+  exit 1
+fi
+
+if [ ! -f ".gitleaks.toml" ]; then
+  echo "[pre-commit] FAIL: .gitleaks.toml missing at repo root." >&2
+  echo "  Per DEC-024, the project's gitleaks config must exist before committing." >&2
+  exit 1
+fi
+
+echo "[pre-commit] gitleaks scanning staged content..."
+if ! gitleaks protect --staged --config .gitleaks.toml --redact --verbose; then
+  echo "" >&2
+  echo "[pre-commit] FAIL: gitleaks flagged a potential secret in staged content." >&2
+  echo "" >&2
+  echo "Required actions (per DEC-024):" >&2
+  echo "  1. Treat the matched content as compromised — rotate at source immediately." >&2
+  echo "  2. Remove the content from the staged diff (do NOT --no-verify)." >&2
+  echo "  3. File an INCIDENT entry with redacted detail (DEC-024 / Procedure 8)." >&2
+  echo "  4. If the rule is a false positive, extend .gitleaks.toml allowlist." >&2
+  echo "" >&2
+  echo "Commit blocked." >&2
+  exit 1
+fi
+
+echo "[pre-commit] gitleaks: clean."
+exit 0
