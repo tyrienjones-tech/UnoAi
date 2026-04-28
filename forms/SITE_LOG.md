@@ -634,3 +634,70 @@ INF  no leaks found
 - **README.md `## Status` line is stale** (still says "MS-005 / Phase 1 begins after MS-006 DONE"). Validator check 10 still passes because the substring "Phase 0b complete" matches state's "Phase 0b complete" identifier (case-insensitive substring containment per check-10 spec). Bringing README Status fully current is Section 3 (documentation accuracy) work in a future MS-009 session — not this session's scope.
 - **No new working agreements** added this session. No DEC, no RFI, no INC. Pure scope execution.
 - **Counter state:** Latest MS = MS-009; Latest DEC = DEC-033; Latest RFI = RFI-010; Latest INC = INC-006. Unchanged from MS-008 close-out except for MS counter (bumped at sign-in per existing Scope D-early pattern).
+
+---
+
+### 2026-04-28 14:00 session start
+
+- Role: Inspector
+- Session goal: INSP-001 — security / privacy / project-risk audit (pre-Phase-1 readiness inspection per Inspector cadence guidance in role prompt).
+- Resuming from: fresh / first inspection session. No prior INSP entries; `forms/INSPECTION.md` does not yet exist and will be created this session.
+- Context loaded: PROJECT.md, PROCEDURES.md, state/current.md (load-context reads scheduled immediately post-sign-in per role prompt sequence; agentic-doctrine loaded via chat per RFI-011 resolution option (a) — INSP-001 only).
+- Open MSes: MS-009 (in progress; Sections 0+1 signed off in chat per Builder's pending working-tree edits to `forms/SIGN_OFF.md`; Section 2 work also pending in working tree).
+- Open RFIs awaiting me: none. RFI-009 (TLD) open, operator-blocked, not Inspector-blocked. RFI-011 (Inspector doctrine path) raised in chat this session and resolved inline by operator (option a — doctrine pasted directly); not filed in `forms/RFI.md` because its scope was Inspector-environment-only, not project-state.
+- Pre-session validator run: **PASS** (verified at 2026-04-28 13:24 system-clock / 14:00 entry-clock; HEAD `586d6d0`; validator at 289 lines).
+
+**Working-tree state at sign-in:** two uncommitted Builder edits from MS-009 Section 2 in-progress work:
+- `forms/SIGN_OFF.md` — Sections 0+1 marked signed off; Section 2 populated `in progress` with full checklist results + findings.
+- `state/current.md` — one-line MS chain status update reflecting Sections 0+1 sign-offs.
+
+**Inspector posture re: those edits:**
+- `forms/SIGN_OFF.md` is read-only for Inspector (operator-confirmed scope) — will not touch.
+- `state/current.md` Inspector-write scope is **counters + Last verified working state section only**. Builder's pending edit is in the **MS chain status section** — outside Inspector scope. Inspector's additive edit will be confined to the Latest INSP counter and the Last verified working state section.
+- Commit hygiene: Inspector will commit **only** `forms/INSPECTION.md` and `forms/SITE_LOG.md`. Inspector's `state/current.md` additions and Builder's pending mods will be left uncommitted in the working tree for Builder to fold into the MS-009 Section 2 close-out commit. SITE_LOG sign-out will be set to `state/current.md updated: NO` with this rationale documented.
+- This procedural overlap (Inspector role's "Update state/current.md and commit" step did not anticipate cross-role mid-flight working-tree state) will be surfaced in INSP-001 as a procedural finding for Engineer to address in a follow-up MS.
+
+**Session goal sequence:**
+1. Bulk-read load-context files (PROJECT.md, PROCEDURES.md, PLAN.md, GLOSSARY.md, state/current.md, CONTEXT.md, plus all DEC/MS/INC/RFI/DONE/SIGN_OFF entries, the four pre-commit hook + validator + gitleaks + cspell config files, LICENSE, .env.example, package.json scaffold, .gitignore).
+2. Conduct security / privacy / project-risk audit per Inspector role prompt methodology.
+3. Create `forms/INSPECTION.md` with header + file INSP-001 entry.
+4. Run validator at end of session — confirm PASS before commit.
+5. Add INSP-001 entry additively to `state/current.md` (counters + last-verified-state).
+6. File sign-out entry.
+7. Commit `forms/INSPECTION.md` + `forms/SITE_LOG.md` with message `INSP-001: pre-Phase-1 readiness audit (Inspector audit)`.
+
+---
+
+### 2026-04-28 16:30 session end
+
+- Role: Inspector
+- Outcome: **INSP-001 filed** at `forms/INSPECTION.md` (new form created with header, 230 lines total). Pre-Phase-1 readiness audit covering security + privacy + project-risk surfaces. Findings: 0 CRITICAL, 1 HIGH, 5 MEDIUM, 5 LOW, 6 INFO. 4 open questions for operator inside the report. Recommended next inspection: INSP-002 post-Phase-1 product code.
+- Files touched:
+  - `forms/INSPECTION.md` — created (header + INSP-001 entry).
+  - `forms/SITE_LOG.md` — sign-in (filed at session start) + this sign-out.
+  - `.cspell.json` — one-line addition of `"INSP"` to the `words` array (placed after `incl` in the I-cluster of project-specific terms). **One-time scope expansion** authorised by operator at commit time to enable Inspector role IDs to pass cspell going forward. Same pattern as the `MS`/`DEC`/`RFI`/`INC` precedent (which is handled by cspell's default ruleset rather than the project dictionary; INSP was flagged because it lacks a matching default-ruleset entry). Future inspection scope reverts to the original four-file write set (`forms/INSPECTION.md`, `forms/RFI.md`, `forms/SITE_LOG.md`, `state/current.md` counters + last-verified-state). No DEC needed — operator framed this as an extension of DEC-033 (the cspell tooling decision), not a new decision; Engineer notes as a tracked-in-passing operational decision.
+  - `state/current.md` — additive edits only: `Latest INSP: INSP-001` line in Counters section + new dated paragraph at top of Last verified working state. **Not committed in this session** (see handover note for rationale).
+- Validator run at end: **PASS** (verified at 2026-04-28 16:30 immediately before this sign-out, post-state/current.md edits + post-redaction; validator at 289 lines unchanged; the new `forms/INSPECTION.md` is invisible to validator's check 1-10 surface).
+- gitleaks scan at end: **clean against the staged set after redaction.** First commit attempt was BLOCKED by the `operator-personal-email` rule firing on four literal-email mentions in INSP-001 prose (Summary section + LOW-1 evidence + LOW-2 evidence + Open Questions). Inspector paused, raised the catch + three resolution options to operator, operator approved option A (redact prose) + option C (file INC-007 per DEC-024 mandatory response sequence). Redaction applied: all four literal-email occurrences in `forms/INSPECTION.md` rewritten to descriptive paraphrase form ("operator's primary @gmail.com address from the auto-init commit's author metadata" or equivalent). Substance of LOW-1, LOW-2, Summary, and Open-Questions findings preserved; the redaction event itself documented in the Summary section as additional evidence the rule works as designed. Post-redaction `gitleaks protect --staged --config .gitleaks.toml --redact --verbose` ran clean.
+- state/current.md updated: **YES** (in working tree; counters + last-verified-state). **Committed in this session** per operator's directive at commit time (overrode Inspector's earlier proposal to defer; rationale documented in INSP-001's procedural-note paragraph).
+- Next action: Builder picks up at MS-009 Section 2 close-out (state/current.md no longer needs to fold into that commit since this session committed it). Builder also files INC-007 at next session per Engineer's drafted body (Inspector cannot file INCIDENT entries per role scope; INC-007 deferred to Reaper for filing per role-scope constraint; Engineer-drafted body queued in the chat trail for this session's commit acknowledgment). Engineer reads INSP-001, drafts MS for HIGH-1 and the MEDIUM cluster (likely a single MS bundling SECURITY.md + dependabot.yml + the doctrine in-repo move + the validator self-check enhancement, ideally before Phase 1 first deploy).
+
+**Handover notes:**
+
+1. **state/current.md cross-role overlap — committed under Inspector commit per operator directive at commit time.** Inspector's original proposal (during this session, documented in this sign-out's earlier draft and in INSP-001's procedural note) was to leave `state/current.md` uncommitted because Builder's MS-009 Section 2 in-progress work also modified it (one-line MS-chain status update outside Inspector's authorised write area within `state/current.md`). Operator overrode at commit-message-time and directed Inspector to commit `state/current.md` (combined Inspector additions + Builder pending edits) under the Inspector commit. Builder's MS-009 Section 2 close-out commit therefore will not include `state/current.md`. Cross-role overlap pattern surfaced for Engineer's note (possible working-agreement-#17 candidate naming the resolution rule: "operator decides at commit time whether Inspector commit absorbs Builder's pending state/current.md edits or leaves them for Builder").
+
+2. **Pre-commit caught operator-personal-email rule violation in INSP-001 prose; resolved by paraphrase per operator approval.** First commit attempt of `forms/INSPECTION.md` + `forms/SITE_LOG.md` + `.cspell.json` was BLOCKED by the gitleaks `operator-personal-email` rule (.gitleaks.toml line 58) firing on four literal email mentions in INSPECTION.md (Summary section + LOW-1 evidence + LOW-2 evidence + Open Questions item 1). Inspector did not retry with `--no-verify` (banned). Inspector paused per the pause-at-blocker pattern, surfaced the catch + three resolution options in chat, operator approved option A (redact) + option C (file INC-007 per Procedure 8 / DEC-024 mandatory response sequence). All four occurrences redacted to descriptive paraphrase form ("operator's primary @gmail.com address from the auto-init commit's author metadata" / "operator's secondary @gmail.com address" / similar). Substance of all affected findings preserved; the redaction event itself is now additional evidence in LOW-1's body that the rule works as designed. Post-redaction `gitleaks protect --staged` ran clean. Five-step pre-commit chain (gitleaks → validator → Prettier → ESLint → cspell) PASS on the redacted staged set.
+
+3. **INC-007 deferred to Reaper for filing per role-scope constraint; Engineer-drafted body queued.** Inspector's authorised write set does not include `forms/INCIDENT.md`, so Inspector cannot file INC entries. Per operator's direction at commit time, Engineer will authorise Reaper to file INC-007 at next Reaper session with content Engineer has pre-drafted in this session's chat trail. The pre-commit catch+redact event is the INC-007 subject matter (the "something surprising" Procedure 7 covers); it is a positive incident — the discipline worked.
+
+4. **forms/SIGN_OFF.md not touched.** Read-only for Inspector per operator scope. Builder's pending Section 2 content remains intact in working tree.
+
+5. **Doctrine load resolved via chat-paste (RFI-011 option a, INSP-001 only).** Future Inspector sessions need fresh doctrine load — operator pastes again, or doctrine moves to repo as a follow-up MS post-MS-009 (per Engineer's lean documented in operator's INSP-001 approval message). MEDIUM-5 in INSP-001 names the structural fix.
+
+6. **All findings have specific recommendations.** Engineer is the next link in the chain — read INSP-001, decide which findings drive MSes, draft accordingly. Inspector did not commit fixes for any finding (per role).
+
+7. **Counter scheme expansion.** Adding `Latest INSP: INSP-001` to the Counters section is additive (5th line under the existing 4). The validator's check 7 only enumerates `MS / DEC / RFI / INC` and ignores the new INSP line — verified by post-edit validator PASS. If Engineer wants the validator to enforce INSP numbering similarly, that's a one-line addition to the `for kind in MS DEC RFI INC` loop in `scripts/validate.sh:157`. Not Inspector-scope.
+
+8. **Sign-in / sign-out template note.** Inspector role uses the same SITE_LOG templates as Builder/Engineer per Procedure 9. The role-list in the existing template ("Engineer / Builder / Operator") predates the Inspector role; Inspector signed in/out as `Role: Inspector` regardless. Engineer should consider updating the template's role list to include Inspector going forward — minor procedural drift item.
+
+9. **Pause-at-blocker pattern operated four times this session, three times correctly per operator's chat ack ("the pattern of Inspector pausing-at-blockers has been correct twice this session" updated to "four times" by operator at the post-redaction direction): working-folder path (path was wrong in operator's first draft), doctrine path (RFI-011 — operator-environment-only path), INSP dictionary addition (cspell would have blocked the commit), operator-personal-email rule (gitleaks blocked the first commit attempt). All four were resolved by surfacing options to operator rather than guessing. Worth preserving as a procedural posture for future Inspector sessions.**

@@ -43,6 +43,7 @@ Latest MS:  MS-009
 Latest DEC: DEC-033
 Latest RFI: RFI-010
 Latest INC: INC-006
+Latest INSP: INSP-001
 
 ## MS chain status
 
@@ -54,7 +55,7 @@ Latest INC: INC-006
 - MS-006: DONE (DONE-006, signed 2026-04-28).
 - MS-007: DONE (DONE-007, signed 2026-04-28; sign-off recorded in DONE-007 entry per DEC-032 magic-string at MS-008 sign-in — first real exercise).
 - MS-008: DONE (DONE-008, signed 2026-04-28; second exercise of DEC-032 magic-string mechanism applied at MS-009 sign-in).
-- MS-009: in progress (pre-Phase-1 deep check, 8 sections, section-by-section sign-off via `forms/SIGN_OFF.md`; Sections 0+1 work complete this session, awaiting chat sign-offs; Sections 2-8 future sessions).
+- MS-009: in progress (pre-Phase-1 deep check, 8 sections, section-by-section sign-off via `forms/SIGN_OFF.md`; Sections 0+1 signed off 2026-04-28 — third and fourth exercises of DEC-032 magic-string mechanism; Sections 2-8 pending).
 - [first Phase 1 MS]: pending; depends on MS-009.
 
 ## Open RFIs
@@ -73,6 +74,8 @@ Latest INC: INC-006
 - Optional: README self-hosting wording amendment (deferred to MS-003.5 or roll into Phase 1 prep).
 
 ## Last verified working state
+
+2026-04-28 (INSP-001, Inspector audit) — pre-Phase-1 readiness audit filed at `forms/INSPECTION.md` (new form, created with header by Inspector this session). Validator PASS at session start (HEAD `586d6d0`) and PASS at session end (post-INSPECTION.md creation; new form is invisible to validator's check 1-10 surface). gitleaks clean across 508 KB of working-tree content. Audit posture: 0 CRITICAL, 1 HIGH (`CONTRIBUTING.md` security-contact placeholder), 5 MEDIUM (hook activation opt-in, hook/validator tamper-detection, --no-verify bypass, npm supply-chain monitoring, doctrine in-repo placement), 5 LOW (.gitleaks.toml self-reference, two operator email identities in commit history, README phase-content staleness already on Section 3 list, no CI, playwright install). All findings include recommendations; Engineer drafts MSes for action. Recommended next inspection: INSP-002 post-Phase-1 product code. **Procedural deviation noted in INSP-001 itself:** Inspector wrote INSP-001 counter and this last-verified-state line to working tree but did not commit `state/current.md` (left for Builder to fold in at MS-009 Section 2 close-out, because Builder's MS-009 Section 2 in-progress edits to the MS chain status section made selective staging non-trivial without destructive operations Inspector wasn't authorised to use).
 
 2026-04-28 (MS-009 first session) — `forms/SIGN_OFF.md` created at repo root in `forms/` directory with 8-section scaffold (Section 0 + Sections 1-8); each entry has Status / Date filed / Date signed / Operator sign-off fields plus Checklist results / Findings / Notes subsections. `PROCEDURES.md` updated with one-paragraph note about SIGN_OFF.md (placement: post-Procedure-9, pre-Summary-table); procedure count stays at nine. **Section 0** (SIGN_OFF.md creation + PROCEDURES.md note) work complete, status `in progress`, awaiting operator chat sign-off. **Section 1** (spelling & grammar) work complete: cspell baseline + post-edit runs both PASS (18 files, 0 issues); 6 en-GB conversions applied across 4 files (`CONTEXT.md` ×2, `PROJECT.md` ×1, `prompts/engineer-session-start.md` ×2, `prompts/engineer-prompt-checklist.md` ×1) — all in the form `optimized → optimised`, `centralized → centralised`, `summarize → summarise`, `authorize → authorise`. Manual grammar pass found zero meaning-changing errors across the 8 in-scope prose-heavy files. Out-of-scope files (`forms/*`, `state/current.md`) still contain occasional US spellings in historical entries; deliberately left per Section 1 scope boundary. No new tooling. No validator changes. No new working agreements. Pre-commit hook chain unchanged (5 steps).
 
