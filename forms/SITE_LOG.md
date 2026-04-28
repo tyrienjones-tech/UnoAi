@@ -701,3 +701,61 @@ INF  no leaks found
 8. **Sign-in / sign-out template note.** Inspector role uses the same SITE_LOG templates as Builder/Engineer per Procedure 9. The role-list in the existing template ("Engineer / Builder / Operator") predates the Inspector role; Inspector signed in/out as `Role: Inspector` regardless. Engineer should consider updating the template's role list to include Inspector going forward — minor procedural drift item.
 
 9. **Pause-at-blocker pattern operated four times this session, three times correctly per operator's chat ack ("the pattern of Inspector pausing-at-blockers has been correct twice this session" updated to "four times" by operator at the post-redaction direction): working-folder path (path was wrong in operator's first draft), doctrine path (RFI-011 — operator-environment-only path), INSP dictionary addition (cspell would have blocked the commit), operator-personal-email rule (gitleaks blocked the first commit attempt). All four were resolved by surfacing options to operator rather than guessing. Worth preserving as a procedural posture for future Inspector sessions.**
+
+---
+
+### 2026-04-28 17:00 session start
+
+- Role: Builder
+- Session goal: Continue MS-009 from Section 3 (documentation accuracy).
+- Resuming from: SIGN_OFF.md Section 2 signed off in chat by operator (magic-string applied this sign-in per DEC-032 — fifth exercise of the mechanism, third on SIGN_OFF.md surface). Sections 0+1 magic-strings already applied per prior session sign-in (verified in working-tree diff against HEAD `c655dab` before re-applying). INSP-001 complete and committed at `c655dab`.
+- Context loaded: PROJECT.md, PROCEDURES.md, state/current.md, forms/SIGN_OFF.md, prior SITE_LOG entries (Builder MS-009 first session + Inspector INSP-001 session).
+- Open MSes: MS-009 (in progress; Section 3 unlocked this session).
+- Open RFIs awaiting me: none. RFI-009 (TLD) open, operator-blocked.
+- Pre-session validator run: **PASS** (verified at 2026-04-28 16:59 before this entry was filed; HEAD `c655dab`; validator at 289 lines).
+
+**Mechanical sign-in actions completed (per MS-009 Section-3-resumption prompt steps 2-5):**
+
+1. **DEC-032 third SIGN_OFF.md exercise — Section 2 sign-off line:** `forms/SIGN_OFF.md` Section 2 entry updated from `Status: in progress` / `Date signed: pending` / `Operator sign-off: pending` to `Status: signed off` / `Date signed: 2026-04-28` / `Operator sign-off: Section 2 signed off by operator on 2026-04-28.`. Sections 0+1 magic-strings and DONE-008 magic-string already applied per prior Builder sign-in (verified in working-tree diff against `c655dab` before re-applying — discipline #1 on the prior session's working-tree state).
+
+2. **Working agreements #17-#20 added to `state/current.md`** (verbatim from operator): #17 cross-environment-paths discipline, #18 explicit-approval discipline, #19 path-verification discipline, #20 new-agent-role first-session friction expectation. All four traceable to INSP-001 first-inspection lessons surfaced this week.
+
+3. **MS chain status section updated** for post-INSP-001 sequence: MS-009 line bumped to "Sections 0-2 signed off ... Sections 3-8 pending" with the fifth DEC-032 exercise noted; placeholder `[first Phase 1 MS]: pending; depends on MS-009.` line replaced with explicit chain — MS-010 (INSP-001 security cluster) → INSP-002 (verify MS-010 closed findings) → MS-011 (working-agreements consolidation) → first Phase 1 MS.
+
+4. **`Latest INC` counter** verified at INC-006; INC-007 to be filed during this session's Section 5 work per prompt step 13b (counter advances when filed).
+
+---
+
+### 2026-04-28 17:20 session end
+
+- Role: Builder
+- Outcome: **MS-009 Section 3** (documentation accuracy) work complete and awaiting operator chat sign-off; Section 3 SIGN_OFF.md entry filed `Status: in progress`. Section 2 sign-off magic-string applied at sign-in (DEC-032 fifth exercise, third on SIGN_OFF.md surface). Working agreements #17-#20 added to `state/current.md` verbatim. MS chain status updated for post-INSP-001 sequence (MS-010 / INSP-002 / MS-011 / first Phase 1 MS). **RFI-011** (validator check 10 design tightness) and **RFI-012** (banned moves divergence between PROJECT.md and state/current.md) filed. No DONE filed (DONE-009 only fires after Section 8 per MS-009 prompt).
+- Files touched:
+  - `Desktop/UnoAi/PROCEDURES.md` (italicised footnote inserted between Form line and Why line of Procedure 3, explaining DONE-001-onwards schema carve-out for the MS-001 close-out-DONE convention predate)
+  - `Desktop/UnoAi/README.md` (three edits: Status section line 85 updated to current-state phrasing; `.githooks/` parenthetical line 63 updated to include `cspell` as 5th hook step; file map lines 52-79 updated to add `.cspell.json`, `forms/SIGN_OFF.md`, `forms/INSPECTION.md` with tree connectors adjusted — `forms/INCIDENT.md` no longer last in `forms/`, `forms/INSPECTION.md` becomes new `└──`)
+  - `Desktop/UnoAi/forms/RFI.md` (RFI-011 + RFI-012 entries appended after `<!-- Append below this line. -->` anchor)
+  - `Desktop/UnoAi/forms/SIGN_OFF.md` (Section 2 sign-off magic-string applied at sign-in; Section 3 entry filled with full checklist results / findings / notes — `Status: in progress`)
+  - `Desktop/UnoAi/forms/SITE_LOG.md` (sign-in already filed at session start; this sign-out)
+  - `Desktop/UnoAi/state/current.md` (sign-in: working agreements #17-#20 added + MS chain status updated for post-INSP-001 sequence; sign-out: `Updated:` timestamp refreshed / `Active MS` line revised / `Latest RFI` counter RFI-010 → RFI-012 / MS chain MS-009 line refined to reflect Section 3 status / `Open RFIs` adds RFI-011 + RFI-012 / new dated paragraph at top of `Last verified working state`)
+  - `Desktop/UnoAi/.cspell.json` (operator-authorised at commit time, one-time write-surface expansion: `hase` and `rocedure` added to `words` array as cspell POSIX-character-class tokenization artefacts — bracket-class regex `[Pp]hase` and `[Pp]rocedure` inside backtick-wrapped inline code tokenize as `Pp` + partial-word and trigger false positives; same operational pattern as Inspector's `INSP` addition in INSP-001, no DEC per DEC-033 spirit)
+- Validator run at end: **PASS** (verified before commit; 289 lines unchanged, no validator code change in this section).
+- cspell run at end: pending — pre-commit hook will run cspell as step 5 of 5.
+- Format / Lint at end: pending — pre-commit hook will run Prettier as step 3 and ESLint as step 4. No staged code files in this section, so steps 3 and 4 short-circuit cleanly per the hook's `[ -n "$STAGED_FILES" ]` guard.
+- state/current.md updated: **YES**.
+- Next action: commit + push (5-step hook fires gitleaks → validator → Prettier → ESLint → cspell). Then hold for operator chat sign-off of Section 3 + the MS-009 Section 4 unlock signal. **Section 4 (state integrity) is future-session work**; this session deliberately ends at the Section 3 boundary per MS-009 prompt rules of engagement.
+
+**Handover notes:**
+
+1. **Two RFIs filed for Engineer's design call.** RFI-011 — validator check 10 is *working as designed* (phase-identifier match per MS-006 Scope G), but its narrow scope let MS-005 / MS-006 active-MS staleness escape into the Section 2 audit. Three options surfaced for Engineer to scope into MS-010 / MS-011: accept current scope; tighten to validate active-MS reference; replace with structured-field requirement. RFI-012 — `PROJECT.md` banned moves (9 entries) and `state/current.md` banned moves (5 + 1 not-in-PROJECT.md) don't match despite the state header's `(mirror of PROJECT.md, restated for session-start visibility)` claim; the lists were drafted at different times by different agents. Three options surfaced: true mirror; retitle as curated subset; delete state/current.md's section entirely. Engineer decides direction — Section 3 deliberately did NOT touch either banned-moves list.
+
+2. **RFI-011 chat-label collision noted (procedural footnote, not a numbering error).** The "RFI-011 (Inspector doctrine path)" raised in chat during INSP-001 was *not* filed in `forms/RFI.md` (per Inspector's session-end handover note 5: "scope was Inspector-environment-only, not project-state"). Per working agreement #5 (the file is canonical, no skip-numbering), RFI-011 in this section's filing is the first sequentially-filed RFI-011. The chat label collision is documented in the SIGN_OFF Section 3 Notes section.
+
+3. **Validator check 10 still PASS post-Section-3 edits.** README's `## Status` first non-empty line still extracts `Phase 0b complete` identifier, matching state's `Current: Phase 0b complete.`. Section 3's substantive change (active-MS tail updated from MS-005 to the MS-009 → MS-010 → INSP-002 → MS-011 chain) doesn't affect check 10's regex output. This is precisely the design-narrowness pattern that RFI-011 surfaces.
+
+4. **No DEC, INC, MS filed this section.** Two RFIs are the only forms-with-numbers filed; the rest are content edits to existing files (PROCEDURES.md footnote, README.md three updates, state/current.md sign-in + sign-out updates, SIGN_OFF.md Sections 2 + 3, SITE_LOG.md sign-in + sign-out, RFI.md two new entries).
+
+5. **Counter state at sign-out:** Latest MS = MS-009; Latest DEC = DEC-033; **Latest RFI = RFI-012** (advanced from RFI-010); Latest INC = INC-006; Latest INSP = INSP-001. INC-007 still deferred to Section 5 per the original prompt step 13b (counter advances when filed).
+
+6. **Section 3 was a single-section session per MS-009 prompt rules of engagement.** Sections 3+4 in one session was not authorised. Next session: operator chat sign-off of Section 3 → Section 4 (state integrity) unlocks → next Builder session begins Section 4. The prompt explicitly authorises multi-session resumption per Procedure 9.
+
+7. **Pause-at-blocker discipline operated cleanly.** No genuine ambiguities surfaced during Section 3 audit — the structural questions (validator check 10 design, banned-moves direction) were RFI'd rather than fixed unilaterally per working agreement #18 + the prompt's findings-discipline guidance. The four current-state staleness fixes were unambiguous (carry-forward findings explicitly approved in Section 3 prompt + the cspell parenthetical and file-map omissions being mechanical doc-currency work) and applied without RFI.

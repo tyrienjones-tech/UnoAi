@@ -60,7 +60,8 @@ unoai/
 ├── PLAN.md              ← phased build with acceptance criteria
 ├── PROCEDURES.md        ← the nine rules
 ├── .gitleaks.toml       ← secrets ruleset (per DEC-024)
-├── .githooks/           ← pre-commit hook (gitleaks + validator + Prettier + ESLint)
+├── .cspell.json         ← spell-check config (per DEC-033)
+├── .githooks/           ← pre-commit hook (gitleaks + validator + Prettier + ESLint + cspell)
 ├── prompts/
 │   ├── engineer-session-start.md     ← paste at fresh Engineer session start
 │   └── engineer-prompt-checklist.md  ← Engineer reads before writing prompts to Builder
@@ -75,11 +76,13 @@ unoai/
     ├── DECISION.md         ← log non-obvious choices
     ├── CHANGE_ORDER.md     ← when scope wants to expand
     ├── RFI.md              ← when you need an answer to proceed
-    └── INCIDENT.md         ← when something breaks
+    ├── INCIDENT.md         ← when something breaks
+    ├── SIGN_OFF.md         ← section-by-section sign-off for section-gated MSes
+    └── INSPECTION.md       ← independent audit (Inspector role) — security/privacy/risk findings
 ```
 
 ---
 
 ## Status
 
-Phase 0b complete. Infrastructure phase in progress (MS-005). Phase 1 begins after MS-006 DONE. See [`PLAN.md`](./PLAN.md).
+Phase 0b complete. Infrastructure phase in progress (MS-009). Phase 1 begins after MS-009 → MS-010 → INSP-002 → MS-011. See [`PLAN.md`](./PLAN.md).

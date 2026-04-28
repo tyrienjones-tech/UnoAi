@@ -66,6 +66,8 @@ A description of expected behaviour is **not proof**. "It works on my machine" i
 
 **Form:** `forms/DONE.md` (append-only, DONE-001 onwards)
 
+_Numbering note: the first real DONE entry is DONE-002. DONE-001 was never written — MS-001 predated the close-out-DONE convention (see `state/current.md` MS chain status: "MS-001: complete (operator pre-authorised; no DONE filed — predates the DONE-required convention)"). The "DONE-001 onwards" phrasing names the schema's starting point, not an existing entry; backfilling a retroactive DONE-001 would create a synthetic record._
+
 **Why:** LESSON-009 from the doctrine — agents produce confident, plausible, fabricated work whenever procedure doesn't catch it. Proof is the antidote. The two-party division prevents the failure mode of "Builder claimed DONE with no recording attached because the headless agent couldn't capture one."
 
 ---

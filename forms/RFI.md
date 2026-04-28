@@ -228,3 +228,64 @@ Fixtures stored at `/test/fixtures/destructive_prompts.json`. Test runner feeds 
 ## New entries
 
 <!-- Append below this line. -->
+
+### RFI-011 — Validator check 10 design: tighten beyond phase identifier?
+- Date: 2026-04-28
+- From: Builder (MS-009 Section 3 audit)
+- To: engineer
+- Phase: 0b — pre-Phase-1 deep check (MS-009 Section 3)
+- Blocking task: not blocking; surfaced for Engineer to scope into MS-010 or MS-011
+
+**Question:**
+Should validator check 10 (`scripts/validate.sh:243-277`) be tightened to validate more than the phase identifier, or accept the current narrow scope as designed?
+
+**Context:**
+Section 3 audit caught a current-state staleness in `README.md:85`: `Phase 0b complete. Infrastructure phase in progress (MS-005). Phase 1 begins after MS-006 DONE.` was committed during MS-005 / MS-006 era and survived through MS-007, MS-008, MS-009 first session, INSP-001, and MS-009 second-session sign-in. The MS-005 / MS-006 references are accurate as historical references but stale as current-state phrasing — current state is MS-009 in progress with MS-010 → INSP-002 → MS-011 ahead. Section 3 fixes the README content per Engineer's lean in this session's Section 3 approval.
+
+The check IS working as designed per its MS-006 Scope G specification: it extracts a `Phase X status` pattern (POSIX bracket-class regex at `scripts/validate.sh:253`, case-insensitive on the leading character, captured via awk's `match()` and lowercased before comparison) from each file's relevant line. Both the stale README and current state extract `Phase 0b complete` — they match. The `MS-005 / MS-006 DONE` tail isn't examined.
+
+So the check is not "too lax in implementation" (no substring laxness bug) — it's narrow by design. Whether that narrowness is the right design is the question.
+
+**Options visible:**
+- **A: Accept current scope** — check 10 was specced as a phase-identifier sync, not a full-status-line sync. README's `## Status` section is intended as user-facing prose, not a structured field; tightening risks over-coupling README prose to state file format. Section-3-style audits catch staleness manually; the validator's job is structural integrity, not editorial freshness.
+- **B: Tighten to also validate active-MS reference** — extract the `MS-NNN` reference from README's `## Status` first sentence and compare against `state/current.md`'s `## Active MS` first `MS-NNN` reference. Catches the specific class of staleness that escaped this time. Cost: one more parse pass per pre-commit; one more failure mode for prose drift to trip.
+- **C: Replace with a structured-field requirement** — require README to carry an explicit machine-parseable status marker (e.g. an HTML comment) that the validator parses, decoupling from prose. Most strict; biggest documentation surface change.
+
+**Engineer's lean (if any):**
+None — Section 3 surfaces the design question; Engineer decides scope.
+
+**Operator decision:** pending
+**Answer:**
+[Engineer scopes into MS-010 (security cluster) or MS-011 (working agreements consolidation), or files a new MS for documentation-currency tooling, or rejects the tightening per Option A.]
+
+---
+
+### RFI-012 — Banned moves: PROJECT.md and state/current.md don't match
+- Date: 2026-04-28
+- From: Builder (MS-009 Section 3 audit)
+- To: engineer
+- Phase: 0b — pre-Phase-1 deep check (MS-009 Section 3)
+- Blocking task: not blocking; surfaced for Engineer to scope into MS-010 or MS-011
+
+**Question:**
+Which direction should Engineer reconcile the banned-moves divergence between `PROJECT.md` and `state/current.md`?
+
+**Context:**
+Section 3 audit comparing `PROJECT.md:102-114` ("Banned moves" — 9 entries) against `state/current.md:120-126` ("Banned moves (mirror of PROJECT.md, restated for session-start visibility)" — 5 entries plus 1 not-in-PROJECT.md):
+
+- PROJECT.md banned moves (9 items): MS discipline; DONE proof; top-level dependency without DEC; CHANGE_ORDER for scope; user-conversation server storage; minor-targeting marketing; LLM-via-our-proxy; persona promises/love/substitution; sensitive-content commits.
+- state/current.md banned moves (5 + 1): code changes without MS; silent fixes outside scope; commits with secrets; **Co-Authored-By Claude footers on commits** (NOT IN PROJECT.md); persona promises/love/substitution.
+
+state/current.md's `(mirror of PROJECT.md, restated for session-start visibility)` header is inaccurate — the lists are not equivalent. They were drafted at different times by different agents: PROJECT.md banned moves landed at MS-001 / MS-002 era; state/current.md banned moves landed in MS-004 session-lifecycle setup as a session-start checklist.
+
+**Options visible:**
+- **A: Make state/current.md a true mirror** — copy PROJECT.md banned moves verbatim into state/current.md. Decide what to do with `Co-Authored-By Claude footers on commits`: either add it to PROJECT.md as a 10th banned move (if it's a project-level rule), or move it elsewhere in state/current.md (e.g. a "Builder commit discipline" subsection — if it's a Builder-only operational rule).
+- **B: Retitle state/current.md's section as a curated subset** — change the header from `(mirror of PROJECT.md, restated for session-start visibility)` to `(project-relevant subset for session-start visibility)` or similar. Acknowledges that state/current.md is a quick-reference, not a literal mirror. Add the missing `Co-Authored-By Claude footers` item to PROJECT.md if it should be project-level.
+- **C: Delete state/current.md's banned-moves section entirely** — let PROJECT.md be canonical; state/current.md links to PROJECT.md instead. Cleanest but reduces session-start visibility (Builder sees the full list only by reading PROJECT.md, which is already required reading per Procedure 1).
+
+**Engineer's lean (if any):**
+None — Section 3 surfaces the question; Engineer decides direction.
+
+**Operator decision:** pending
+**Answer:**
+[Engineer scopes into MS-010 / MS-011 or addresses inline at section close-out.]
