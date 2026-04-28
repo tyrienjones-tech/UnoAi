@@ -197,10 +197,10 @@ Operator sign-off: Section 3 signed off by operator on 2026-04-28.
 
 ## MS-009 Section 4 — State integrity
 
-Status: in progress
+Status: signed off
 Date filed: 2026-04-28
-Date signed: pending
-Operator sign-off: pending
+Date signed: 2026-04-28
+Operator sign-off: Section 4 signed off by operator on 2026-04-28.
 
 ### Checklist results
 
@@ -257,24 +257,85 @@ Resolution applied per Engineer's direction (resolved via INSP-002 MEDIUM-7 and 
 
 ---
 
-## MS-009 Section 5 — Form integrity + retroactive DONE sign-off
+## MS-009 Section 5 — Form integrity + retroactive DONE sign-off + 11th validator check
 
-Status: pending
-Date filed: pending
+Status: in progress
+Date filed: 2026-04-29
 Date signed: pending
 Operator sign-off: pending
 
 ### Checklist results
 
-(to be filled at Section 5 work)
+**Sub-scope 5A — Per-form integrity audits:**
+
+- [x] **6a `forms/DECISION.md` (DEC-001..033).** Sequential numbering clean (validator check 1 PASS). Each entry carries Date / Decided by / Decision / Reason / Reversibility / Affects fields per template. Supersede chains resolve cleanly: DEC-014 supersedes DEC-003 ✓; DEC-015 supersedes DEC-004 ✓; DEC-009 supersedes DEC-005 ✓; DEC-007 supersedes earlier informal HMAC reference (prose form, no orphan); DEC-008 supersedes RFI-004 lean (prose form). Validator check 6 PASS confirms every `Supersedes:` line points to an existing prior DEC. DEC-013 Tailwind v4 sign-off line **NOT** added per scope guard (INSP-002 LOW-5 routing → MS-010); DEC-013 still carries `**Operator confirmation needed at MS-003 close**` from MS-003. Documented as deferred, not new finding. DEC-003 + DEC-004 retain `Status: pending operator confirmation` because both are append-only historical text — they are *superseded* by DEC-014 / DEC-015 respectively (resolved via Supersedes chain), not retroactively rewritten.
+- [x] **6b `forms/RFI.md` (RFI-001..014).** Sequential numbering clean (validator check 2 PASS). Each entry has clear status: ANSWERED with closure citation OR pending. Open RFIs verify as the expected four — RFI-009 (TLD, pending operator), RFI-011 (validator check 10 design tightness, pending Engineer scoping), RFI-013 (Pages → Workers timing, pending operator), RFI-014 (email delivery mechanism, pending operator). RFI-012 properly carries `Operator decision: ANSWERED 2026-04-28 via MS-009 Section 4 + INSP-002 MEDIUM-7` per Section 4 closure. ANSWERED RFIs cite the closing DEC (RFI-001→DEC-014, RFI-002→DEC-015, RFI-005→DEC-016, RFI-006→DEC-021, RFI-007→DEC-019, RFI-008→DEC-018, RFI-010→DEC-032) or MS (RFI-012→MS-009 Section 4).
+- [x] **6c `forms/INCIDENT.md` (INC-001..009).** Sequential numbering clean (validator check 3 PASS). Each entry carries root cause / resolution / lesson sections (INC-007/008/009 use `### Root cause` / `### Resolution` / `### Lesson` H3 sub-headings; INC-001..006 use `**Root cause:** ... **Action taken:** ... **Lessons:** ...` bold-prefix style — both are valid INCIDENT.md conventions established by existing entries). All historical incidents resolved. INC-007/008/009 (filed in INSP-002 session) verify as properly structured — body content matches Engineer-supplied verbatim text, H3 heading-marker convention applied per INC-009's resolution.
+- [x] **6d `forms/METHOD_STATEMENT.md` (MS-001..009).** Sequential numbering clean (validator check 4 PASS). MS-001 through MS-008 each have a corresponding DONE entry (DONE-002 through DONE-008; MS-001 carve-out documented in `PROCEDURES.md:67` footnote per Section 3.1). MS-009 in progress (no DONE-009 yet — correct). One finding flagged on field population: see Finding 1 below.
+- [x] **6e `forms/DONE.md` (DONE-002..008).** Sequential numbering clean (validator check 4-equivalent — DONE.md isn't directly numbered-checked but check 9's done_mses parser inventories cleanly). DONE-001 absent by design (MS-001 predates the DONE convention; carve-out per `PROCEDURES.md:67` footnote — not a numbering gap). DONE-002..008 each carry Acceptance criteria + Builder-produced proof. Operator-captured proof present for DONE-003..008 (UI / scaffold / commit-state work); absent for DONE-002 by design (template comment "where applicable to the phase" + DONE-002 sign-off-notes line documents "Likely no visual proof needed per MS-002 (doc work only)"). Sign-off field present for each DONE; **all seven now populated** post Sub-scope 5B (DONE-002..006 magic-strings applied this session; DONE-007 + DONE-008 already populated from MS-008 / MS-009 session sign-ins).
+- [x] **6f `forms/SITE_LOG.md` sign-in / sign-out pairing.** Validator check 8 (session lifecycle) PASS — exactly one open session (this Section 5 session's sign-in) without matching sign-out. Chronological order preserved. No orphaned sign-ins from prior sessions (each prior sign-in has a matching sign-out from the same date).
+- [x] **6g `forms/CHANGE_ORDER.md`.** Entries section is empty (line 86 onwards is just the `<!-- Append below this line. -->` comment); no real CO entries filed yet. Template at line 12 uses `CO-NNN`; example at line 53 uses `CO-002`. The template/example CO-002 numbering gap (CO-002 in example without CO-001 in template/entries) is documented in INSP-002 LOW-1 → MS-010 routing. Documented as deferred, not new finding.
+- [x] **6h `forms/SIGN_OFF.md`.** Sections 0-4 marked signed off (Section 4 magic-string applied at this session's sign-in per DEC-032 seventh exercise). Section 5 (this entry) `Status: in progress` with all sub-scope 5A/5B/5C work documented. Sections 6-8 still scaffolded `Status: pending`.
+- [x] **6i `forms/INSPECTION.md`.** INSP-001 (filed at c655dab) and INSP-002 (filed at bb88533) both present and structured per template (Date / Inspector / Scope / Repo state / Files reviewed / Methodology / Summary / Findings by severity / Open questions / Recommended next inspection / Cross-references). INSP cross-references inside INSP-002 resolve to existing entries (INSP-001 ✓, INC-008 ✓, RFI-012 ✓, RFI-013 ✓, RFI-014 ✓). The INSP-002 Cross-references block does NOT name INC-007 (pre-existing-deferred) or INC-009 (surfaced after INSP-002 was drafted) — documented in MS-009 Section 4 SITE_LOG handover note 6 per the verbatim-preservation rule (Builder did not retroactively edit INSP-002's Cross-references). The INSP-002 Cross-references RFI-012 entry says `(banned moves divergence, open) — resolution routed to MS-010 per MEDIUM-7`; this is now stale because RFI-012 was actually resolved in Section 4 itself (not routed to MS-010). Same verbatim-preservation rule applies; logged here as a known property of the append-only convention rather than as a new finding.
+
+**Sub-scope 5B — Retroactive DONE sign-off cleanup (FIRST application of DEC-032 to historical entries):**
+
+- [x] DONE-002 `Operator sign-off:` field updated `pending.` → `DONE-002 signed off by operator on 2026-04-27.` (verbatim per Engineer-supplied magic-string).
+- [x] DONE-003 `Operator sign-off:` field updated `pending.` → `DONE-003 signed off by operator on 2026-04-27.` (verbatim per Engineer-supplied magic-string).
+- [x] DONE-004 `Operator sign-off:` field updated `pending.` → `DONE-004 signed off by operator on 2026-04-28.` (verbatim per Engineer-supplied magic-string).
+- [x] DONE-005 `Operator sign-off:` field updated `pending.` → `DONE-005 signed off by operator on 2026-04-28.` (verbatim per Engineer-supplied magic-string).
+- [x] DONE-006 `Operator sign-off:` field updated `pending.` → `DONE-006 signed off by operator on 2026-04-28.` (verbatim per Engineer-supplied magic-string).
+- [x] All five strings applied verbatim per working agreement #11 (Engineer-supplied content goes in unchanged). Dates reflect operator's actual chat sign-off timing for each DONE entry. Note: DONE-002's commit lineage differs from DONE-003..006 — MS-002 was documentation-only and landed inside the MS-003 migration commit (`0cf45cd`) rather than its own close-out commit. The close-out-commit pattern became standard from MS-003 onward. DONE-002 was operator-signed in chat at the time; the retroactive sign-off applies anyway. This is the **first application of DEC-032 to historical entries** (prior DEC-032 exercises were forward-looking from DONE-007 onwards starting at MS-008 sign-in).
+
+**Sub-scope 5C — 11th validator check shipped + synthetic-tested:**
+
+- [x] **Check 11 implementation in `scripts/validate.sh`:** parses `forms/DONE.md` for each DONE entry's `Method statement: MS-NNN` and `Operator sign-off:` lines, builds the set of MSes whose DONE has a non-pending sign-off (sign-off considered "signed" if its trimmed value does NOT match `[Pp]ending\.?\s*` — i.e. anything other than `pending` / `pending.` is treated as a magic-string per DEC-032). Then walks the same `Depends on: MS-NNN` lines that check 9 walks, FAILing with a specific message naming the source MS and the unsigned dependency. Skips targets that check 9 already failed on (DONE missing) to avoid double-fail noise. Implementation lives between check 10 and the Output block.
+- [x] **README "10 checks" reference scan:** `README.md` carries no current-state numeric check count to update (only `scripts/validate.sh` path reference at file-map line 69). `GLOSSARY.md:161` `**validator**` definition was the only current-state mention of "10 checks" / "11th deferred"; updated to "11 checks" with DEC-032 enforcement called out and the MS-009 Section 5 ship-event noted. Historical-record references in `forms/DONE.md`, `forms/METHOD_STATEMENT.md`, `forms/SIGN_OFF.md` (Section 3 entry), `forms/SITE_LOG.md` (prior session entries), and `forms/DECISION.md` DEC-026 left untouched per append-only convention.
+- [x] **Validator header comment block updated:** lines 7-37 of `scripts/validate.sh` rewritten — opening line now says `(eleven — see DEC-026 + INC-006 + MS-005 Scope A + MS-006 Scope G + MS-009 Section 5)`; check 9 description revised so its trailing sentence reads "check 11 below tightens this to DONE-signed" instead of the prior "deferred to MS-007"; new check 11 description added after check 10; the standalone `Deferred check 11` block at lines 27-37 removed (replaced by the new check 11 entry in the numbered list).
+- [x] **Synthetic test (working agreement #8 mandatory before shipping tooling):**
+  - **Pre-toggle baseline:** `bash scripts/validate.sh` → `VALIDATOR: PASS`, exit 0.
+  - **Synthetic violation injected:** DONE-008 `Operator sign-off:` field temporarily reverted from `DONE-008 signed off by operator on 2026-04-28.` to `pending`.
+  - **Post-toggle:** `bash scripts/validate.sh` → `VALIDATOR: FAIL`, exit 1, with the specific message `DONE sign-off: MS-009 cannot proceed — depends on MS-008 whose DONE entry has 'Operator sign-off: pending' (not signed). DEC-032 magic-string must be applied at next session sign-in.` Confirms the check fires, names both the source MS (MS-009) and the unsigned dependency (MS-008), and references the resolution path (DEC-032 magic-string at next sign-in).
+  - **Revert:** DONE-008 `Operator sign-off:` field restored to `DONE-008 signed off by operator on 2026-04-28.`
+  - **Post-revert:** `bash scripts/validate.sh` → `VALIDATOR: PASS`, exit 0. Clean state confirmed.
+- [x] **Validator size after addition:** `wc -l scripts/validate.sh` reports 324 lines (was 289 lines pre-Section-5; net +35 lines). Per working agreement #10 (validator size budget retired in favour of per-check complexity calibration; the budget is wrong, not the script): the +35 lines decompose as ~13 lines of header comment block update (rewriting the `(ten — ...)` line, adding check 11 description, removing the deferred-check-11 block) + ~22 lines of new implementation code (signed_mses awk parser ~16 lines + while-loop walk ~6 lines). No size cap exceeded; no compression pressure.
 
 ### Findings
 
-(to be filled at Section 5 work)
+**Finding 1 — MS template + MS-001..MS-004 lack explicit `**Depends on:** / **Blocks:**` field lines** (routing: MS-010 / MS-011 territory; documented here as audit-not-fix per scope guards).
+
+INC-006 (MS-004 H2d shortfall) claims H2a, H2b, H2c shipped while H2d (validator chain check) did not, with H2d folded into MS-005. Specifically, INC-006 asserts H2b shipped — "MS template 'Depends on / Blocks' fields" — and H2c shipped — "retroactive lines on MS-001/002/003".
+
+Section 5 audit verifies neither claim is reflected in the current file:
+
+- **Template** (`forms/METHOD_STATEMENT.md:7-39`) does not contain `Depends on:` or `Blocks:` field placeholders; the template's bullet list ends at `Linked RFIs / decisions:` and proceeds straight into `Plan (numbered, terse):`.
+- **Example** (`forms/METHOD_STATEMENT.md:43-78`) likewise has no `Depends on:` / `Blocks:` lines.
+- **MS-001..MS-004 entries** carry no `^- \*\*Depends on:\*\*` lines (verified via Grep across all entries; only MS-005 line 510, MS-006 line 655, MS-007 line 843, MS-008 line 988, MS-009 line 1162 have explicit `Depends on:` field lines). No MS entry uses `Blocks:` at all.
+
+This means validator's check 9 (chain check) and the new check 11 (sign-off enforcement) only validate the MS-005-onwards portion of the chain. MS-001..MS-004 are invisible to both checks — accidental clean state today because all four are DONE and signed, but a chain check that doesn't validate the start of the chain has reduced coverage.
+
+Routing options for Engineer to scope:
+- **MS-010 territory** — alongside other validator hardening (RFI-011 check-10 design tightness, INSP-001 MEDIUM-3 hook tamper-detection).
+- **MS-011 territory** — as a procedural-discipline finding alongside the working-agreements consolidation work and the Engineer "verify before asserting" pattern (#21-#24 candidates from INSP-002 session).
+
+This finding is **audit-not-fix per scope guards**: per the operator-validated rule on MS-009-style audits, when audit catches divergence already routed to a future MS family, document as finding only; do not reconcile in-section. The MS template + retroactive MS-001..MS-004 backfill belongs in the same MS-010-or-MS-011 batch as the rest of the validator hardening work; not in Section 5.
+
+**Finding 2 — Documented-as-deferred items confirmed in current state (no new findings; explicit re-listing for sign-off audit-trail completeness):**
+- DEC-013 Tailwind v4 sign-off line — still carries `**Operator confirmation needed at MS-003 close**` text; INSP-002 LOW-5 routes to MS-010.
+- CO-001 numbering gap — `forms/CHANGE_ORDER.md` template at line 12 uses `CO-NNN` placeholder, example at line 53 uses `CO-002`; no real CO-NNN entries; INSP-002 LOW-1 routes to MS-010.
+- INSP-002 Cross-references block stale on RFI-012 (calls it "open" / "routed to MS-010" when it was actually closed in Section 4) — append-only verbatim convention preserves the as-drafted text.
+- INSP-002 Cross-references block missing INC-007 + INC-009 — same append-only verbatim preservation rule (operator's Section 4 SITE_LOG handover note 6 documented this).
+- RFI-011 (validator check 10 design tightness) — pending Engineer scoping into MS-010 / MS-011 per Section 3 finding.
+- DONE-002 has no Operator-captured proof header — by design (documentation-only MS); template phrase "where applicable to the phase" supports this; sign-off-notes line documents "Likely no visual proof needed per MS-002 (doc work only)." Not a finding, listed for completeness.
 
 ### Notes
 
-(to be filled at Section 5 work — includes retroactive sign-off application for DONE-002..006 per operator-supplied magic-strings, plus 11th validator check ship + synthetic test)
+- **Order of execution non-negotiable:** 5A → 5B → 5C ran in that order. Sub-scope 5C's check 11 would have FAILed on the very entries it's designed to validate (DONE-002..006) if it had shipped before Sub-scope 5B retroactive cleanup. Working agreement #8 (synthetic tests before shipping tooling) requires the check pass on clean state before going live; Sub-scope 5B getting the state clean before 5C ships the check is the order this constraint imposes.
+- **DEC-032 first application to historical entries.** All prior DEC-032 exercises (DONE-007 at MS-008 sign-in, DONE-008 at MS-009 sign-in, then SIGN_OFF.md Sections 0-4 across MS-009 sign-ins #2-#5) were forward-looking — magic-strings copied from chat into entries as they were freshly signed. Sub-scope 5B retroactively applies the mechanism to DONE entries operator-signed in chat months earlier (per the dates: DONE-002 + DONE-003 on 2026-04-27; DONE-004 + DONE-005 + DONE-006 on 2026-04-28). The DEC-032 entry's `Affects` line foresaw this — "Existing DONE-002 through DONE-006 to be cleaned up retroactively at MS-008 (Section 5 — form integrity audit)" — though the actual cleanup landed at MS-009 Section 5 rather than MS-008 because MS-008 ended up scoped to glossary + cspell tooling instead of form integrity. The MS-008 deferred-check-11 header comment in `scripts/validate.sh` lines 27-37 was the inherited deferral from that re-scoping; it's now removed in favour of check 11's actual implementation.
+- **Working agreement #8 produced durable evidence.** The synthetic test outputs documented above (PASS → FAIL with specific message → PASS) are the exact pattern the working agreement was written to produce: the validator's behaviour on a known-bad input is captured in the SIGN_OFF entry as the proof artefact, so future Engineer verification doesn't require re-toggling the field. Same precedent established at MS-005 (chain-check synthetic test for both target-missing and target-undone branches) and MS-006 (README ↔ state-sync synthetic test).
+- **Validator size posture stable.** 324 lines (11 checks). Per working agreement #10 the budget retiring decision from MS-005 onwards continues — caps are calibrated against per-check complexity, not against fixed line counts. Check 11's +35 lines is in line with check 10's pre-shipped budget (40 lines for the 10th check per `state/current.md` MS-006 history line 97). No compression pressure surfaced this section.
+- **No new numbered entries (DEC / RFI / INC / MS) filed this section.** The only file-with-numbered-entries change is the SIGN_OFF Section 5 entry itself (which is not subject to validator numbering checks per `forms/SIGN_OFF.md` header). All other file changes are field updates inside existing entries (DONE-002..006 sign-off fields, GLOSSARY.md validator definition, scripts/validate.sh check 11 implementation + header comment block, state/current.md MS chain + Active MS + Updated timestamp + Last verified working state, forms/SIGN_OFF.md Section 4 magic-string + Section 5 entry).
+- **Section 5 sign-off in chat unlocks Section 6 (tooling end-to-end).** Per the MS-009 prompt scaffold, Section 6 is the cold-clone test at `/tmp/unoai-cold-clone` plus all five hook synthetic tests plus cleanup. Next Builder session begins Section 6 in a fresh session.
 
 ---
 

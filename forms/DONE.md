@@ -162,7 +162,7 @@ RFI-009+ orphans   → 0
 
 **Linked incidents:** INC-003 (engineer pattern: DECs referencing absent RFIs, including DEC-018/019 → RFI-007/008 from this MS), INC-004 (sweep-miss: two stale $39 references caught in cross-reference sweep).
 
-**Operator sign-off:** pending.
+**Operator sign-off:** DONE-002 signed off by operator on 2026-04-27.
 **Sign-off notes:**
 [Operator fills. Likely no visual proof needed per MS-002 (doc work only). Any caveats / follow-ups go here.]
 
@@ -310,7 +310,7 @@ DEC-013 now contains the engineer-pre-fill-vs-scaffold-actuals comparison table,
 
 **Linked RFIs:** RFI-003 (closed via DEC-023), RFI-009 (newly filed, OPEN).
 
-**Operator sign-off:** pending.
+**Operator sign-off:** DONE-003 signed off by operator on 2026-04-27.
 **Sign-off notes:**
 [Operator fills. Visit GitHub repo + commit URL to confirm visible state. Caveats or post-DONE-003 follow-ups go here, including the `Chat2U/` rollback-folder retention call.]
 
@@ -493,7 +493,7 @@ Both bugs are documented in DEC-026 reproduction notes and in `scripts/validate.
 
 **Linked RFIs:** none from this MS. RFI-009 (TLD) remains OPEN; RFI-003 closed in MS-003.
 
-**Operator sign-off:** pending.
+**Operator sign-off:** DONE-004 signed off by operator on 2026-04-28.
 **Sign-off notes:**
 [Operator fills. Run `bash scripts/validate.sh` once locally and confirm PASS. Decide: (a) accept the 192-line validator as-is, or (b) ask Builder to compress to ~165 lines by trimming header comments. Optional: confirm whether the README `## Self-hosting` → `Self-hosting` heading-marker change in bf2d661 was intentional.]
 
@@ -642,7 +642,7 @@ EXIT: 0
 
 3. **Validator size at 237 lines.** Per operator's mid-session RFI resolution + working agreements #7 and #10, this is the new baseline. MS-006 may include a refactor pass that compresses without losing correctness; for now, ships as-is.
 
-**Operator sign-off:** pending.
+**Operator sign-off:** DONE-005 signed off by operator on 2026-04-28.
 **Sign-off notes:**
 [Operator fills. Run `bash scripts/validate.sh` once locally and confirm PASS. Confirm working-agreement #10 renumber, INC-006 H2 labeling note, and validator size posture. Caveats or follow-ups go here.]
 
@@ -826,7 +826,7 @@ VALIDATOR: PASS
 
 3. **One accidental local commit** (`7d4b513`) landed during ESLint F4 testing because the rule severity was `'warn'` not `'error'`. Reset via `git reset HEAD~1` (mixed) before any push. Not in remote history.
 
-**Operator sign-off:** pending.
+**Operator sign-off:** DONE-006 signed off by operator on 2026-04-28.
 **Sign-off notes:**
 [Operator fills. Run `bash scripts/validate.sh`, `npm run lint`, `npm run format:check`; confirm all pass. Confirm validator size posture (277 lines). Caveats / follow-ups go here.]
 

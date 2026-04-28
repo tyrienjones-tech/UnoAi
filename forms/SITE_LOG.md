@@ -902,3 +902,77 @@ INF  no leaks found
 8. **Pause-at-blocker discipline operated zero times this section.** All Section 4 work fit within the explicit step instructions (steps 4-7) or the documented Engineer's-direction-confirmed resolution (step 5b/c on RFI-012). Working agreement #18 (explicit-approval-per-step) had no triggering moments this session — the Section 4 prompt itself encoded the approval for the RFI-012 resolution direction. Quiet single-session.
 
 9. **Push posture per operator's standing preference.** Reaper will push immediately after commit per the Section 4 prompt's step 12 — "recent precedent has been push immediately for sections that don't need review-before-push." Section 4 is audit + a contained structural change (banned-moves mirror sync) with the resolution direction pre-confirmed by the prompt; no review-before-push gate applies.
+
+---
+
+### 2026-04-29 00:08 session start
+
+- Role: Builder
+- Session goal: Continue MS-009 from Section 5 (form integrity + retroactive DONE sign-offs + 11th validator check).
+- Resuming from: Section 4 chat sign-off (applied this sign-in); Section 4 work landed at `cfc6071` (committed and pushed). MS-009 Sections 0-4 signed off; Sections 5-8 pending.
+- Context loaded: PROJECT.md, PROCEDURES.md, state/current.md, forms/SIGN_OFF.md (Section 5 scaffold + carry-forward Sections 0-4), scripts/validate.sh (289 lines, 10 checks + deferred 11th documented in header lines 27-37), prior SITE_LOG entries (Section 4 sign-in/out).
+- Open MSes: MS-009 (in progress; Section 5 unlocked this session).
+- Open RFIs awaiting me: none. RFI-009 (TLD), RFI-011 (validator check 10), RFI-013 (Pages → Workers timing), RFI-014 (email delivery mechanism) all open and pending operator / Engineer.
+- Pre-session validator run: pending (will run after sign-in mechanical actions per Section 5 prompt step 5).
+
+**Mechanical sign-in actions (per Section 5 prompt steps 1-5):**
+
+1. **Push state verified:** `git ls-remote origin refs/heads/main` returns `cfc607117991b73f305ecb609f8358149e6f8274`, matching local main HEAD. No mismatch; no RFI needed.
+
+2. **DEC-032 magic-string for Section 4** to be applied at this sign-in (seventh DEC-032 exercise overall, fifth on SIGN_OFF.md surface): `Section 4 signed off by operator on 2026-04-28.` Updates SIGN_OFF.md Section 4 entry from `Status: in progress` / `Date signed: pending` / `Operator sign-off: pending` to `Status: signed off` / `Date signed: 2026-04-28` / `Operator sign-off: Section 4 signed off by operator on 2026-04-28.`
+
+3. **state/current.md MS chain section** updated: MS-009 line bumps from "Sections 0-3 signed off" to "Sections 0-4 signed off"; `Active MS` line revised to reflect Section 4 signed off, Section 5 in progress.
+
+4. **Counters carried over:** Latest MS = MS-009; Latest DEC = DEC-033; Latest RFI = RFI-014; Latest INC = INC-009; Latest INSP = INSP-002. No new numbered entries expected this session unless audit surfaces something outside scope warranting an RFI.
+
+**Session goal sequence:**
+
+1. Sign-in mechanical actions (push verify, Section 4 magic-string applied, state/current.md MS chain bump, validator PASS).
+2. Sub-scope 5A — per-form integrity audits across DECISION.md, RFI.md, INCIDENT.md, METHOD_STATEMENT.md, DONE.md, SITE_LOG.md, CHANGE_ORDER.md, SIGN_OFF.md, INSPECTION.md. Document findings; documented-as-deferred items (DEC-013 sign-off line, CO-001 numbering) noted as deferred not new findings.
+3. Sub-scope 5B — apply five operator-supplied verbatim magic-strings to DONE-002..006 `Operator sign-off:` fields (DEC-032 first historical-entry application).
+4. Sub-scope 5C — implement validator check 11 (DONE sign-off enforcement); synthetic test by toggling DONE-008's signed field to `pending`, confirming check 11 FAILs with specific message, reverting and confirming full PASS; update README "ten checks" reference if present; update validator header from "ten" to "eleven."
+5. File SIGN_OFF.md Section 5 entry with checklist results across 5A/5B/5C, findings, and Notes; `Status: in progress`.
+6. Run validator at end of session — confirm PASS (including the new 11th check).
+7. Sign-out entry; refresh `state/current.md` `Updated:` timestamp + new dated paragraph in `Last verified working state`.
+8. Single commit: `MS-009 Section 5: form integrity + retroactive DONE sign-offs + 11th validator check`.
+9. Push immediately per Section 5 prompt step 20 — Section 5 is mechanical work; push posture matches Section 4.
+
+---
+
+### 2026-04-29 00:29 session end
+
+- Role: Builder
+- Outcome: **MS-009 Section 5 (form integrity + retroactive DONE sign-offs + 11th validator check)** work complete; SIGN_OFF.md Section 5 entry filed `Status: in progress` awaiting operator chat sign-off. **Sub-scope 5A audit clean** across all nine forms (one audit-not-fix finding flagged for MS-010/MS-011 routing: MS template + MS-001..MS-004 entries lack explicit `**Depends on:** / **Blocks:**` field lines despite INC-006 H2b/H2c claims). **Sub-scope 5B retroactive cleanup applied:** five operator-supplied verbatim DEC-032 magic-strings appended to DONE-002..006 `Operator sign-off:` fields (first historical-entry application of DEC-032; DONE-002 + DONE-003 dated 2026-04-27, DONE-004 + DONE-005 + DONE-006 dated 2026-04-28). **Sub-scope 5C validator check 11 shipped + synthetic-tested:** `scripts/validate.sh` 289 → 324 lines (10 → 11 checks); synthetic test cycle PASS → FAIL (specific message naming MS-009 → MS-008) → PASS confirms the check fires correctly and clears on revert. `GLOSSARY.md` `**validator**` definition updated from "10 checks ... 11th deferred" to "11 checks ... DEC-032 enforcement"; no other current-state numeric check-count references. No DONE filed (DONE-009 only fires after Section 8 per MS-009 prompt). No new numbered entries (DEC / RFI / INC / MS) filed this section.
+- Files touched:
+  - `Desktop/UnoAi/forms/DONE.md` (DONE-002..006 `Operator sign-off:` fields each updated from `pending.` to operator-supplied verbatim magic-string per Sub-scope 5B; DONE-007 + DONE-008 unchanged from prior sessions)
+  - `Desktop/UnoAi/scripts/validate.sh` (header comment block: opening line "ten" → "eleven" with MS-009 Section 5 added to the citation list; check 9 description's trailing sentence revised; standalone "Deferred check 11" block at lines 27-37 removed in favour of new check 11 entry in the numbered list. New check 11 implementation block added after check 10 / before Output: signed_mses awk parser building the set of MSes whose DONE has non-pending sign-off, while-loop walking the same Depends on lines as check 9, FAIL message naming source MS + unsigned dependency + DEC-032 resolution path. Net +35 lines: 289 → 324)
+  - `Desktop/UnoAi/GLOSSARY.md` (`**validator**` definition at line 161 updated for 11 checks + DEC-032 enforcement + MS-009 Section 5 ship-event)
+  - `Desktop/UnoAi/forms/SIGN_OFF.md` (Section 4 entry: `Status` / `Date signed` / `Operator sign-off` fields updated to signed-off state at sign-in per DEC-032 seventh exercise; Section 5 entry filled with `Status: in progress` / `Date filed: 2026-04-29` / 5A nine-checklist + 5B six-checklist + 5C five-checklist sub-blocks / 2 findings / 5 notes; Date signed and Operator sign-off remain `pending` until operator chat sign-off)
+  - `Desktop/UnoAi/forms/SITE_LOG.md` (sign-in already filed at session start; this sign-out)
+  - `Desktop/UnoAi/state/current.md` (sign-in: `Updated:` timestamp refreshed, `Active MS` line revised to "Sections 0-4 signed off, Section 5 in progress", MS chain MS-009 line bumped to "Sections 0-4 signed off ... third through seventh exercises of DEC-032 magic-string mechanism"; sign-out: `Updated:` timestamp refreshed again, `Active MS` line revised to reflect Section 5 work complete + Status: in progress, new dated paragraph at top of `Last verified working state` summarising the Section 5 session arc across all three sub-scopes)
+- Validator run at end: **PASS** (verified before commit; HEAD will be the close-out commit; validator at 324 lines, 11 checks; check 11 PASS on the seven `Depends on` lines from MS-005..MS-009).
+- gitleaks scan at end: pending — pre-commit hook will run gitleaks as step 1 of 5.
+- cspell run at end: pending — pre-commit hook will run cspell as step 5 of 5. New SIGN_OFF Section 5 entry, GLOSSARY validator definition update, and validator script comment block use existing project terms / dictionary-known content; no anticipated dictionary additions.
+- Format / Lint at end: pending — pre-commit hook will run Prettier as step 3 and ESLint as step 4. No staged code files in this section beyond `scripts/validate.sh` (a bash script — outside Prettier/ESLint glob); steps 3 and 4 short-circuit cleanly per the hook's `[ -n "$STAGED_FILES" ]` guard.
+- state/current.md updated: **YES**.
+- Next action: commit + push (5-step hook fires gitleaks → validator → Prettier → ESLint → cspell). Then hold for operator chat sign-off of Section 5 + the MS-009 Section 6 unlock signal. **Section 6 (tooling end-to-end — cold-clone test at `/tmp/unoai-cold-clone`, all five hook synthetic tests, cleanup) is future-session work**; this session deliberately ends at the Section 5 boundary per MS-009 prompt rules of engagement.
+
+**Handover notes:**
+
+1. **Order of execution non-negotiable held: 5A → 5B → 5C.** Sub-scope 5C's check 11 would have FAILed on DONE-002..006 (the very entries it's designed to validate) if it had shipped before Sub-scope 5B retroactive cleanup. Working agreement #8 (synthetic tests before shipping tooling) requires the check pass on clean state before going live; Sub-scope 5B getting the state clean before 5C ships the check is the order this constraint imposes. Single-session completion was the goal per the prompt and was achieved.
+
+2. **First DEC-032 application to historical entries.** All prior DEC-032 exercises (DONE-007 at MS-008 sign-in; DONE-008 at MS-009 sign-in; SIGN_OFF.md Sections 0-4 across MS-009 sign-ins #2-#5) were forward-looking — magic-strings applied as new sign-offs landed. Sub-scope 5B retroactively applies the mechanism to DONE entries operator-signed in chat earlier in the project. The DEC-032 entry's `Affects` line foresaw this (named "MS-008 Section 5"; landed at MS-009 Section 5 because MS-008 was scoped to glossary + cspell instead). The header comment block deferral note in `scripts/validate.sh` lines 27-37 (inherited from MS-007) is now removed; check 11 is the actual implementation.
+
+3. **One audit-not-fix finding routed forward (Finding 1 in Section 5 SIGN_OFF entry).** MS template + MS-001..MS-004 lack explicit `**Depends on:** / **Blocks:**` field lines despite INC-006 H2b/H2c claims of those parts shipping. Validator's check 9 + new check 11 only validate MS-005-onwards as a result. Per the operator-validated rule on MS-009-style audits, when audit catches divergence already routed to a future MS family, document as finding only; don't reconcile in-section. Routing options: MS-010 (alongside other validator hardening) or MS-011 (alongside working-agreements consolidation + Engineer "verify before asserting" candidates #21-#24 from INSP-002 session). Engineer's call.
+
+4. **Synthetic test outputs documented in SIGN_OFF Section 5 entry.** Pre-toggle PASS, post-toggle FAIL with the exact message text quoted (`DONE sign-off: MS-009 cannot proceed — depends on MS-008 whose DONE entry has 'Operator sign-off: pending' (not signed). DEC-032 magic-string must be applied at next session sign-in.`), post-revert PASS. Same evidence pattern as MS-005 / MS-006 synthetic tests; future Engineer verification doesn't require re-toggling the field.
+
+5. **Validator size posture stable per working agreement #10.** 289 → 324 lines (+35 lines for check 11). Decomposes as ~13 lines header comment update + ~22 lines new implementation. No size cap exceeded; no compression pressure surfaced. Per-check complexity calibration (the working agreement's framing) continues to absorb the growth.
+
+6. **Counter state at sign-out:** Latest MS = MS-009; Latest DEC = DEC-033; Latest RFI = RFI-014; Latest INC = INC-009; Latest INSP = INSP-002. No new numbered entries this section.
+
+7. **Section 5 was a single-section session per MS-009 prompt rules of engagement.** Sections 5+6 in one session was not authorised. Next session: operator chat sign-off of Section 5 → Section 6 (tooling end-to-end) unlocks → next Builder session begins Section 6.
+
+8. **Pause-at-blocker discipline operated zero times this session.** All Section 5 work fit within the explicit step instructions (steps 6-14 of the MS-009 Section 5 prompt) and the operator-supplied verbatim content (five DEC-032 magic-strings for DONE-002..006). Working agreement #18 (explicit-approval-per-step) had no triggering moments — the Section 5 prompt itself encoded the order, the magic-string content, and the synthetic-test resolution path. Quiet single-section.
+
+9. **Push posture per Section 5 prompt step 20.** Section 5 is mechanical work (audit + retroactive sign-offs + new check + synthetic test); no review-before-push gate applies. Reaper pushes immediately after commit. Operator chat sign-off of Section 5 happens against the pushed state.

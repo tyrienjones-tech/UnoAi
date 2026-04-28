@@ -70,7 +70,8 @@
 		"prepping",
 		"bindable",
 		"asdfqwerty",
-		"writable"
+		"writable",
+		"mses"
 	],
 	"ignorePaths": [
 		"node_modules/**",

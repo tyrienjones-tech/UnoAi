@@ -158,7 +158,7 @@ For session-start: read [`prompts/engineer-session-start.md`](./prompts/engineer
 
 ## V
 
-**validator** — bash script at `scripts/validate.sh`. Runs as 2nd step of pre-commit hook. Currently 10 checks (numbering, cross-references, state-counter sync, session lifecycle, MS chain, README↔state currency). 11th check (DONE sign-off) deferred per DEC-032.
+**validator** — bash script at `scripts/validate.sh`. Runs as 2nd step of pre-commit hook. Currently 11 checks (numbering, cross-references, state-counter sync, session lifecycle, MS chain, README↔state currency, DONE sign-off enforcement per DEC-032). 11th check shipped at MS-009 Section 5 once retroactive sign-off cleanup of DONE-002..006 completed.
 
 **validator size budget** — per-MS line-count cap for `scripts/validate.sh`. Smell-check, not hard limit, per working agreement #10. Caps calibrated against existing per-check complexity; new checks that need new parsing primitives (block-aware scans, multi-file walks) routinely exceed per-check estimates by 2–3×. The 150-line guidance from MS-004 is retired (per DEC-026).
 

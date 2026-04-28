@@ -4,7 +4,7 @@
 # Pure bash, no external deps. Runs from repo root: `bash scripts/validate.sh`.
 # Wired into `.githooks/pre-commit` after gitleaks.
 #
-# Checks (ten — see DEC-026 + INC-006 + MS-005 Scope A + MS-006 Scope G):
+# Checks (eleven — see DEC-026 + INC-006 + MS-005 Scope A + MS-006 Scope G + MS-009 Section 5):
 #   1. DEC numbering: sequential, no gaps, no duplicates (DEC-001..DEC-NNN)
 #   2. RFI numbering: sequential, no gaps, no duplicates
 #   3. INC numbering: sequential, no gaps, no duplicates
@@ -18,23 +18,19 @@
 #      resolves to an MS that (a) exists in METHOD_STATEMENT.md AND (b) has
 #      a corresponding DONE entry (matched via "Method statement: MS-NNN"
 #      line in DONE.md). "DONE exists" is the v1 semantics per RFI-010
-#      default (a); a stricter "DONE signed" check is deferred to MS-007.
+#      default (a); check 11 below tightens this to "DONE signed."
 #  10. README ↔ state sync: README.md "## Status" first non-empty line and
 #      state/current.md "## Phase" "Current:" line must contain the same
 #      "Phase X status" identifier (case-insensitive substring match).
 #      Hard-fail on parse error per DEC-026's fail-closed precedent.
-#
-# Deferred check 11 (per MS-007 Scope D3 + DEC-032):
-#   DONE sign-off enforcement. Verify any DONE-NNN referenced as a chain
-#   dependency target by another MS has its "Operator sign-off:" field
-#   populated (not "pending"). Implementing now would block the chain check
-#   for every existing MS that depends on DONE-002..006 — all currently say
-#   "pending" because operator sign-off has been chat-only. Per DEC-032,
-#   future sign-offs use a magic string ("DONE-NNN signed off by operator
-#   on YYYY-MM-DD") that Builder copies into the DONE entry at the next
-#   session sign-in. Once retroactive cleanup completes at MS-008 Section 5
-#   (form integrity audit), this check ships and the chain check tightens
-#   from "DONE-exists" to "DONE-signed."
+#  11. DONE sign-off: every "Depends on: MS-NNN" reference resolves to an MS
+#      whose DONE-NNN has a populated "Operator sign-off:" field (not the
+#      literal "pending"). Sign-off field expected to carry the DEC-032
+#      magic-string "DONE-NNN signed off by operator on YYYY-MM-DD" applied
+#      by Builder at next session sign-in after operator chat sign-off.
+#      Tightens check 9's DONE-exists semantics to DONE-signed. Shipped at
+#      MS-009 Section 5 once retroactive cleanup of DONE-002..006 sign-off
+#      fields landed (deferred from MS-007 Scope D3 / DEC-032 closing note).
 #
 # Sign-in / sign-out heading-line regex (strict):
 #   ^### [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2} session (start|end)$
@@ -275,6 +271,45 @@ fi
 if [ -n "$state_phase" ] && [ -n "$readme_phase" ] && [ "$state_phase" != "$readme_phase" ]; then
   fail "README Status section out of sync with state/current.md. README says '$readme_phase'; state says '$state_phase'."
 fi
+
+# Check 11: DONE sign-off enforcement (per MS-007 Scope D3 + DEC-032 + MS-009 Section 5).
+# Build the set of MSes whose DONE entry carries a non-pending Operator sign-off
+# field (i.e. a DEC-032 magic-string was applied), parallel to check 9's done_mses.
+# Then walk the same Depends on: MS-NNN lines and verify each target's DONE is signed.
+# Skip targets that check 9 already failed on (DONE missing) to avoid double-fail noise.
+signed_mses=$(awk '
+  /^```/ { in_block = !in_block; next }
+  !in_block && /^### / {
+    if (in_done && ms != "" && status == "signed") print ms
+    in_done = ($0 ~ /^### DONE-[0-9]+/); ms = ""; status = "unsigned"
+  }
+  in_done && /^- \*\*Method statement:\*\*/ {
+    if (match($0, /MS-[0-9]+/)) ms = substr($0, RSTART, RLENGTH)
+  }
+  in_done && /^\*\*Operator sign-off:\*\*/ {
+    rest = $0
+    sub(/^\*\*Operator sign-off:\*\*[[:space:]]*/, "", rest)
+    if (rest !~ /^[Pp]ending\.?[[:space:]]*$/) status = "signed"
+  }
+  END { if (in_done && ms != "" && status == "signed") print ms }
+' forms/DONE.md | sort -u)
+
+while IFS='|' read -r src target; do
+  [ -z "$target" ] && continue
+  # Skip if check 9 already failed on this target (DONE missing).
+  grep -qx "$target" <<< "$done_mses" || continue
+  if ! grep -qx "$target" <<< "$signed_mses"; then
+    fail "DONE sign-off: $src cannot proceed — depends on $target whose DONE entry has 'Operator sign-off: pending' (not signed). DEC-032 magic-string must be applied at next session sign-in."
+  fi
+done < <(awk '
+  /^```/ { in_block = !in_block; next }
+  !in_block && /^### MS-[0-9]+/ {
+    if (match($0, /MS-[0-9]+/)) current = substr($0, RSTART, RLENGTH)
+  }
+  !in_block && /^- \*\*Depends on:\*\*/ && !/[Nn]one/ {
+    if (match($0, /MS-[0-9]+/)) print current "|" substr($0, RSTART, RLENGTH)
+  }
+' forms/METHOD_STATEMENT.md)
 
 # Output.
 if [ "${#FAILS[@]}" -eq 0 ]; then
