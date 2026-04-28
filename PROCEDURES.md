@@ -177,6 +177,12 @@ A session that starts without a sign-in is a procedural incident. Catch it immed
 
 ---
 
+## Section-gated MSes (`forms/SIGN_OFF.md`)
+
+Some MSes are large enough that signing them off as a single unit at DONE-time loses too much detail — a failure in section 5 might invalidate sections 6-8 work. For those, an MS opts into a section-gated execution model: each section gets its own checklist, findings, and `Operator sign-off:` field in `forms/SIGN_OFF.md`. Sections must be completed in order; section N+1 cannot begin until section N is signed off in chat (per the magic-string format `Section N signed off by operator on YYYY-MM-DD`, copied verbatim into the section's entry at the next session sign-in per the same DEC-032 mechanism that handles DONE-form sign-offs). DONE for the whole MS is filed only after the final section signs off. Currently only **MS-009** uses this form (pre-Phase-1 deep check, 8 sections); future MSes opt in case-by-case based on scope. SIGN_OFF.md is not subject to the validator's numbering checks (those apply to DEC/RFI/INC/MS only); section ordering is enforced procedurally.
+
+---
+
 ## Summary
 
 | Trigger | Form | Procedure |

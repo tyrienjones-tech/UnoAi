@@ -579,3 +579,58 @@ INF  no leaks found
 - **DEC-033 body** captures cspell version, dictionary policy (additive, no per-instance disable comments), language choice rationale, and first-run cleanup result.
 - **State counter bump mid-session** (Scope D-early) repeats the MS-006 pattern: when MS-008 was filed in METHOD_STATEMENT.md, validator check 7 failed until counters were updated. Bumping to MS-008/DEC-033 once DEC-033 was filed cleared the validator before B6 synthetic test. Documented in DEC-033 body and at the top of state/current.md.
 - **Validator deferred 11th check** still deferred to MS-009+ (per MS-007 / DEC-032 / SITE_LOG handover note). MS-009 Section 5 (form integrity audit) does the retroactive cleanup of DONE-002..006 sign-off lines, after which the 11th check ships.
+
+---
+
+### 2026-04-28 12:30 session start
+
+- Role: Builder
+- Session goal: implement MS-009 — pre-Phase-1 deep check, 8 sections, section-by-section sign-off via new `forms/SIGN_OFF.md` form. **First-session goal:** sign-in mechanical actions + file MS-009 + (after approval) complete Section 0 (SIGN_OFF.md creation + PROCEDURES note) and Section 1 (spelling & grammar). End session at Section 1 boundary.
+- Resuming from: DONE-008 (signed 2026-04-28 in chat). Magic-string per DEC-032: "DONE-008 signed off by operator on 2026-04-28."
+- Context loaded: PROJECT.md, PROCEDURES.md, GLOSSARY.md, state/current.md, DEC-033, RFI-009 (open).
+- Open MSes: none (MS-008 closed).
+- Open RFIs awaiting me: none. RFI-009 (TLD) still open but not Builder-blocking.
+- Pre-session validator run: **PASS** (verified at 2026-04-28 12:30 before this entry was filed).
+
+**Mechanical sign-in actions completed (per MS-009 procedure step 2 + 3):**
+
+1. **DEC-032 second exercise — DONE-008 sign-off line:** updated DONE-008's `Operator sign-off:` field from `pending` to `DONE-008 signed off by operator on 2026-04-28`. Pattern continues to work as designed (first exercise was DONE-007 at MS-008 sign-in; this is the second).
+
+2. **`.cspell.json` header comment** added per operator's MS-008 sign-off acknowledgment #2. Used a `_comment` field (pure JSON, Prettier-safe) explaining why `files` key is omitted: cspell intersects config-glob with explicit CLI-args, so passing literal filenames in the pre-commit hook gets silently filtered when `files` is configured. The hook relies on direct filename invocation; npm script uses its own glob inline. Verified post-edit: cspell still passes (0 issues), Prettier accepts the JSON, validator passes.
+
+**Working-agreement-#1 verification:** DEC-033 confirmed highest in DECISION.md; next sequential is DEC-034 per discipline #5. RFI-009 still open. Five retroactive sign-off magic-strings provided in operator's MS-009 prompt for Section 5.8 application (DONE-002 through DONE-006, dates 2026-04-27 / 2026-04-27 / 2026-04-28 / 2026-04-28 / 2026-04-28 respectively).
+
+---
+
+### 2026-04-28 13:30 session end
+
+- Role: Builder
+- Outcome: MS-009 filed and approved; **Section 0** (SIGN_OFF.md creation + PROCEDURES.md note) and **Section 1** (spelling & grammar) work complete and awaiting chat sign-offs. No DONE filed (DONE-009 only fires after Section 8 per MS-009 prompt).
+- Files touched:
+  - `Desktop/UnoAi/forms/METHOD_STATEMENT.md` (MS-009 entry filed; approval status set to APPROVED 2026-04-28; one internal US→en-GB conversion of the four-letter root word in the working-agreement-#17 candidate quotation, applied for cspell-clean MS-009 entry)
+  - `Desktop/UnoAi/.cspell.json` (added `_comment` field at top + `writable` to project dictionary)
+  - `Desktop/UnoAi/forms/DONE.md` (DONE-008 `Operator sign-off:` line updated from `pending` to magic-string per DEC-032 second exercise — sign-in mechanical action)
+  - `Desktop/UnoAi/forms/SIGN_OFF.md` (created — header explaining purpose / format / magic-string / ordering / validator interaction; 8 entries scaffolded for Section 0 + Sections 1-8; Section 0 entry populated and `Status: in progress`; Section 1 entry populated this session and `Status: in progress`)
+  - `Desktop/UnoAi/PROCEDURES.md` (added "Section-gated MSes (`forms/SIGN_OFF.md`)" paragraph between Procedure 9 and Summary table; procedure count remains nine — SIGN_OFF.md is a form, not a new procedure category)
+  - `Desktop/UnoAi/CONTEXT.md` (en-GB conversions ×2 — `engagement-optimized` → `engagement-optimised`, `centralized` → `centralised`)
+  - `Desktop/UnoAi/PROJECT.md` (en-GB conversion ×1 — `optimized` → `optimised` in organising-principle blockquote)
+  - `Desktop/UnoAi/prompts/engineer-session-start.md` (en-GB conversions ×2 — `optimize` → `optimise`, `summarize` → `summarise`)
+  - `Desktop/UnoAi/prompts/engineer-prompt-checklist.md` (en-GB conversion ×1 — `authorize` → `authorise`)
+  - `Desktop/UnoAi/forms/SITE_LOG.md` (sign-in already filed at session start; this sign-out)
+  - `Desktop/UnoAi/state/current.md` (Updated timestamp / Phase line / Last completed / Next / Active MS / MS chain status / Last verified working state — MS-008 marked DONE, MS-009 marked in progress, new entry written)
+- Validator run at end: **PASS** (verified at 2026-04-28 13:30 before commit; 289 lines, no validator code change in this MS).
+- cspell run at end: **PASS** (full repo, 18 files, 0 issues — clean baseline maintained after the 6 en-GB conversions).
+- Format check at end: pending — pre-commit hook will run Prettier as step 3 of 5.
+- Lint at end: pending — pre-commit hook will run ESLint as step 4 of 5.
+- state/current.md updated: **YES**.
+- Next action: commit + push (5-step hook fires gitleaks → validator → Prettier → ESLint → cspell). Then hold for operator chat sign-offs of Section 0 and Section 1, plus the MS-009 Section 2 unlock signal. **Sections 2-8 are future-session work**; this session deliberately ends at Section 1 boundary per MS-009 prompt scope.
+
+**Handover notes:**
+
+- **`forms/SIGN_OFF.md` is a new form template** at `forms/SIGN_OFF.md`. It is exempt from the validator's numbering checks (those apply to DEC/RFI/INC/MS only); section ordering is enforced procedurally by Builder reading SIGN_OFF.md at next session sign-in to determine which section is current. The mechanism is: a section's `Operator sign-off:` field stays `pending` until operator sends the magic-string in chat (`Section N signed off by operator on YYYY-MM-DD.`), at which point Builder copies the magic-string verbatim into the field at next session sign-in (DEC-032 mechanism extended from DONE-form to SIGN_OFF-form).
+- **Section 0 work** was scaffolding-only — SIGN_OFF.md created, PROCEDURES.md updated. No DEC needed (procedural scaffolding, not a decision). No new tooling. No validator changes.
+- **Section 1 work** was content-only — 6 en-GB conversions across 4 files plus a manual grammar pass on the 8 in-scope prose-heavy files (zero meaning-changing errors found). The `_comment` field added to `.cspell.json` at sign-in (mechanical action carried over from MS-008) is a separate from this section but committed together. cspell still passes (18 files, 0 issues) after all conversions.
+- **Out-of-scope dialect inconsistencies in `forms/`** (METHOD_STATEMENT.md, DECISION.md, etc.) are deliberately left in historical entries. The MS-009 Section 1 scope is the 8 prose-heavy authoritative files; converting historical record entries would be an MS-008-style bulk pass not authorised here.
+- **README.md `## Status` line is stale** (still says "MS-005 / Phase 1 begins after MS-006 DONE"). Validator check 10 still passes because the substring "Phase 0b complete" matches state's "Phase 0b complete" identifier (case-insensitive substring containment per check-10 spec). Bringing README Status fully current is Section 3 (documentation accuracy) work in a future MS-009 session — not this session's scope.
+- **No new working agreements** added this session. No DEC, no RFI, no INC. Pure scope execution.
+- **Counter state:** Latest MS = MS-009; Latest DEC = DEC-033; Latest RFI = RFI-010; Latest INC = INC-006. Unchanged from MS-008 close-out except for MS counter (bumped at sign-in per existing Scope D-early pattern).

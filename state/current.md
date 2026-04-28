@@ -25,21 +25,21 @@ sign-out where state changes, per Procedure 9 (session lifecycle).
 
 # UnoAi — Current State
 
-Updated: 2026-04-28 12:00 (auto-updated at session sign-out — bumped mid-session in MS-008 Scope D-early after DEC-033 filed so validator clears check 7 before B6 synthetic test re-run; final timestamp at this sign-out)
+Updated: 2026-04-28 13:30 (auto-updated at session sign-out — MS-009 first session, Sections 0+1 complete and awaiting chat sign-offs).
 
 ## Phase
 
-Current: Phase 0b complete. Infrastructure phase in progress (MS-008). Phase 1 blocked on MS-009.
-Last completed: MS-007 (DONE-007 signed 2026-04-28; first real exercise of DEC-032 magic-string mechanism applied at MS-008 sign-in).
-Next: MS-009 (pre-Phase-1 deep check, 8 sections, section-by-section sign-off) → Phase 1 (landing + payment + license).
+Current: Phase 0b complete. Infrastructure phase in progress (MS-009). Phase 1 blocked on MS-009 close.
+Last completed: MS-008 (DONE-008 signed 2026-04-28; second exercise of DEC-032 magic-string mechanism applied at MS-009 sign-in).
+Next: MS-009 remaining sections (2 through 8, multi-session) → Phase 1 (landing + payment + license).
 
 ## Active MS
 
-MS-008 in progress (glossary + cspell tooling + Procedure 3 doc-only-MS fix).
+MS-009 in progress (pre-Phase-1 deep check, 8 sections, section-by-section sign-off via `forms/SIGN_OFF.md`). Sections 0 (SIGN_OFF.md creation + PROCEDURES.md note) and 1 (spelling & grammar) completed this session and awaiting operator chat sign-offs.
 
 ## Counters (latest of each)
 
-Latest MS:  MS-008
+Latest MS:  MS-009
 Latest DEC: DEC-033
 Latest RFI: RFI-010
 Latest INC: INC-006
@@ -53,8 +53,8 @@ Latest INC: INC-006
 - MS-005: DONE (DONE-005, signed 2026-04-28).
 - MS-006: DONE (DONE-006, signed 2026-04-28).
 - MS-007: DONE (DONE-007, signed 2026-04-28; sign-off recorded in DONE-007 entry per DEC-032 magic-string at MS-008 sign-in — first real exercise).
-- MS-008: in progress (glossary + cspell tooling + Procedure 3 doc-only-MS fix).
-- MS-009: pending; depends on MS-008 (pre-Phase-1 deep check, 8 sections, section-by-section sign-off model).
+- MS-008: DONE (DONE-008, signed 2026-04-28; second exercise of DEC-032 magic-string mechanism applied at MS-009 sign-in).
+- MS-009: in progress (pre-Phase-1 deep check, 8 sections, section-by-section sign-off via `forms/SIGN_OFF.md`; Sections 0+1 work complete this session, awaiting chat sign-offs; Sections 2-8 future sessions).
 - [first Phase 1 MS]: pending; depends on MS-009.
 
 ## Open RFIs
@@ -73,6 +73,8 @@ Latest INC: INC-006
 - Optional: README self-hosting wording amendment (deferred to MS-003.5 or roll into Phase 1 prep).
 
 ## Last verified working state
+
+2026-04-28 (MS-009 first session) — `forms/SIGN_OFF.md` created at repo root in `forms/` directory with 8-section scaffold (Section 0 + Sections 1-8); each entry has Status / Date filed / Date signed / Operator sign-off fields plus Checklist results / Findings / Notes subsections. `PROCEDURES.md` updated with one-paragraph note about SIGN_OFF.md (placement: post-Procedure-9, pre-Summary-table); procedure count stays at nine. **Section 0** (SIGN_OFF.md creation + PROCEDURES.md note) work complete, status `in progress`, awaiting operator chat sign-off. **Section 1** (spelling & grammar) work complete: cspell baseline + post-edit runs both PASS (18 files, 0 issues); 6 en-GB conversions applied across 4 files (`CONTEXT.md` ×2, `PROJECT.md` ×1, `prompts/engineer-session-start.md` ×2, `prompts/engineer-prompt-checklist.md` ×1) — all in the form `optimized → optimised`, `centralized → centralised`, `summarize → summarise`, `authorize → authorise`. Manual grammar pass found zero meaning-changing errors across the 8 in-scope prose-heavy files. Out-of-scope files (`forms/*`, `state/current.md`) still contain occasional US spellings in historical entries; deliberately left per Section 1 scope boundary. No new tooling. No validator changes. No new working agreements. Pre-commit hook chain unchanged (5 steps).
 
 2026-04-28 (MS-008) — `GLOSSARY.md` landed at repo root with ~50 alphabetical entries (operator-supplied content + Builder-drafted entries for Vitest / synthetic test / validator size budget per Open-Item-1 RFI resolution). `cspell` v10.0.0 installed as devDependency, `.cspell.json` configured (en-GB + 50+ project terms in dictionary), wired into pre-commit hook as 5th step (gitleaks → validator → Prettier → ESLint → cspell). First-run cleanup: 159 issues across 15 files initially → 0 issues after dictionary additions + bulk US→UK fixes (per Scope B5 bulk-conversion authority). Synthetic violation test (B6) confirmed cspell BLOCKS commits with definitively-misspelled content (`asdfqwerty`); revert + clean run passes. Note: `teh` is in cspell's default dictionary (treated as valid in some company-name dictionary), so the synthetic test used a less-ambiguous typo. Procedure 3 "Proof division" updated for doc-only-MS work-type-conditional operator-capture (per Scope C). DEC-033 filed. RFI-010 closure (from MS-007) carried over. Working agreements #14 refined to three-tier (git ls-remote / API endpoint / never-HTML), #15 added (glossary scope must be grep-evidence-based), #16 added (approval messages need actual content not placeholders).
 

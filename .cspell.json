@@ -1,4 +1,5 @@
 {
+	"_comment": "DO NOT add a 'files' key to this config. cspell intersects the config-glob with explicit CLI-args, so passing literal filenames (which the pre-commit hook does — `git diff --cached --name-only ... .md`) gets silently filtered when the config also has a 'files' glob. The hook relies on direct filename invocation; the npm 'spell-check' script uses its own glob inline. Per MS-008 first-run debugging + DEC-033.",
 	"version": "0.2",
 	"language": "en-GB",
 	"words": [
@@ -63,7 +64,8 @@
 		"lockfiles",
 		"prepping",
 		"bindable",
-		"asdfqwerty"
+		"asdfqwerty",
+		"writable"
 	],
 	"ignorePaths": [
 		"node_modules/**",

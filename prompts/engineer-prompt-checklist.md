@@ -34,7 +34,7 @@ This is the checklist Engineer runs through before sending any prompt to Builder
 
 10. **For repo-creation MSes: verify remote state at create-time.** GitHub auto-init, default branch, default permissions — all need to be checked when the repo is created, not when Builder clones. (Working agreement #6.)
 
-11. **Don't authorize prep work for "hold" answers.** If Builder is correctly waiting and there's no real work product to define, the answer is "hold" — not "useful things to do while waiting." (Working agreement #4.)
+11. **Don't authorise prep work for "hold" answers.** If Builder is correctly waiting and there's no real work product to define, the answer is "hold" — not "useful things to do while waiting." (Working agreement #4.)
 
 12. **Pushback framing is neutral, not fault-implying.** Verification questions are "what state is X in?", not "did you do X correctly?". The first produces diagnostic responses; the second produces defensive ones. (Working agreement #13.)
 

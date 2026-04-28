@@ -1106,9 +1106,9 @@ After cleanup:  0 issues across 17 files
 
 3. **MS-009 next** — "pre-Phase-1 deep check, 8 sections, section-by-section sign-off model" per state's MS chain. MS-009 will include retroactive sign-off cleanup of DONE-002..006 (Section 5) which unblocks the deferred 11th validator check.
 
-**Operator sign-off:** pending.
+**Operator sign-off:** DONE-008 signed off by operator on 2026-04-28.
 **Sign-off notes:**
-[Operator fills. Run `bash scripts/validate.sh` + `npm run spell-check` + `npm run lint` + `npm run format:check`; confirm all PASS. Verify via `git ls-remote origin refs/heads/main` per refined agreement #14. Magic-string format for sign-off: "DONE-008 signed off by operator on YYYY-MM-DD" — Builder copies into the line above at next session sign-in per DEC-032.]
+[Builder note 2026-04-28 (MS-009 sign-in): magic-string copied verbatim per DEC-032 — second exercise of the mechanism. Pattern continues to work as designed. Operator's full sign-off message (DONE-008 closure with five tracked enhancements + working agreements list at 16) handled via state/current.md updates at MS-009 sign-out, not retroactively rewriting this block.]
 
 
 

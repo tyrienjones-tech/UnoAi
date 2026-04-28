@@ -1150,3 +1150,129 @@ These are the five items in the Builder's reply preceding this MS — restated h
 - **B6 synthetic test:** initially used `teh` per operator's prompt; cspell treats `teh` as valid (in some default dictionary). Switched to `asdfqwerty` for unambiguous misspelling. Hook BLOCKED commit at exit 1; revert + clean run passes. First synthetic test commit (with `teh`) accidentally landed at SHA `4d88669` because cspell didn't flag it; reset via `git reset HEAD~1` (mixed) before any push. Not in remote history. **Worth surfacing for operator awareness:** `teh` isn't reliably caught by cspell defaults — a future MS may want to add it explicitly to a `flagWords` list in `.cspell.json` if catching common typos like `teh` is the goal.
 - **First-run cleanup result:** 159 issues across 15 files initially → 0 issues after dictionary additions (~22 project terms beyond the seed 30) + bulk US→UK fixes. Categorisation in DONE-008 proof.
 - **`.cspell.json` `files` glob removed** because it interacts oddly with literal-filename CLI args (cspell intersects config glob with explicit args; literal filenames silently skipped if not matched by config glob). Hook now passes filenames through to cspell which uses them directly. npm script glob form unchanged.
+
+---
+
+### MS-009 — Pre-Phase-1 deep check (8 sections, section-by-section sign-off, multi-session)
+- **Date:** 2026-04-28
+- **Agent:** Reaper-1
+- **Phase:** 0b infrastructure layer (final MS before Phase 1)
+- **Session start:** 2026-04-28 12:30 (see SITE_LOG)
+- **Task:** The largest verification pass before product code. Eight sections, each independently sign-off-gated. Builder works through one section, files a section summary in `forms/SIGN_OFF.md`, operator signs off in chat, next section unlocks. **Sections must be completed in order.** Multi-session execution supported via SIGN_OFF.md state. DONE-009 filed only after Section 8 signs off. This MS does NOT write product code; it verifies everything previously built.
+- **Depends on:** MS-008 (DONE-008 signed 2026-04-28; magic-string applied to DONE-008's `Operator sign-off:` field at this session sign-in — second real exercise of DEC-032 mechanism).
+- **Linked RFIs / decisions:**
+  - **New (planned):** DEC-034 (deep-check methodology locked). DEC-035 conditional on Section 5.9 11th-check shipping (DONE sign-off enforcement). DEC-036+ may emerge from Section 7 doctrine alignment.
+  - **Builds on:** DEC-024 (gitleaks), DEC-026 (validator), DEC-027 (code conventions), DEC-031 (dependency policy), DEC-032 (DONE sign-off mechanism), DEC-033 (cspell tooling).
+  - **Resolves:** DONE-002..006 retroactive sign-off cleanup (operator-supplied magic-strings provided in MS-009 prompt for Section 5.8 application). RFI-009 (TLD) remains OPEN — not in MS-009 scope unless surfaced by Section 4.2 pending-actions audit.
+- **Operator approval:** pending.
+
+**Open items / Builder decisions to surface at MS-009 approval:**
+
+1. **DEC numbering DEC-034 sequential** after DEC-033 per discipline #5. Working-agreement-#1 verification done at sign-in; RFI-010 was closed in MS-007 (no longer open RFIs to verify against this MS's `Closes:` lines unless Section 7 surfaces new RFI candidates).
+
+2. **Multi-session execution.** First-session goal explicitly bounded by operator: sign-in + file MS-009 + Section 0 (SIGN_OFF.md creation) + Section 1 (spelling & grammar). End session at Section 1 boundary. Subsequent sessions resume per SIGN_OFF.md state. Each section signs off in chat before next begins.
+
+3. **Section 5.8 retroactive magic-strings** — already provided in operator's MS-009 prompt:
+   - `DONE-002 signed off by operator on 2026-04-27`
+   - `DONE-003 signed off by operator on 2026-04-27`
+   - `DONE-004 signed off by operator on 2026-04-28`
+   - `DONE-005 signed off by operator on 2026-04-28`
+   - `DONE-006 signed off by operator on 2026-04-28`
+   Builder will copy each verbatim into the corresponding DONE entry's `Operator sign-off:` field at Section 5 work time. Operator's note that **DONE-002 doesn't have its own close-out commit** (landed inside MS-003 migration commit `0cf45cd`) is captured in Section 5 SIGN_OFF entry; magic-string applies regardless.
+
+4. **Section 5.9 11th validator check implementation.** Block-aware parsing pattern same as existing chain check (#9). Approach: for each MS-NNN with `Depends on: MS-XXX` line, locate corresponding DONE-XXX in DONE.md, verify `Operator sign-off:` line is non-`pending`. Estimated ~30-40 lines added to validator. Validator currently 289 lines; post-check ~320-330 lines. Per working agreement #10 no hard cap. Synthetic test mandatory per agreement #8: temporarily revert a DONE sign-off to `pending`, confirm validator FAIL, revert.
+
+5. **Section 6 cold-clone test environment.** Builder uses `/tmp/unoai-cold-clone` (Git Bash on Windows resolves to a writable temp area). Cleanup after test. All command outputs captured in SIGN_OFF.md Section 6 entry.
+
+6. **Section 7 doctrine accessibility.** `/mnt/skills/user/eco-agentic-doctrine/SKILL.md` is an Anthropic-environment-specific path. May not exist from Builder's terminal session. **At Section 7 time:** Builder verifies first; if path doesn't exist, RFI to operator for alternative path or for operator to paste doctrine content into chat. Builder does NOT proceed with doctrine alignment from memory or training-distribution priors.
+
+7. **PROCEDURES.md SIGN_OFF.md note placement (Section 0).** Operator says "Update PROCEDURES.md to note SIGN_OFF.md exists, describe its purpose (one paragraph), and clarify it's used for MSes that have section-by-section gates." Builder default: add a short subsection at the end of PROCEDURES.md (after Procedure 9 + Summary table), titled "## Section-gated MSes (`forms/SIGN_OFF.md`)" with one paragraph explanation. SIGN_OFF.md isn't a procedure with its own form template trigger; it's a form used by certain MSes. The placement keeps the procedure count at nine (no sweep needed).
+
+8. **Section 7 Engineer working agreement #17 candidate** — operator's MS-009 prompt names this for sign-out time: "Engineer claims about tool behaviour, file content, or text in prior messages must be verified before being included in approvals or prompts. Hypotheses get filed as questions, not assertions." (Operator's original wording used the US form of `behaviour`; converted to en-GB per established authority — Builder's bulk US→UK conversion granted at MS-008.) Builder will add at MS-009 final sign-out (after Section 8 signs off).
+
+9. **First-session SIGN_OFF.md schema decision.** Operator's Scope 0.1 provides an entry template. Builder will create the file with a header (purpose + usage notes) followed by 8 entries, each per the template, all initially `Status: in progress` for Section 0 (this section creates the file) and `Status: pending` for Sections 1-8. As each section completes, Builder updates its entry status + checklist results + findings + notes.
+
+10. **Section 0 itself signs off.** Section 0 is the SIGN_OFF.md creation. The first entry in SIGN_OFF.md is Section 0; its sign-off at chat time follows the same pattern as Sections 1-8.
+
+**Plan (numbered, terse):**
+
+*First-session work (ends at Section 1 boundary):*
+1. Sign in done. DONE-008 magic-string applied. `.cspell.json` header comment added (via `_comment` field).
+2. File MS-009 (this entry).
+3. **Wait for operator approval.**
+4. **Section 0:** create `forms/SIGN_OFF.md` with header + 8 section entries per Scope 0.1 template. Update `PROCEDURES.md` with one-paragraph note about SIGN_OFF.md (post-Procedure-9, pre-Summary placement). Mark Section 0 `Status: in progress` (this session is doing the creation).
+5. **Section 1:** spelling & grammar pass. (a) Run `npm run spell-check` — expected clean (MS-008 baseline). Document. (b) Manual grammar pass on 8 prose-heavy files (README, PROJECT, PLAN, PROCEDURES, CONTEXT, GLOSSARY, prompts/engineer-session-start, prompts/engineer-prompt-checklist) — only fix errors that change meaning. (c) File Section 1 results in SIGN_OFF.md with findings.
+6. **End session at Section 1 boundary.** Update state/current.md with current section status. Sign out. Commit + push (5-step hook). Wait for operator chat sign-offs of Sections 0 + 1.
+
+*Subsequent sessions (one or more — operator's choice of cadence):*
+7. **Session N:** sign-in includes copying operator's chat magic-strings for prior-session sections into SIGN_OFF.md. Read SIGN_OFF.md to determine current section. Work through next section (Section 2 references → Section 3 docs → Section 4 state → Section 5 forms + retroactive sign-offs + 11th validator → Section 6 cold-clone → Section 7 doctrine → Section 8 readiness gate). End session at section boundary.
+8. **DONE-009** filed only after Section 8 signs off. State updates: MS-008 → DONE (already), MS-009 → DONE, MS-010 (first Phase 1 MS) → pending depends on MS-009.
+
+**Files to be touched (across multi-session lifetime of MS-009):**
+- `Desktop/UnoAi/forms/SIGN_OFF.md` — created at Section 0; updated section-by-section.
+- `Desktop/UnoAi/PROCEDURES.md` — modified at Section 0 (one-paragraph note about SIGN_OFF.md).
+- `Desktop/UnoAi/forms/DECISION.md` — modified at various sections (DEC-034 likely at Section 0 or end of MS; DEC-035 at Section 5.9 if 11th check ships; DEC-036+ if Section 7 surfaces deviations).
+- `Desktop/UnoAi/forms/DONE.md` — DONE-002..006 sign-off lines updated retroactively at Section 5.8; DONE-009 filed at Section 8 close.
+- `Desktop/UnoAi/scripts/validate.sh` — modified at Section 5.9 if 11th check ships.
+- `Desktop/UnoAi/forms/METHOD_STATEMENT.md` — modified (this entry; approval status update post-approval; possibly other entries if Section 5 form-integrity audit surfaces issues).
+- `Desktop/UnoAi/forms/SITE_LOG.md` — modified each session (sign-in + sign-out per Procedure 9).
+- `Desktop/UnoAi/state/current.md` — modified each session (MS chain, counters, working agreements).
+- **Various .md files** — modified at Section 1 (grammar fixes), Section 2 (broken-link fixes), Section 3 (stale-reference fixes), Section 4 (state corrections), Section 5 (form integrity fixes) as needed.
+- **Existing DONE-002..006 entries** — retroactive sign-off lines populated at Section 5.8.
+
+**Files NOT touched (per scope):**
+- LICENSE, CONTRIBUTING.md, .gitignore, .gitleaks.toml, .githooks/pre-commit (validator-only changes go in Section 5.9), .prettierignore, .prettierrc, eslint.config.js, package.json (no new deps), .cspell.json (header comment already added at sign-in).
+- SvelteKit scaffold tree — `src/`, `static/`, `vite.config.ts`, `svelte.config.js`, `tsconfig.json`, etc. (Phase 1 product-code territory; this MS doesn't touch).
+- prompts/engineer-session-start.md, prompts/engineer-prompt-checklist.md — content unchanged unless Section 1 grammar pass surfaces a meaning-changing error.
+
+**Expected diff size:** large (across 8 sections, multi-session). Section 1 likely small. Section 5 has the largest individual diff (validator 11th check + 5 retroactive sign-off lines + form audits + possible cleanups). Section 6 produces large SIGN_OFF.md content (cold-clone test outputs verbatim). Total estimate: ~1500-2500 lines net added across the lifetime of MS-009, mostly into SIGN_OFF.md as section findings.
+
+**Risks identified:**
+
+- **R1. Multi-session boundary discipline.** Operator's rule: end session at section boundary; section N+1 cannot begin before Section N's sign-off. Builder's risk: starting Section N+1 prematurely if operator chat sign-off is delayed. Mitigation: explicit hold at section boundary; session-end + commit + push at each boundary; SIGN_OFF.md state is the source of truth.
+
+- **R2. Section 7 doctrine path inaccessibility.** Anthropic-environment paths may not resolve in Builder's terminal. Mitigation: probe at Section 7 entry; RFI if missing.
+
+- **R3. Section 6 cold-clone test failure modes.** If `npm install` or any of the five tools fail in the fresh clone but pass in the working folder, that's a real difference (likely a node_modules state issue or missing setup). Mitigation: cold-clone test is the definitive end-to-end verification; failures get logged + fixed before Section 6 signs off.
+
+- **R4. Section 5.9 11th check + chain check interaction.** Currently the chain check (#9) verifies "DONE exists" semantics. The new 11th check verifies "DONE signed" semantics. Both checks fire on every commit. The 11th check ships ONLY AFTER Section 5.8 retroactive cleanup, otherwise it would block on every MS-009 commit (because MS-009 itself depends on MS-008 which depends on MS-007 etc. — chain reaches back to DONE-002..006 which need the retroactive magic-strings applied). Order matters; documented in DEC-035 body (when filed).
+
+- **R5. Section 4.2 pending operator actions audit.** Some items need operator chat confirmation ("still pending / done / obsolete"). Builder cannot resolve these alone. Mitigation: Section 4 entry surfaces each item with current status; operator sign-off includes acknowledging the cleanup decisions.
+
+- **R6. Section 7 surfacing real doctrine gaps.** Doctrine-alignment review may find real procedural gaps in UnoAi's setup. Per operator's Section 7.3: RFI for real issues; document non-applicable lessons; do not silently fix. Builder discipline: surface, don't decide.
+
+- **R7. SIGN_OFF.md as new form interaction with validator.** SIGN_OFF.md doesn't have entry-numbering like DEC/RFI/INC/MS/DONE. The validator's checks 1-4 only number-check those five forms. SIGN_OFF.md is exempt. Validator can read it but doesn't enforce sequence. Documented.
+
+- **R8. State counter bumping mid-session.** When MS-009 entry was filed in METHOD_STATEMENT.md, validator check 7 fails until state's Latest MS is bumped to MS-009. Same Scope I-early pattern as MS-006 and MS-008. Builder bumps state at first opportunity (post-MS-009-approval, at Section 0 work time).
+
+- **R9. Multiple DEC entries during the MS lifetime.** DEC-034 (early), DEC-035 (Section 5.9 if ships), DEC-036+ (Section 7 if needed). Sequential numbering preserved across multiple sessions. Discipline #5 / agreement #5 applies per session (each Builder session re-verifies highest DEC before filing new ones).
+
+- **R10. DONE-002 lineage anomaly.** Operator noted: "DONE-002's commit lineage is different from DONE-003..006. MS-002 was a documentation-only batch that landed inside the MS-003 migration commit (0cf45cd)." Section 5.4 audit (every MS has corresponding DONE) needs to acknowledge this — DONE-002 exists as a form entry, but its closing commit isn't dedicated. Documented in Section 5 entry; retroactive sign-off magic-string still applies.
+
+- **R11. Engineer working agreement #17 candidate** (verification-before-assertion) lands at MS-009 final sign-out. Mid-MS sessions don't add #17; only the final session that signs off Section 8 + files DONE-009 also adds #17 to state/current.md. Coordinated timing.
+
+**Acceptance criteria (will be copied verbatim into DONE-009 at Section 8 close):**
+- `forms/SIGN_OFF.md` exists with all 8 sections marked `signed off by operator on YYYY-MM-DD` (magic-string format).
+- All 8 section entries contain checklist results, findings, and operator sign-off magic-strings.
+- DONE-002..008 `Operator sign-off:` fields all populated (retroactive cleanup + ongoing mechanism).
+- Validator at new line count (post-11th-check); synthetic test FAIL output for the new check captured.
+- Cold-clone test outputs from Section 6 present in SIGN_OFF.md.
+- Doctrine alignment summary from Section 7 present.
+- Phase 1 first MS shape drafted in Section 8 entry.
+- DEC-034 + (DEC-035 if Section 5.9 ships) + any others filed during the MS.
+- `state/current.md` fully accurate per Section 4 audit; pending operator actions list cleaned up.
+- Sign-in / sign-out entries in SITE_LOG for each session in MS-009 lifetime.
+- `forms/SIGN_OFF.md` mentioned in PROCEDURES.md.
+- Working agreement #17 added to state/current.md at MS-009 final sign-out.
+
+**Operator approval:** APPROVED 2026-04-28.
+**Approval notes:**
+- Approved as scoped. All 10 Builder runtime decisions accepted per defaults.
+- Section 5.8 retroactive magic-strings provided in MS-009 prompt (5 entries: DONE-002 through DONE-006, dates per the prompt). Applied during Section 5 work, not at sign-in.
+- Section 7 doctrine accessibility — Builder probes path at Section 7 time; RFI if missing.
+- Section 6 cold-clone test path `/tmp/unoai-cold-clone`, cleanup after.
+- Multi-session execution: first-session bounded to Section 0 + Section 1, end at Section 1 boundary, await chat sign-offs.
+- DONE-002 commit-lineage anomaly noted (landed inside MS-003 migration commit `0cf45cd`); sign-off magic-string applies regardless.
+- Section sign-off chat format: `Section N signed off by operator on YYYY-MM-DD`. Builder copies verbatim into SIGN_OFF.md at next session sign-in.
+- DONE-009 filed only after Section 8 signs off.
+

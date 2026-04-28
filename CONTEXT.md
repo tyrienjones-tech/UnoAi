@@ -19,9 +19,9 @@ The pitch in one line: *"the one you own."*
 
 It is not:
 
-- An engagement-optimized companion (the persona is explicitly designed to push back, not flatter).
+- An engagement-optimised companion (the persona is explicitly designed to push back, not flatter).
 - A subscription product (one-time purchase, BYOK for usage).
-- A surveillance product (no telemetry, no centralized conversation storage).
+- A surveillance product (no telemetry, no centralised conversation storage).
 - A romantic partner simulator (banned moves: no permanence promises, no love claims, no substitute-for-humans framing).
 - A wellness app (no mood tracking, no daily check-ins, no habit-formation hooks).
 - A self-help substitute (crisis classifier hands off to hotlines; bot does not pretend to be therapy).

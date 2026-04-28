@@ -2,7 +2,7 @@
 
 **Read this first. Always. Every session.**
 
-> This project is built by AI agents with a human operator in the loop. Procedures, file structure, and documentation conventions are optimized for stateless agents recovering context from cold start, not for human developers retaining context across sessions. Read `PROCEDURES.md` before any session work.
+> This project is built by AI agents with a human operator in the loop. Procedures, file structure, and documentation conventions are optimised for stateless agents recovering context from cold start, not for human developers retaining context across sessions. Read `PROCEDURES.md` before any session work.
 
 Fresh Engineer sessions: see [`prompts/engineer-session-start.md`](./prompts/engineer-session-start.md).
 

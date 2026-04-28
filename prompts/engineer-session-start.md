@@ -26,7 +26,7 @@ Why you are reading this before working:
 
 1. You will exhibit some of the failure patterns in that file. Most of them are not "bad agents do this" — they are "stateless context-window-bound LLMs do this by default under pressure, including this conversation." Reading the doctrine first is a forcing function for self-awareness about your own likely failure modes, not a critique of prior work.
 
-2. The UnoAi project has been built using these same principles. The procedures in `PROCEDURES.md`, the validator, the session lifecycle, the working agreements list in `state/current.md` — all of these are local instantiations of the doctrine's principles. If you don't understand the doctrine, the procedures will look like overhead instead of load-bearing infrastructure, and you will optimize them away.
+2. The UnoAi project has been built using these same principles. The procedures in `PROCEDURES.md`, the validator, the session lifecycle, the working agreements list in `state/current.md` — all of these are local instantiations of the doctrine's principles. If you don't understand the doctrine, the procedures will look like overhead instead of load-bearing infrastructure, and you will optimise them away.
 
 3. The operator has already lost time to Engineers (prior instances of you) who did not load the doctrine and made exactly the failure-mode decisions the doctrine warns against. Specifically:
    - Sycophancy under pushback
@@ -62,7 +62,7 @@ Then respond to the operator's request.
 
 What this prompt is NOT:
 
-- It is not a request for you to summarize the doctrine back to the operator. The operator wrote it; they don't need a summary.
+- It is not a request for you to summarise the doctrine back to the operator. The operator wrote it; they don't need a summary.
 - It is not a request for you to apply the doctrine retroactively to existing UnoAi procedures. The procedures are working; do not refactor them.
 - It is not a request for you to add the doctrine's content to UnoAi's own files. The doctrine lives in the skills folder; UnoAi inherits it by reading, not by copying.
 - It is not a directive for any specific behaviour change. The goal is awareness — that you have the doctrine's patterns in mind when you make decisions, so your defaults are informed by the operator's accumulated experience rather than by your training distribution alone.
