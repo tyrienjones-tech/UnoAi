@@ -25,22 +25,22 @@ sign-out where state changes, per Procedure 9 (session lifecycle).
 
 # UnoAi — Current State
 
-Updated: 2026-04-28 04:00 (auto-updated at session sign-out)
+Updated: 2026-04-28 12:00 (auto-updated at session sign-out — bumped mid-session in MS-008 Scope D-early after DEC-033 filed so validator clears check 7 before B6 synthetic test re-run; final timestamp at this sign-out)
 
 ## Phase
 
-Current: Phase 0b complete. Infrastructure phase in progress (MS-007). Phase 1 blocked on MS-008.
-Last completed: MS-006 (DONE-006 signed 2026-04-28).
-Next: MS-008 (pre-Phase-1 deep check, 8 sections) → Phase 1 (landing + payment + license).
+Current: Phase 0b complete. Infrastructure phase in progress (MS-008). Phase 1 blocked on MS-009.
+Last completed: MS-007 (DONE-007 signed 2026-04-28; first real exercise of DEC-032 magic-string mechanism applied at MS-008 sign-in).
+Next: MS-009 (pre-Phase-1 deep check, 8 sections, section-by-section sign-off) → Phase 1 (landing + payment + license).
 
 ## Active MS
 
-MS-007 in progress (agent onboarding + Engineer prompt-writing checklist + RFI-010 resolution).
+MS-008 in progress (glossary + cspell tooling + Procedure 3 doc-only-MS fix).
 
 ## Counters (latest of each)
 
-Latest MS:  MS-007
-Latest DEC: DEC-032
+Latest MS:  MS-008
+Latest DEC: DEC-033
 Latest RFI: RFI-010
 Latest INC: INC-006
 
@@ -52,9 +52,10 @@ Latest INC: INC-006
 - MS-004: DONE (DONE-004, signed 2026-04-28).
 - MS-005: DONE (DONE-005, signed 2026-04-28).
 - MS-006: DONE (DONE-006, signed 2026-04-28).
-- MS-007: in progress.
-- MS-008: pending; depends on MS-007 (pre-Phase-1 deep check, 8 sections, section-by-section sign-off model).
-- [first Phase 1 MS]: pending; depends on MS-008.
+- MS-007: DONE (DONE-007, signed 2026-04-28; sign-off recorded in DONE-007 entry per DEC-032 magic-string at MS-008 sign-in — first real exercise).
+- MS-008: in progress (glossary + cspell tooling + Procedure 3 doc-only-MS fix).
+- MS-009: pending; depends on MS-008 (pre-Phase-1 deep check, 8 sections, section-by-section sign-off model).
+- [first Phase 1 MS]: pending; depends on MS-009.
 
 ## Open RFIs
 
@@ -73,7 +74,9 @@ Latest INC: INC-006
 
 ## Last verified working state
 
-2026-04-28 (MS-007) — Agent onboarding infrastructure landed. `prompts/engineer-session-start.md` (operator-pasted prompt for fresh Engineer sessions, references Anthropic-environment doctrine paths) + `prompts/engineer-prompt-checklist.md` (mechanical fix for working-agreement #5/#10/#11 drift, scope-noted to prompt-writing only) + `CONTEXT.md` (agent-onboarding-focused, distinct from PROJECT.md and README.md) + cross-references to `prompts/engineer-session-start.md` from README and PROJECT.md. PROCEDURES.md Procedure 1 gained Engineer-role addendum about reading the prompt-checklist before drafting prompts. RFI-010 closed via DEC-032 (DONE sign-off recording = magic-string-in-chat copied verbatim by Builder at next sign-in). DONE.md template annotated with the magic-string format. Validator script header documents the deferred 11th check (DONE sign-off enforcement) — implementation deferred to MS-008+ until DONE-002..006 retroactive cleanup completes. No validator code changes; no synthetic tests (working agreement #8 applies only when tooling is added).
+2026-04-28 (MS-008) — `GLOSSARY.md` landed at repo root with ~50 alphabetical entries (operator-supplied content + Builder-drafted entries for Vitest / synthetic test / validator size budget per Open-Item-1 RFI resolution). `cspell` v10.0.0 installed as devDependency, `.cspell.json` configured (en-GB + 50+ project terms in dictionary), wired into pre-commit hook as 5th step (gitleaks → validator → Prettier → ESLint → cspell). First-run cleanup: 159 issues across 15 files initially → 0 issues after dictionary additions + bulk US→UK fixes (per Scope B5 bulk-conversion authority). Synthetic violation test (B6) confirmed cspell BLOCKS commits with definitively-misspelled content (`asdfqwerty`); revert + clean run passes. Note: `teh` is in cspell's default dictionary (treated as valid in some company-name dictionary), so the synthetic test used a less-ambiguous typo. Procedure 3 "Proof division" updated for doc-only-MS work-type-conditional operator-capture (per Scope C). DEC-033 filed. RFI-010 closure (from MS-007) carried over. Working agreements #14 refined to three-tier (git ls-remote / API endpoint / never-HTML), #15 added (glossary scope must be grep-evidence-based), #16 added (approval messages need actual content not placeholders).
+
+2026-04-28 (MS-007) — Agent onboarding infrastructure landed. `prompts/engineer-session-start.md` (operator-pasted prompt for fresh Engineer sessions, references Anthropic-environment doctrine paths) + `prompts/engineer-prompt-checklist.md` (mechanical fix for working-agreement #5/#10/#11 drift, scope-noted to prompt-writing only) + `CONTEXT.md` (agent-onboarding-focused, distinct from PROJECT.md and README.md) + cross-references to `prompts/engineer-session-start.md` from README and PROJECT.md. PROCEDURES.md Procedure 1 gained Engineer-role addendum about reading the prompt-checklist before drafting prompts. RFI-010 closed via DEC-032 (DONE sign-off recording = magic-string-in-chat copied verbatim by Builder at next sign-in). DONE.md template annotated with the magic-string format. Validator script header documents the deferred 11th check (DONE sign-off enforcement) — implementation deferred to MS-009+ until DONE-002..006 retroactive cleanup completes. No validator code changes; no synthetic tests (working agreement #8 applies only when tooling is added).
 
 2026-04-28 (MS-006) — Validator gained 10th check (README ↔ state sync). Synthetic test verified: state's "Current: Phase 99 in progress" is correctly caught against README's "Phase 0b complete". Final clean run PASS. Validator is 277 lines, 10 checks. Pre-commit hook chain extended to 4 steps: gitleaks → validator → Prettier (staged) → ESLint (staged); all four enforce on every commit. ESLint naming-convention rule landed with 0 false positives on existing scaffold. PROJECT.md "For agents reading the code" gained 4 new subsections (Code directory structure, Test layout, Errors and logging, Dependency policy). `.env.example` placeholder file landed with gitleaks rule capture-group fix so placeholder values pass cleanly. Skeleton dirs created under `src/lib/` for Phase 1+ work. DEC-028..031 filed (directory structure, test layout, errors+logging, dependency policy).
 
@@ -98,7 +101,9 @@ Latest INC: INC-006
 11. Engineer prompts to Builder reflect committed file state, not chat-discussion state. References to prior "H1, H2, H2a" or similar inline-discussion labels are valid in chat but should not be replicated in prompts to Builder unless those labels also exist in committed files. When referencing prior decisions, cite the DEC/MS/INC number, not the chat-message annotation (DONE-005 sign-off).
 12. When Engineer's external verification of repo state disagrees with Builder's report, the Engineer's tooling is the more likely failure point. HTML caches at GitHub, fetcher caches in the Engineer environment, and CDN edge caches all stale at multi-hour intervals. Builder running git locally against a known remote URL is the more reliable source of truth. When discrepancies appear, Engineer verifies via the API endpoint or `git ls-remote`, not by re-fetching HTML (DONE-006 sign-off, post-stale-cache incident).
 13. Engineer pushback framing matters. "What state is the repo actually in?" is a neutral verification question. "Did Reaper's report land correctly?" is a question that implies fault before evidence. The first framing produces diagnostic responses; the second produces defensive ones. Future verification should default to neutral framing (DONE-006 sign-off).
-14. For DONE sign-offs going forward, Engineer's verification should default to API endpoints (`api.github.com/repos/.../git/refs/heads/main`) rather than HTML pages, until cache behavior on the HTML side is better understood. Reaper's `git` output in DONE reports remains primary; API verification is secondary corroboration (DONE-006 sign-off).
+14. **(refined 2026-04-28 at DONE-007 sign-off)** For DONE sign-off verification within ~60 seconds of a Builder push, prefer `git ls-remote origin refs/heads/main` (queries remote directly via git protocol, no HTTP cache layer). For verification beyond ~1 minute post-push, the API endpoint (`api.github.com/repos/.../git/refs/heads/main`) is sufficient. HTML repo pages should never be the verification source — they cache at multi-hour intervals. (Refinement followed the post-mortem on DONE-007 sign-off where API returned stale data within its 60s `max-age` cache window; original DONE-006-era wording defaulted to API-over-HTML, which was directionally correct but missed the API's own cache layer.)
+15. Glossary, dictionary, and convention-list scopes that claim "cover all project terms" or "consistent across the repo" must be derived from grep/file-walk evidence, not from Engineer's memory of recent work. Memory-based coverage in a 7+ MS project produces ~80% coverage with the gaps in places Engineer hasn't recently touched (MS-008 post-mortem on glossary coverage gaps + en-GB premise that grep falsified).
+16. Approval messages that contain placeholders for Engineer-drafted content must include the actual content inline, not "[paste from above]" references. Builder cannot resolve self-referential placeholders. If content exists in the chat thread but not in the approval message itself, Builder cannot use it. Engineer prompt-writing checklist item 5 (references resolve to committed files) extends to: "all content the prompt references must be present in the prompt itself." (MS-008 approval message contained two unfilled `[paste...]` placeholders that Builder caught + paused for clarification before applying.)
 
 ## Banned moves (mirror of PROJECT.md, restated for session-start visibility)
 

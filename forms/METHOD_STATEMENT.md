@@ -167,7 +167,7 @@ Operator approval: pending
 5. README.md changes:
    - R1: add license badge line near the top: "License: PolyForm Noncommercial 1.0.0 — see LICENSE file."
    - R2: add "Self-hosting" section near the bottom per the prompt's wording.
-   - R3: restructure: top of README becomes user-facing stub ("[Marketing copy goes here in Phase 1]"); current agent-facing content moves to a section labeled "For agents working on this project" (it already is — verify the heading and ordering).
+   - R3: restructure: top of README becomes user-facing stub ("[Marketing copy goes here in Phase 1]"); current agent-facing content moves to a section labelled "For agents working on this project" (it already is — verify the heading and ordering).
 6. RFI.md status updates: change "Operator decision: pending" to "Operator decision: ANSWERED 2026-04-27 via DEC-NNN" for RFI-001, 002, 004 (sign-off date addition), 005, 006. Author retroactive entries for RFI-007 and RFI-008 as already-answered (see Risk R1 below).
 7. INCIDENT.md cosmetic fix: update example INC-001 (line ~61) HMAC reference to Ed25519 wording per the prompt.
 8. File SITE_LOG entry covering scope, pushback (DEC-022 reservations), and progress.
@@ -195,7 +195,7 @@ Operator approval: pending
   1. Most public ToS templates do not bundle AI-disclosure / crisis-protocol / 18+ language by default. Operator should confirm the template chosen contains these or that we'll add them ourselves at Phase 8.
   2. The footer line is a good user-facing disclaimer but does not substitute for full SB 243 §22602 disclosure. The `/safety` page (Phase 6) and `/privacy` page (Phase 8) carry the load-bearing compliance text — confirm the ToS references them by URL.
   3. PolyForm NC + public source means self-hosters inherit our liability exposure for their own users without our ToS protecting them. This is fine for the operator (we're not liable for their deployments) but worth stating in the README self-hosting section so self-hosters understand they're on their own legally.
-- **R3. README R3 restructure** moves agent-facing content below a new user-facing stub. The four "For agents" steps in current README.md (lines 7–22) and the file map (lines 23–41) need to remain agent-discoverable. Mitigation: keep all current agent content under a clearly-labeled "For agents working on this project" section heading; user-facing stub sits above it at the top. Builder will not delete agent content, only move it.
+- **R3. README R3 restructure** moves agent-facing content below a new user-facing stub. The four "For agents" steps in current README.md (lines 7–22) and the file map (lines 23–41) need to remain agent-discoverable. Mitigation: keep all current agent content under a clearly-labelled "For agents working on this project" section heading; user-facing stub sits above it at the top. Builder will not delete agent content, only move it.
 - **R4. PolyForm NC license-link in README R1** points to a LICENSE file that won't exist until Phase 0b. Brief broken-link window. Acceptable — README is not yet on a live site (Phase 0b deploys the placeholder).
 - **R5. PL3 Phase 6 acceptance rewrite** moves from "≤ 2% FN / ≤ 10% FP" (MS-001 wording) to "98% TP / 10% FP starting points, final tuned during implementation" (DEC-021 wording). 2% FN ≡ 98% TP — same number, different framing. Floor preserved ("numbers must exist and be met before DONE-006"). RFI-006's body becomes historical-record-of-prior-thinking; RFI-006 status is updated to ANSWERED via DEC-021.
 - **R6. RFI-005 fixture #4 expected-behaviour wording** in the source RFI does not include the "stay in character / no fourth-wall break" softening that DEC-016 introduces. Per scope, RFI-005 stays as historical record of what was answered then; DEC-016 supersedes it for new behaviour. PLAN.md PL2 updates the operative reference. RFI-005 itself is left untouched (closure status updated only).
@@ -497,7 +497,7 @@ These are the five items in the Builder's reply preceding this MS — restated h
 - **R8 acknowledgment:** Hard-fail named as intentional in DEC-026 body. Trade-off documented.
 - **R9 acknowledgment:** Document the heading-line format in BOTH the template (in SITE_LOG.md) AND in PROJECT.md's "For agents working on this project" section so future agents copy it correctly. Regex must appear as a comment in the validator script.
   - **Builder interpretation note:** the "For agents..." section currently lives in `README.md`, not `PROJECT.md`. Builder will document in README's existing section. See SITE_LOG sign-in entry for transparency note.
-- **H1 (added scope):** Add a one-paragraph organizing-principle section to top of `PROJECT.md` before the existing content: *"This project is built by AI agents with a human operator in the loop. Procedures, file structure, and documentation conventions are optimized for stateless agents recovering context from cold start, not for human developers retaining context across sessions. Read PROCEDURES.md before any session work."* Easy fit; folded into MS-004.
+- **H1 (added scope):** Add a one-paragraph organising-principle section to top of `PROJECT.md` before the existing content: *"This project is built by AI agents with a human operator in the loop. Procedures, file structure, and documentation conventions are optimized for stateless agents recovering context from cold start, not for human developers retaining context across sessions. Read PROCEDURES.md before any session work."* Easy fit; folded into MS-004.
 
 ---
 
@@ -532,7 +532,7 @@ These are the five items in the Builder's reply preceding this MS — restated h
    - Realistic post-A+C3: 235–242 lines. **Over the cap.**
    Builder default per operator's Scope C3 conditional: **ship Scope A (chain check), drop Scope C3 (README check), document the deferral in SITE_LOG and DONE-005.** README Status currency stays trust-based for MS-005; can ship in MS-006 if operator wants.
 
-5. **B2 (organizing-principle line at top of PROJECT.md) — already landed in MS-004.** Builder verified PROJECT.md line 5 contains the H1 text. Scope B2 is a no-op for MS-005; will note in SITE_LOG.
+5. **B2 (organising-principle line at top of PROJECT.md) — already landed in MS-004.** Builder verified PROJECT.md line 5 contains the H1 text. Scope B2 is a no-op for MS-005; will note in SITE_LOG.
 
 6. **Synthetic-violation test for the chain check (Scope A3).** Same discipline as MS-004's E1. One test:
    - Add fake `### MS-100 — synthetic chain test` with `Depends on: MS-099` to METHOD_STATEMENT.md.
@@ -551,7 +551,7 @@ These are the five items in the Builder's reply preceding this MS — restated h
 5. Synthetic-violation test (Scope A3): add fake MS-100/Depends-on-MS-099, run validator, capture FAIL output, revert. Final clean PASS.
 
 *Scope B — code conventions:*
-6. Verify B2 (organizing-principle line at top of PROJECT.md). Confirmed already present from MS-004.
+6. Verify B2 (organising-principle line at top of PROJECT.md). Confirmed already present from MS-004.
 7. Append "For agents reading the code" section to PROJECT.md after the existing "Sensitive content — never committed" section. Content per operator's Scope B1 verbatim, with file-header convention, DEC-reference rule, tests-as-documentation rule, naming conventions, and "When in doubt → RFI" closer.
 
 *Scope C — README markdown fixes:*
@@ -622,7 +622,7 @@ These are the five items in the Builder's reply preceding this MS — restated h
 - `scripts/validate.sh` has 9 checks; new check is MS-chain dependency. Header comment block updated to enumerate 9 checks. Line count: 192 + chain check, target ≤220.
 - Synthetic violation test for chain check produced FAIL output verbatim, captured in DONE-005 proof. Final clean run: PASS.
 - `PROJECT.md` has "For agents reading the code" section after "Sensitive content" section, containing file-header convention, DEC-reference rule, tests-as-documentation rule, naming conventions, "When in doubt" closer, all per operator's Scope B1 verbatim.
-- `PROJECT.md` organizing-principle line at top: confirmed already present (no edit needed; from MS-004).
+- `PROJECT.md` organising-principle line at top: confirmed already present (no edit needed; from MS-004).
 - `README.md` "Self-hosting" section has `##` heading marker restored.
 - `README.md` "Status" section reads: "Phase 0b complete. Infrastructure phase in progress (MS-005). Phase 1 begins after MS-006 DONE."
 - `PROCEDURES.md` Procedure 9 has a sentence about README Status section sync at sign-out.
@@ -669,7 +669,7 @@ These are the five items in the Builder's reply preceding this MS — restated h
    - File-suffix-based filenames like `+page.svelte`, `+layout.svelte`, `+server.ts` (the `+` prefix is non-standard).
    Builder approach: configure conservatively. Allow `$`-prefixed names. Allow `+` prefix on filenames via filename-pattern carve-out (or just don't enforce filename-name-convention via lint, leave that to manual review). Run on existing scaffold output; count false positives. If >5 (per Scope F2 explicit cap), RFI before shipping.
 
-3. **Pre-commit hook chain (Scope F3).** Order: gitleaks → validator → Prettier → ESLint. Both Prettier and ESLint should run on STAGED files only (not whole repo) for performance. Builder approach: extract staged files via `git diff --cached --name-only --diff-filter=ACMR` and pass to `prettier --check` and `eslint`. Builder's only design choice here is whether to fail-fast across tools (one tool's fail aborts the rest) or run all four and report all failures. Standard `set -e` pattern fails-fast. Builder default: fail-fast (matches existing hook behavior with gitleaks → validator).
+3. **Pre-commit hook chain (Scope F3).** Order: gitleaks → validator → Prettier → ESLint. Both Prettier and ESLint should run on STAGED files only (not whole repo) for performance. Builder approach: extract staged files via `git diff --cached --name-only --diff-filter=ACMR` and pass to `prettier --check` and `eslint`. Builder's only design choice here is whether to fail-fast across tools (one tool's fail aborts the rest) or run all four and report all failures. Standard `set -e` pattern fails-fast. Builder default: fail-fast (matches existing hook behaviour with gitleaks → validator).
 
 4. **Hook synthetic violation tests (F4).** Mandatory per working agreement #8. Two tests: (a) ESLint violation, (b) Prettier violation. Builder will pick canonical violations:
    - **ESLint:** introduce a `let foo_bar = 1;` (snake_case variable, violates naming convention) in a temp scratch file under `src/`.
@@ -855,7 +855,7 @@ These are the five items in the Builder's reply preceding this MS — restated h
 
 3. **Engineer-session-start prompt references `/mnt/skills/user/eco-agentic-doctrine/SKILL.md` (Anthropic-environment paths).** The prompt itself acknowledges this with the disclaimer "If running in a different environment, the doctrine source needs to be located there first." Self-aware. Builder copies verbatim. No action.
 
-4. **PROJECT.md cross-reference placement (Scope A4).** Operator says "near the top after the organizing-principle line." The organizing-principle line is the blockquoted paragraph at the top of PROJECT.md added in MS-004 H1. Builder will place the cross-reference sentence immediately after that blockquote, before the existing `---` separator.
+4. **PROJECT.md cross-reference placement (Scope A4).** Operator says "near the top after the organising-principle line." The organising-principle line is the blockquoted paragraph at the top of PROJECT.md added in MS-004 H1. Builder will place the cross-reference sentence immediately after that blockquote, before the existing `---` separator.
 
 5. **README.md cross-reference placement (Scope A3).** Operator says "before step 1" of "For agents working on this project". Builder will insert the sentence immediately above step 1 (currently `Read PROJECT.md`).
 
@@ -875,7 +875,7 @@ These are the five items in the Builder's reply preceding this MS — restated h
 1. Create `prompts/` directory at repo root.
 2. Create `prompts/engineer-session-start.md` with operator's Scope A2 content verbatim. Two top-level headings: "How to use this file" and "The prompt." All sub-content nested appropriately.
 3. Add cross-reference sentence to README.md "For agents working on this project" immediately above step 1 (per Scope A3).
-4. Add cross-reference sentence to PROJECT.md immediately after the organizing-principle blockquote (per Scope A4).
+4. Add cross-reference sentence to PROJECT.md immediately after the organising-principle blockquote (per Scope A4).
 
 *Scope B — CONTEXT.md:*
 5. Create `CONTEXT.md` at repo root with operator's Scope B1 content verbatim.
@@ -912,7 +912,7 @@ These are the five items in the Builder's reply preceding this MS — restated h
 - `Desktop/UnoAi/prompts/engineer-prompt-checklist.md` — created.
 - `Desktop/UnoAi/CONTEXT.md` — created at repo root.
 - `Desktop/UnoAi/README.md` — modified (cross-reference + file-map CONTEXT.md entry).
-- `Desktop/UnoAi/PROJECT.md` — modified (cross-reference after organizing-principle line).
+- `Desktop/UnoAi/PROJECT.md` — modified (cross-reference after organising-principle line).
 - `Desktop/UnoAi/PROCEDURES.md` — modified (Procedure 1 note about prompt-writing checklist for Engineer sessions).
 - `Desktop/UnoAi/scripts/validate.sh` — modified (header comment documenting deferred 11th check). No actual check code added.
 - `Desktop/UnoAi/forms/DECISION.md` — modified (DEC-032 appended).
@@ -933,7 +933,7 @@ These are the five items in the Builder's reply preceding this MS — restated h
 
 - **R1. Verbatim copy of operator-supplied content.** Three files contain ~200+ lines of operator-supplied text. Risk: typo or paste error. Mitigation: Builder will copy via heredoc/Write tool with explicit content matching operator's prompt body exactly. Post-write `diff` against operator's spec (mentally — there's no machine-readable spec) for a final verify.
 
-- **R2. PROJECT.md cross-reference placement adjacent to existing organizing-principle line.** The current organizing-principle is a blockquote (` > This project is built by AI agents...`). The new cross-reference is plain text. Builder will place it as a separate paragraph after the blockquote, before the `---` separator that follows. Tested mentally; should render cleanly.
+- **R2. PROJECT.md cross-reference placement adjacent to existing organising-principle line.** The current organising-principle is a blockquote (` > This project is built by AI agents...`). The new cross-reference is plain text. Builder will place it as a separate paragraph after the blockquote, before the `---` separator that follows. Tested mentally; should render cleanly.
 
 - **R3. README.md cross-reference placement.** "Before step 1" of the numbered list. Markdown numbered lists may auto-renumber when items are inserted. Builder's insertion is a sentence-level paragraph BEFORE the list, not a list item, so numbering should not shift.
 
@@ -954,7 +954,7 @@ These are the five items in the Builder's reply preceding this MS — restated h
 - `prompts/engineer-prompt-checklist.md` exists with operator's Scope C1 content verbatim. ✓
 - `CONTEXT.md` exists at repo root with operator's Scope B1 content verbatim. ✓
 - `README.md` has cross-reference to `prompts/engineer-session-start.md` before step 1; file map includes `CONTEXT.md`.
-- `PROJECT.md` has cross-reference to `prompts/engineer-session-start.md` after the organizing-principle blockquote.
+- `PROJECT.md` has cross-reference to `prompts/engineer-session-start.md` after the organising-principle blockquote.
 - `PROCEDURES.md` Procedure 1 has a note about the Engineer prompt-writing checklist.
 - `scripts/validate.sh` header comments document the deferred 11th check (DONE sign-off enforcement).
 - `forms/DECISION.md` has DEC-032 (DONE sign-off recording mechanism — magic-string-in-chat). Closes RFI-010.
@@ -976,3 +976,177 @@ These are the five items in the Builder's reply preceding this MS — restated h
 - **DEC-032 closes RFI-010** verified — RFI-010 was open in `forms/RFI.md` at sign-in time per working agreement #1.
 - **Validator stays at ~287 lines** (header comment for deferred check 11 added). No code changes. Per working agreement #10, no hard cap. No synthetic test required since no tooling enforces a new discipline (working agreement #8 only triggers when tooling is added).
 - **Working agreements #12/#13/#14** added to state/current.md verbatim from DONE-006 sign-off. Operator's sequential numbering correct this time; no Builder renumber needed.
+
+---
+
+### MS-008 — Glossary + spell-check tooling + Procedure 3 doc-only-MS fix
+- **Date:** 2026-04-28
+- **Agent:** Reaper-1
+- **Phase:** 0b infrastructure layer (post-MS-007, pre-MS-009 deep check)
+- **Session start:** 2026-04-28 04:30 (see SITE_LOG)
+- **Task:** Three scopes combined. **Scope A** `GLOSSARY.md` at repo root (~50 alphabetical entries, operator-supplied) + cross-references in README, prompts/engineer-session-start.md, CONTEXT.md. **Scope B** install `cspell` as devDependency + `.cspell.json` config + 5th step in pre-commit hook (gitleaks → validator → Prettier → ESLint → cspell, all on staged files) + first-run cleanup + synthetic violation test. **Scope C** small clarification to PROCEDURES.md Procedure 3 about doc-only MSes (no DEC needed; SITE_LOG-documented procedural drift across 7 MSes). Plus DEC-033 (spell-check tooling locked) and state update with working agreement #14 refinement.
+- **Depends on:** MS-007 (DONE-007 signed 2026-04-28; magic-string copied verbatim into entry per DEC-032 first-exercise at this session sign-in).
+- **Linked RFIs / decisions:**
+  - **New:** DEC-033 (spell-check tooling locked).
+  - **Builds on:** DEC-024 (gitleaks hook), DEC-026 (validator + checks), DEC-031 (dependency policy — cspell install requires DEC-033 per the policy).
+  - **Doesn't touch:** validator script (cspell is separate from validator); RFI-010 (closed); RFI-009 (TLD, still open). DONE-002..006 retroactive sign-off cleanup explicitly deferred to MS-009 Section 5 per Scope D2 of MS-007.
+- **Operator approval:** pending.
+
+**Open items / Builder decisions to surface at MS-008 approval:**
+
+1. **Glossary coverage gaps (Scope A4 RFI per operator).** Builder ran a grep for project-specific terms used across 2+ files but not present in operator's Scope A2 glossary content. Three real gaps found:
+   - **Vitest** — used in 17 files (test framework). Operator's content has `vitest` in cspell words list but no glossary entry.
+   - **synthetic test** — used in ~10 files (Builder discipline, working agreement #8). No glossary entry.
+   - **validator size budget** — used across 5+ MSes / DONEs (operator's working-agreement-#10 framing). No glossary entry.
+   
+   Builder default per operator's RFI instruction: **flag at approval, do NOT add silently.** If operator wants these added, paste wording at approval. Otherwise Builder ships glossary as Scope A2 content + adds an "(MS-008 coverage RFI deferred)" footnote.
+
+2. **US/UK divergence in existing files (Scope B `language: en-GB`).** Operator's prompt note: "matches operator's UK English usage (already consistent across the repo per Engineer's verification of PROCEDURES.md)." Builder's pre-flight grep finds the premise empirically false:
+   - **"behaviour"** appears in PROJECT.md (3×), METHOD_STATEMENT.md, prompts/engineer-session-start.md (1×). en-GB will flag all 5+ instances as misspellings expecting "behaviour."
+   - **"organize" / "organizing"** appears in DONE.md (4×), DECISION.md (1×). en-GB will flag.
+   - "color/colour" — no findings.
+   - "license/licence" — uses "license" (correct as the proper noun in "PolyForm Noncommercial License" + license-as-verb; en-GB tolerates "license" for verb form).
+   
+   Three paths:
+   - **(a) Stay en-GB, fix existing US spellings as part of MS-008 first-run cleanup (Scope B5).** Per operator's intent (en-GB explicitly chosen), US instances ARE the typos. ~10 fixes. Builder default.
+   - **(b) Switch to `language: "en"` (or add `en-US` to languageId allowlist).** Tolerates both spellings; loses the en-GB consistency goal.
+   - **(c) Add explicit US-allow words to `.cspell.json` (`behaviour`, `organize`, etc.).** Hybrid; convoluted.
+   
+   Builder default: **(a)**. Surface for operator override. The "30-80 more terms" first-run estimate from the operator's prompt is likely understated given the en-GB+US-spelling overlap; expect closer to 50-150 items, most of which are project terms or US spellings rather than real typos.
+
+3. **DEC-033 numbering and cspell version.** DEC-033 sequential after DEC-032 (verified at sign-in). Builder will install `cspell` and capture the actual installed version (currently `cspell@10.0.0` per pre-flight `npx cspell --version`). DEC-033 body cites the installed version + npm devDependencies entry.
+
+4. **Pre-commit hook chain order (Scope B4): gitleaks → validator → Prettier → ESLint → cspell, fail-fast on staged .md files.** Builder default matches operator's spec. cspell runs only on staged `.md` files via `git diff --cached --name-only --diff-filter=ACMR | grep '\.md$' | xargs -r npx cspell --no-summary`. If no .md files staged, cspell skips (matches Prettier/ESLint behaviour in MS-006 hook).
+
+5. **Glossary content "operator-reviewed" verbatim posture.** Same as MS-007 prompts and CONTEXT.md. Builder may refine wording for grammar/flow; substantive changes require RFI. Builder will copy operator's Scope A2 content as-is, with the three coverage-gap entries flagged in #1 either added (per operator approval) or omitted (default).
+
+6. **DONE-007 sign-off magic-string applied at session sign-in.** Mechanical pre-approved action per operator's MS-008 procedure step 2. Already done at sign-in: DONE-007 line 951 updated from `Operator sign-off: pending` to `Operator sign-off: DONE-007 signed off by operator on 2026-04-28`. First real exercise of DEC-032. Existing DONE-002..006 stay pending per Scope D2 of MS-007 (retroactive cleanup is MS-009 Section 5 work).
+
+7. **Working agreement #14 refinement** lands at this sign-out per operator's instruction in DONE-007 sign-off. Replaces existing #14 entry in state/current.md.
+
+8. **B5 first-run categorization process.** Operator says: "(a) project-specific terms missing → ADD to dictionary, (b) real typos → FIX, (c) false positives on technical terms → ADD to dictionary." Builder will go through each flagged item; RFI ambiguous cases. Output documented in SITE_LOG: "cspell first run flagged N items — X added to dictionary, Y fixed as typos, Z left for operator review."
+
+9. **Procedure 3 fix (Scope C) is a clarification, not a new decision.** No DEC needed. SITE_LOG note documents the practice-and-procedure drift for 7 MSes (MS-001 through MS-007 all doc-only). Builder applies operator's exact wording from Scope C1.
+
+**Plan (numbered, terse, scope-letter order):**
+
+*Scope A — GLOSSARY.md:*
+1. Create `GLOSSARY.md` at repo root with operator's Scope A2 content verbatim (modulo Open Item 1's coverage-gap resolution at approval).
+2. Verify alphabetical ordering and term coverage; RFI for gaps not flagged at approval.
+3. Add cross-references:
+   - `README.md` "For agents working on this project" file map: add `GLOSSARY.md` as peer to `PROJECT.md`/`PLAN.md`/etc.
+   - `prompts/engineer-session-start.md` load order: insert `GLOSSARY.md` between `PROJECT.md` and `PROCEDURES.md` in the load list.
+   - `CONTEXT.md`: add a short "For terminology" section pointing at GLOSSARY.md.
+
+*Scope B — cspell tooling:*
+4. `npm install --save-dev cspell` — capture installed version for DEC-033.
+5. Create `.cspell.json` at repo root with operator's Scope B2 config (en-GB, project words seed, ignorePaths, files glob `**/*.md`, ignoreRegExpList).
+6. Add npm script `spell-check` to `package.json` per Scope B3.
+7. Update `.githooks/pre-commit`: append cspell as 5th step after ESLint, scoped to staged .md files.
+8. **First-run cleanup (Scope B5):** run `npx cspell "**/*.md"` across the entire repo. Categorize each flagged item per operator's a/b/c rule. Fix US-spelling typos (per Open Item 2 default), add project terms to `.cspell.json` words list, RFI any ambiguous items.
+9. **Synthetic violation test (Scope B6, mandatory per working agreement #8):**
+   - Create temp file `_synthetic_cspell_test.md` with intentional misspelling ("teh").
+   - `git add`, attempt `git commit`, capture FAIL output naming the misspelling.
+   - Revert (delete file), confirm clean state.
+10. File DEC-033 in DECISION.md per Scope B7 wording, with installed cspell version cited.
+
+*Scope C — Procedure 3 fix:*
+11. Update PROCEDURES.md Procedure 3 "Proof division" section per Scope C1 verbatim. Replace the "Operator captures:" line with the work-type-conditional version.
+12. Document in SITE_LOG: practice-and-procedure drift across MS-001..007 (all doc-only, all bypassed operator-capture step), this fix aligns the procedure with established practice.
+
+*Scope D — state update:*
+13. Update `state/current.md`:
+    - Bump Updated timestamp.
+    - Phase line: "Phase 0b complete. Infrastructure phase in progress (MS-008). Phase 1 blocked on MS-009."
+    - Active MS: MS-008. MS-007 marked DONE.
+    - Counters: Latest MS=MS-008, Latest DEC=DEC-033, Latest INC=INC-006 (unchanged), Latest RFI=RFI-010 (unchanged).
+    - MS chain status: MS-007 DONE, MS-008 in progress, MS-009 pending depends on MS-008 (deep check, 8 sections), [first Phase 1 MS] pending depends on MS-009.
+    - **Replace existing working agreement #14 with refined wording** from operator's DONE-007 sign-off. Old wording stays in DONE-007's sign-off notes for the trail; canonical agreements list now has the refined version.
+    - Update last-verified-state with MS-008 results.
+
+*Sign-out + commit:*
+14. Final validator run: PASS.
+15. Sign-out entry in SITE_LOG using new template.
+16. `git add . && git commit -m "MS-008: glossary + cspell tooling + Procedure 3 fix"`. Hook fires gitleaks → validator → Prettier → ESLint → cspell; all five must pass. Push.
+17. File DONE-008 with proof. Commit + push close-out.
+
+**Files to be touched:**
+- `Desktop/UnoAi/GLOSSARY.md` — created.
+- `Desktop/UnoAi/.cspell.json` — created.
+- `Desktop/UnoAi/.githooks/pre-commit` — modified (cspell as 5th step).
+- `Desktop/UnoAi/package.json` — modified (cspell devDependency + spell-check script).
+- `Desktop/UnoAi/package-lock.json` — modified (cspell + transitive deps locked).
+- `Desktop/UnoAi/README.md` — modified (file map + Self-hosting section if needed for terminology pointer).
+- `Desktop/UnoAi/prompts/engineer-session-start.md` — modified (load order updated).
+- `Desktop/UnoAi/CONTEXT.md` — modified (For terminology section).
+- `Desktop/UnoAi/PROCEDURES.md` — modified (Procedure 3 doc-only-MS clarification).
+- `Desktop/UnoAi/forms/DECISION.md` — modified (DEC-033 appended).
+- `Desktop/UnoAi/forms/METHOD_STATEMENT.md` — modified (this MS-008 entry; approval status update post-approval).
+- `Desktop/UnoAi/forms/SITE_LOG.md` — modified (sign-in already filed; sign-out at session close).
+- `Desktop/UnoAi/forms/DONE.md` — modified (DONE-007 sign-off line already updated; DONE-008 appended at session close).
+- `Desktop/UnoAi/state/current.md` — modified (counters, MS chain, agreement #14 refined, phase line, last-verified-state).
+- **Existing .md files with US spellings (per Open Item 2 default):** PROJECT.md, METHOD_STATEMENT.md, prompts/engineer-session-start.md, DONE.md, DECISION.md — fix US → UK during Scope B5 cleanup. Estimated ~10 instances.
+
+**Files NOT touched (per scope):**
+- `forms/CHANGE_ORDER.md`, `forms/RFI.md` (no new RFIs unless ambiguous cspell items surface), `forms/INCIDENT.md` (no expected incidents). LICENSE, CONTRIBUTING.md, PLAN.md (PLAN may be touched for US-spelling fix only). `.gitignore`, `.gitleaks.toml`, `.prettierignore`, `.prettierrc`, `eslint.config.js`. Existing `scripts/validate.sh` (cspell is separate from validator).
+- Existing DONE-002..006 sign-off lines stay `pending` per MS-007 Scope D2 / MS-009 Section 5 retroactive cleanup.
+
+**Expected diff size:** ~700 lines net added across ~15 files. ~75% is GLOSSARY.md content (operator-supplied verbatim, ~400 lines including alphabetic sections). cspell config + dictionary expansion ~100 lines. Hook update ~25 lines. State update + working agreements update ~40 lines. DEC-033 ~20 lines. PROCEDURES.md fix ~10 lines. Cross-references ~15 lines. US-spelling fixes across existing files ~10 line touches. No product code, no validator changes.
+
+**Risks identified:**
+
+- **R1. Open Item 1 — glossary coverage gaps.** Surfaced at approval. Builder default: ship as Scope A2; operator paste-at-approval for additions.
+
+- **R2. Open Item 2 — Engineer's "en-GB consistent" premise empirically false.** Builder will fix US→UK as part of B5 first-run cleanup (per operator's "real typos → FIX" rule). ~10 fixes across PROJECT.md, METHOD_STATEMENT.md, prompts/, DONE.md, DECISION.md. If operator prefers en-US tolerance instead, override at approval.
+
+- **R3. cspell first-run output volume.** Operator's prompt anticipated "30-80 more terms" beyond the seed list. Builder estimates closer to 50-150 given the en-GB / US-spelling overlap, repeated mentions of project SHAs (already ignored), repeated mentions of file paths and technical strings, and project-specific compound terms (e.g., "agentic", "BYOK", "metallel" — typo? — to be classified). Documented in SITE_LOG with categorization counts.
+
+- **R4. cspell as new top-level npm devDependency.** Per DEC-031 (dependency policy), every new dep needs a DEC. DEC-033 covers this. Standing-approved scaffold deps from MS-003 unchanged.
+
+- **R5. Hook chain expanded to 5 steps.** Adds cspell run time per commit. Estimate: <500ms on staged .md files. Acceptable for solo-dev workflow. fail-fast pattern preserved.
+
+- **R6. Synthetic violation test for cspell (Scope B6).** Same discipline as MS-005 chain check, MS-006 ESLint/Prettier tests. Builder will create temp .md with "teh", attempt commit, capture FAIL output, revert, confirm clean. Expected behaviour: cspell flags `teh`, hook exits 1, commit blocked.
+
+- **R7. Glossary entries reference DEC/MS/INC/RFI numbers — verify cross-references resolve.** Each "(per DEC-NNN)" / "(per MS-NNN)" inline in glossary content needs to point at a real entry. Builder will do a post-write grep to verify. Operator's Scope A2 content references DEC-001/007/008/011/012/015/019/020/021/022/024/026/032 and MS-001/003/005/006/007. All should resolve given current DECISION.md state (DEC-001..033 with MS-008 about to file DEC-033).
+
+- **R8. Procedure 3 "doc-only MS" wording — language mirrors operator's Scope C1 verbatim.** No new decision; just acknowledges that operator-captured proof for doc-only MSes is the chat sign-off itself (per DEC-032 magic-string). Builder copies operator's wording as-is.
+
+- **R9. Working agreement #14 refinement replaces existing #14 in state/current.md.** Builder doesn't preserve old #14 in the canonical list — refined wording is the authoritative version. Old wording lives in DONE-006 sign-off notes (where #14 was originally introduced) and DONE-007 sign-off notes (where the refinement was approved). Audit trail intact.
+
+- **R10. The DONE-007 sign-off magic-string already applied at sign-in (per operator's MS-008 procedure step 2).** Mechanical, pre-approved. Captured in SITE_LOG sign-in entry. First real exercise of DEC-032 mechanism — pattern works.
+
+- **R11. cspell installed as devDependency — won't ship to user-facing bundle.** Standard npm convention; cspell is a dev tool, not runtime. No Phase 1+ code impact.
+
+**Acceptance criteria (will be copied verbatim into DONE-008):**
+- `GLOSSARY.md` exists at repo root with operator's Scope A2 content verbatim (modulo Open Item 1 coverage additions if approved at MS-008 approval).
+- Cross-references to GLOSSARY.md added in: `README.md` file map, `prompts/engineer-session-start.md` load order, `CONTEXT.md` "For terminology" section.
+- `.cspell.json` exists at repo root with operator's Scope B2 config + first-run additions.
+- `package.json` has `cspell` in devDependencies + `spell-check` npm script.
+- `.githooks/pre-commit` runs gitleaks → validator → Prettier → ESLint → cspell. All five must PASS.
+- B5 first-run cleanup: cspell runs cleanly across all `.md` files (categorization counts in SITE_LOG; US-spelling typos fixed; project terms added to dictionary).
+- B6 synthetic test: cspell BLOCKS commit with intentional typo, then revert + clean run passes.
+- DEC-033 filed in DECISION.md with cspell version cited.
+- PROCEDURES.md Procedure 3 "Proof division" section updated per Scope C1.
+- DONE-007 `Operator sign-off:` field updated to `DONE-007 signed off by operator on 2026-04-28` (already done at sign-in per DEC-032 mechanism — first real exercise).
+- `state/current.md` updated: Latest MS=MS-008, Latest DEC=DEC-033, MS-007 DONE, MS-008 in progress, MS-009 pending depends on MS-008, working agreement #14 refined per DONE-007 sign-off.
+- Sign-in (filed) and sign-out (at session end) entries in SITE_LOG using Procedure 9 templates.
+- Validator pre-commit run: PASS. Hook fires all 5 steps on MS-008 commit.
+- Push to GitHub succeeds.
+- DONE-008 contains: validator PASS output, hook output verbatim from MS-008 commit (5 steps), cspell first-run categorization summary, B6 synthetic test FAIL output, file-by-file change summary, GitHub URLs.
+
+**Operator approval:** APPROVED 2026-04-28.
+**Approval notes:**
+- **Open Item 1 (glossary coverage):** Approved adding three entries inline (synthetic test, validator size budget, Vitest) per Builder drafts, with one operator addition to the validator-size-budget entry citing DEC-026.
+- **Open Item 2 (en-GB premise + US→UK):** Approved Builder default (a) — fix US spellings as part of B5 first-run cleanup. Builder given bulk-conversion authority (no per-instance RFI needed for known categories: the US spellings of `behaviour` / `organise` / `theatre` / `memorise` / `labelled`). Documented in SITE_LOG.
+- **Open Item 3 (DEC-033 numbering + cspell version):** Approved sequential. Installed version captured: `cspell ^10.0.0` (v10.0.0 at install time).
+- **Mid-MS pause for unfilled `[paste...]` placeholders in approval message** — Builder caught the failure mode and stopped before applying. Operator approved Builder drafts of the three glossary entries + B5 mechanical execution authority. New working agreement #16 introduced as a result.
+- **Working agreement #14 refinement** lands at this MS sign-out per operator's DONE-007 sign-off instruction (replaces existing #14).
+- **Working agreement #15 added** per MS-008 post-mortem on Engineer's glossary-coverage memory gap.
+- **Working agreement #16 added** per the placeholder-pause discussion above.
+- **DONE-007 sign-off magic-string applied at sign-in** — first real exercise of DEC-032. Pattern works as designed.
+- **Existing DONE-002..006 stay pending** per MS-007 Scope D2 / MS-009 Section 5 retroactive cleanup.
+- **Validator deferred 11th check** still deferred to MS-009+ (per DEC-032 / MS-007 SITE_LOG handover note).
+- **Hook chain becomes 5 steps:** gitleaks → validator → Prettier → ESLint → cspell. Fail-fast preserved.
+- **B6 synthetic test:** initially used `teh` per operator's prompt; cspell treats `teh` as valid (in some default dictionary). Switched to `asdfqwerty` for unambiguous misspelling. Hook BLOCKED commit at exit 1; revert + clean run passes. First synthetic test commit (with `teh`) accidentally landed at SHA `4d88669` because cspell didn't flag it; reset via `git reset HEAD~1` (mixed) before any push. Not in remote history. **Worth surfacing for operator awareness:** `teh` isn't reliably caught by cspell defaults — a future MS may want to add it explicitly to a `flagWords` list in `.cspell.json` if catching common typos like `teh` is the goal.
+- **First-run cleanup result:** 159 issues across 15 files initially → 0 issues after dictionary additions (~22 project terms beyond the seed 30) + bulk US→UK fixes. Categorisation in DONE-008 proof.
+- **`.cspell.json` `files` glob removed** because it interacts oddly with literal-filename CLI args (cspell intersects config glob with explicit args; literal filenames silently skipped if not matched by config glob). Hook now passes filenames through to cspell which uses them directly. npm script glob form unchanged.

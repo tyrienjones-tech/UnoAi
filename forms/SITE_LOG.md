@@ -376,7 +376,7 @@ INF  no leaks found
   - `Desktop/UnoAi/state/current.md` (created with format-spec comment + populated values; updated again at sign-out)
   - `Desktop/UnoAi/scripts/validate.sh` (created — pure bash, 192 lines, 8 checks; ~28% over operator's ~150 guidance, see DONE-004 design-review note)
   - `Desktop/UnoAi/.githooks/pre-commit` (modified — gitleaks then validator; both must PASS)
-  - `Desktop/UnoAi/PROJECT.md` (H1 organizing-principle paragraph at top)
+  - `Desktop/UnoAi/PROJECT.md` (H1 organising-principle paragraph at top)
   - `Desktop/UnoAi/PROCEDURES.md` (Procedure 9 added; "Eight" → "Nine" header; summary table extended)
   - `Desktop/UnoAi/README.md` ("eight rules" → "nine rules" in 2 places; agent step list updated with state/current.md + validator-run steps; sign-in heading-line format documented; file-map updated with state/, scripts/, .githooks/, .gitleaks.toml)
   - `Desktop/UnoAi/forms/SITE_LOG.md` (templates at top + this session's sign-in/sign-out)
@@ -506,7 +506,7 @@ INF  no leaks found
   - `Desktop/UnoAi/prompts/engineer-prompt-checklist.md` (created, operator's Scope C1 verbatim + one-paragraph scope-note at top per friendly amendment)
   - `Desktop/UnoAi/CONTEXT.md` (created at repo root, operator's Scope B1 verbatim)
   - `Desktop/UnoAi/README.md` (cross-reference + file-map updated to include CONTEXT.md, prompts/)
-  - `Desktop/UnoAi/PROJECT.md` (cross-reference after organizing-principle blockquote)
+  - `Desktop/UnoAi/PROJECT.md` (cross-reference after organising-principle blockquote)
   - `Desktop/UnoAi/PROCEDURES.md` (Procedure 1 Engineer-role addendum)
   - `Desktop/UnoAi/scripts/validate.sh` (header comment for deferred check 11; 289 lines)
   - `Desktop/UnoAi/forms/DECISION.md` (DEC-032)
@@ -523,3 +523,59 @@ INF  no leaks found
   - **Friendly amendment taken:** added a one-paragraph scope-note at top of `prompts/engineer-prompt-checklist.md` clarifying the checklist covers prompt-writing only. DONE sign-off discipline (#9, #12, #14) and Builder-execution discipline (#3, #7, #8) stay in their own domains (the canonical agreements list in state/current.md). This is the operator-flagged friendly amendment from the MS-007 approval message.
   - **DEC-032 mechanism (magic-string-in-chat):** going forward, when operator signs off in chat with the string "`DONE-NNN signed off by operator on YYYY-MM-DD`", Builder copies that verbatim into the DONE entry's `Operator sign-off:` line at the next session sign-in. Existing DONE-002..006 stay "pending" in this MS; retroactive cleanup is MS-008 Section 5 work.
   - **Deferred check 11** documented in validator script header. Will ship after MS-008 retroactive cleanup of DONE-002..006 sign-off lines (otherwise the chain check would block since chains depend on those DONEs).
+
+---
+
+### 2026-04-28 04:30 session start
+
+- Role: Builder
+- Session goal: implement MS-008 — GLOSSARY.md at repo root + cspell tooling installed and wired into pre-commit hook (5th step) + small fix to PROCEDURES.md Procedure 3 for doc-only MSes + DEC-033.
+- Resuming from: DONE-007 (signed 2026-04-28 in chat). Operator's magic-string per DEC-032: "DONE-007 signed off by operator on 2026-04-28." **Builder's first action this session: copy that verbatim into DONE-007's `Operator sign-off:` field per DEC-032 mechanism** — first real exercise of the magic-string flow. Done at session start before validator run.
+- Context loaded: PROJECT.md, PROCEDURES.md, state/current.md, DEC-031/032, RFI-009 (open).
+- Open MSes: none (MS-007 closed).
+- Open RFIs awaiting me: none. RFI-009 (TLD) still open but not Builder-blocking.
+- Pre-session validator run: **PASS** (verified at 2026-04-28 04:30 before this entry was filed).
+- Working-agreement-#1 verification: DEC-032 confirmed highest in DECISION.md; next sequential is DEC-033 per discipline #5.
+- **Renumbering note (per operator's MS-008 prompt):** operator inserted glossary work between MS-007 and the planned deep-check. Original "MS-008 = deep check" became MS-009. This MS-008 is the glossary work. State's MS chain section already reflects this — confirmed at sign-in. The MS-008 sneak-peek line in DONE-007's body is now stale (referenced "pre-Phase-1 deep check, 8 sections"); captured in DONE-007 sign-off-notes for the trail rather than retroactively rewritten.
+- **DEC-032 first exercise:** DONE-007's `Operator sign-off:` field updated from `pending` to `DONE-007 signed off by operator on 2026-04-28`. Mechanical pre-approved action per operator's MS-008 procedure step 2.
+
+---
+
+### 2026-04-28 12:00 session end
+
+- Role: Builder
+- Outcome: DONE-008 to follow this commit. MS-008 scope complete. **DEC-032 mechanism's first real exercise** applied at sign-in (DONE-007 magic-string copy-into-file). **Working agreement #14 refined**, **#15 + #16 added** at this sign-out.
+- Files touched (~15 files):
+  - `Desktop/UnoAi/GLOSSARY.md` (created — ~50 alphabetical entries; operator content + 3 Builder drafts approved verbatim for synthetic test / validator size budget / Vitest)
+  - `Desktop/UnoAi/CONTEXT.md` (added "For terminology" pointer line)
+  - `Desktop/UnoAi/README.md` (file map updated to include GLOSSARY.md)
+  - `Desktop/UnoAi/prompts/engineer-session-start.md` (load order updated to include GLOSSARY.md; en-GB conversions ×4: behaviour-related terms + theatre + memorise)
+  - `Desktop/UnoAi/PROJECT.md` (en-GB conversions ×4: behaviour-related terms in Test layout / file header / tests-as-documentation sections)
+  - `Desktop/UnoAi/PROCEDURES.md` (Procedure 3 "Proof division" updated for doc-only-MS work-type-conditional operator-capture per Scope C)
+  - `Desktop/UnoAi/.cspell.json` (created — en-GB + 50+ project terms; Prettier-reformatted)
+  - `Desktop/UnoAi/.githooks/pre-commit` (cspell appended as 5th step on staged .md files; fail-fast preserved)
+  - `Desktop/UnoAi/package.json` (cspell `^10.0.0` devDependency + `spell-check` npm script with `--no-progress`)
+  - `Desktop/UnoAi/package-lock.json` (cspell + transitive deps locked)
+  - `Desktop/UnoAi/forms/DECISION.md` (DEC-033 appended; 1× organisation spelling fix in DEC-028)
+  - `Desktop/UnoAi/forms/METHOD_STATEMENT.md` (MS-008 entry + approval status; bulk en-GB conversions across historical entries)
+  - `Desktop/UnoAi/forms/DONE.md` (DONE-007 sign-off line updated per DEC-032 first exercise; bulk en-GB across historical entries; DONE-008 to be appended at session close)
+  - `Desktop/UnoAi/forms/SITE_LOG.md` (sign-in already filed; this sign-out; bulk en-GB across historical entries)
+  - `Desktop/UnoAi/state/current.md` (counters bumped to MS-008/DEC-033 mid-session for B6 unblock; MS chain advanced; agreements #14 refined / #15 / #16 added; phase line + last-verified-state updated; en-GB fix on `behaviour`)
+- Validator run at end: **PASS** (verified at 2026-04-28 12:00 before commit; 289 lines, no validator code change in this MS).
+- cspell run at end: **PASS** (full repo, 17 files, 0 issues — clean baseline established).
+- Format check at end: **PASS**.
+- Lint at end: **PASS**.
+- state/current.md updated: **YES**.
+- Next action: commit + push (5-step hook fires gitleaks → validator → Prettier → ESLint → cspell). Then DONE-008 + close-out commit. Then hold for MS-009 prompt.
+
+**Handover notes:**
+
+- **First exercise of DEC-032 magic-string mechanism** worked as designed: operator typed "DONE-007 signed off by operator on 2026-04-28" in chat; Builder copied verbatim into DONE-007's `Operator sign-off:` line at session sign-in. No friction; no chat-state-vs-file-state ambiguity. Pattern is solid.
+- **Mid-MS pause for placeholder-resolution** caught a real Engineer-side failure: MS-008 approval message contained two `[paste from above]` placeholders that referenced chat content not actually present. Builder paused, surfaced the issue, operator approved Builder drafts. New working agreement #16 introduced. This is a legitimate Builder-discipline use of the RFI-on-ambiguity rule even when work appears trivially unblocked on first read.
+- **First-run cspell cleanup volume** was 159 issues across 15 files (vs operator's "30-80" estimate). After dictionary additions (~22 project terms beyond seed) + bulk US→UK fixes (~10 instances), 0 issues remaining. This validates working agreement #15 (memory-based scope estimates produce ~80% coverage in active areas; gaps surface when grep is the source-of-truth).
+- **Bulk US→UK conversion** applied per Scope B5 authority: `behaviour` / `organise` / `theatre` / `memorise` / `labelled` across ~10 instances in forward-looking and historical-record .md files. Historical entries were converted because cspell scans all .md files; un-converted historical entries would flag every pre-commit.
+- **`teh` is in cspell's default company-name dictionary** (Tencent Hong Kong, abbreviation Teh, etc.) so it's NOT flagged as a misspelling. Synthetic test (B6) initially used `teh` per operator spec; first attempt accidentally landed at SHA `4d88669` because cspell didn't flag it. Reset via `git reset HEAD~1` (mixed). Switched test to `asdfqwerty` (definitely-flagged). Worth a future MS to add `teh` to a `flagWords` list explicitly if catching common typos is the goal — surfaced for operator awareness but not blocking.
+- **`.cspell.json` `files` glob removed** because cspell's intersection logic between config-glob and explicit-CLI-args caused literal filenames to be silently skipped. Hook now passes filenames through directly; npm script glob form unchanged.
+- **DEC-033 body** captures cspell version, dictionary policy (additive, no per-instance disable comments), language choice rationale, and first-run cleanup result.
+- **State counter bump mid-session** (Scope D-early) repeats the MS-006 pattern: when MS-008 was filed in METHOD_STATEMENT.md, validator check 7 failed until counters were updated. Bumping to MS-008/DEC-033 once DEC-033 was filed cleared the validator before B6 synthetic test. Documented in DEC-033 body and at the top of state/current.md.
+- **Validator deferred 11th check** still deferred to MS-009+ (per MS-007 / DEC-032 / SITE_LOG handover note). MS-009 Section 5 (form integrity audit) does the retroactive cleanup of DONE-002..006 sign-off lines, after which the 11th check ships.

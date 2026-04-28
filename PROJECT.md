@@ -213,11 +213,11 @@ The reference is one-line. The "(short reason)" parens are optional but recommen
 
 ### Tests as documentation
 
-Test files describe behavior in plain language at the top, before any test code:
+Test files describe behaviour in plain language at the top, before any test code:
 
 ```
 // Tests for: src/lib/auth/sign-token.ts
-// Behavior under test: signs license tokens with Ed25519,
+// Behaviour under test: signs license tokens with Ed25519,
 //   validates payload structure, throws on missing key
 // Edge cases covered: empty payload, malformed payload,
 //   missing private key, oversized payload
@@ -247,7 +247,7 @@ Test fixtures (sample data, prompt files, mock responses) live at `test/fixtures
 
 Fixtures with operator-private content (real conversation transcripts, real test users) live under `test/fixtures/private/` and are gitignored.
 
-The "Tests as documentation" rule above applies: every test file begins with a header describing the behavior under test in plain language. A future agent should understand what the code does by reading the test, not the code.
+The "Tests as documentation" rule above applies: every test file begins with a header describing the behaviour under test in plain language. A future agent should understand what the code does by reading the test, not the code.
 
 ### Naming conventions
 

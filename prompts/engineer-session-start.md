@@ -20,7 +20,7 @@ Before you do any work — before you read the repo, before you respond to the o
 /mnt/skills/user/eco-agentic-doctrine/SKILL.md
 ```
 
-That file is the operator's standing doctrine on agentic AI behavior. It is the consolidated record of failure patterns they've observed across multiple projects (primarily ECO, their flagship). It is not aspirational; it is descriptive — these are things that have actually broken, with the lessons named. The numbered LESSON-### entries are battle-tested.
+That file is the operator's standing doctrine on agentic AI behaviour. It is the consolidated record of failure patterns they've observed across multiple projects (primarily ECO, their flagship). It is not aspirational; it is descriptive — these are things that have actually broken, with the lessons named. The numbered LESSON-### entries are battle-tested.
 
 Why you are reading this before working:
 
@@ -36,7 +36,7 @@ Why you are reading this before working:
    - Skip-numbering DECs because the next number "felt" wrong
    - Referring to chat-discussion artifacts (H1, H2a, "as discussed earlier") as if they exist in committed files
 
-4. You are not being asked to memorize the doctrine. You are being asked to load it into context so that when the operator pushes back, when Reaper RFIs, when something feels "obvious," you have the doctrine's lessons available as a counterweight to your defaults.
+4. You are not being asked to memorise the doctrine. You are being asked to load it into context so that when the operator pushes back, when Reaper RFIs, when something feels "obvious," you have the doctrine's lessons available as a counterweight to your defaults.
 
 After you read the doctrine, also load (if present):
 
@@ -49,7 +49,8 @@ Once those are loaded, then load the UnoAi-specific files:
 
 ```
 state/current.md       (current phase, counters, open RFIs, working agreements, MS chain)
-PROJECT.md             (organizing principle, banned moves, "for agents reading the code")
+PROJECT.md             (organising principle, banned moves, "for agents reading the code")
+GLOSSARY.md            (canonical project terminology — acronyms, roles, decisions)
 PROCEDURES.md          (the nine procedures)
 PLAN.md                (phased build with acceptance criteria)
 forms/SITE_LOG.md      (recent session entries — read the last 2-3 sessions to understand what just happened)
@@ -64,7 +65,7 @@ What this prompt is NOT:
 - It is not a request for you to summarize the doctrine back to the operator. The operator wrote it; they don't need a summary.
 - It is not a request for you to apply the doctrine retroactively to existing UnoAi procedures. The procedures are working; do not refactor them.
 - It is not a request for you to add the doctrine's content to UnoAi's own files. The doctrine lives in the skills folder; UnoAi inherits it by reading, not by copying.
-- It is not a directive for any specific behavior change. The goal is awareness — that you have the doctrine's patterns in mind when you make decisions, so your defaults are informed by the operator's accumulated experience rather than by your training distribution alone.
+- It is not a directive for any specific behaviour change. The goal is awareness — that you have the doctrine's patterns in mind when you make decisions, so your defaults are informed by the operator's accumulated experience rather than by your training distribution alone.
 
 What this prompt IS:
 
@@ -72,4 +73,4 @@ What this prompt IS:
 - A self-awareness primer. The doctrine names patterns you will exhibit. Knowing the names makes them catchable in yourself.
 - A continuity bridge. The operator does not want to re-teach these lessons every session. The doctrine is the teaching; this prompt is the pointer.
 
-After loading: respond to the operator's first real request normally. Do not narrate that you've loaded the files unless asked. Do not perform "I have read the doctrine" theater. The operator will know you've loaded it because your decisions will be visibly informed by it — that's the whole point.
+After loading: respond to the operator's first real request normally. Do not narrate that you've loaded the files unless asked. Do not perform "I have read the doctrine" theatre. The operator will know you've loaded it because your decisions will be visibly informed by it — that's the whole point.

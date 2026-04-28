@@ -400,7 +400,7 @@ These are locked at project start. Override only via a new DECISION entry that e
 - **Boundaries** enforced by SvelteKit conventions (`lib/server/`) and DEC-required for crossings. Adding a new top-level directory under `src/lib/` requires a DEC. Subdirectories under existing categories do not.
 - **Reason:** structural decisions get expensive to change once code lands. Fixing the structure now while no product code exists is cheap. Stateless agents reading the code need predictable paths; ad-hoc structure forces every onboarding agent to re-derive the layout.
 - **Reversibility:** clean now (skeleton dirs only contain `.gitkeep`). Expensive once Phase 1+ code depends on the structure.
-- **Affects:** all Phase 1+ code organization, all import paths, all test file locations.
+- **Affects:** all Phase 1+ code organisation, all import paths, all test file locations.
 
 ### DEC-029 — Test layout convention
 - **Date:** 2026-04-28
@@ -440,3 +440,14 @@ These are locked at project start. Override only via a new DECISION entry that e
 - **Affects:** every future DONE sign-off. Existing DONE-002 through DONE-006 to be cleaned up retroactively at MS-008 (Section 5 — form integrity audit).
 - **Closes:** RFI-010.
 - **Future enforcement (deferred to MS-008+):** validator gains an 11th check verifying any DONE-NNN referenced as a chain dependency target has its `Operator sign-off:` field populated (not `pending`). Implementing now would block existing chain-check passes; deferred until retroactive sign-offs are cleaned up at MS-008.
+
+### DEC-033 — Spell-check tooling locked
+- **Date:** 2026-04-28
+- **Decided by:** operator
+- **Decision:** `cspell` (v10.0.0, `^10.0.0` semver in package.json devDependencies) installed and configured via `.cspell.json` at repo root with project-specific dictionary. Wired into pre-commit hook as 5th step on staged `.md` files (gitleaks → validator → Prettier → ESLint → cspell, fail-fast). `npm run spell-check` runs cspell across all `.md` files manually. Initial scope: `.md` files only; expansion to code files deferred to a later MS if proven valuable.
+- **Reason:** 50+ project-specific acronyms and terms produce high cognitive load on stateless agents; spelling drift in prose accumulates over sessions; mechanical enforcement is the only reliable layer (working agreement #8 precedent — untested validators are worse than no validator). cspell chosen over aspell/hunspell because it handles code-context awareness natively and integrates with npm tooling already in the project.
+- **Language: en-GB.** Engineer initially claimed the repo was already en-GB-consistent; Builder's MS-008 pre-flight grep proved the premise false (5+ US-spelling instances of words like "behaviour", 4× "organising", 1× "theatre", 1× "memorise"). Per Scope B5 bulk-conversion authority granted in MS-008 approval, US spellings fixed to UK in-bulk during first-run cleanup. en-GB is now the enforced standard going forward.
+- **Initial dictionary content (.cspell.json `words` array):** 30 seed terms + ~22 project terms surfaced by first-run cleanup (Squeezy, Noncommercial, Tyrien, ACMR, ONNX, polyformproject, prerender, blockquoted, handoff, kickoff, roundtrip, oneline, vulns, vars, judgment/judgement, hosters, offs, incl, anymore, tradeoffs, metallel, Replika, tradeoff, unparseable, filemap, xrefs, lockfiles, prepping, bindable). Dictionary is additive going forward — new project terms get added via `.cspell.json` edits, not via per-instance `// cspell:disable-line` comments.
+- **First-run cleanup result:** 159 issues across 15 files initially → 0 issues after bulk dictionary additions + bulk US→UK fixes. Synthetic violation test (B6, intentional "teh" misspelling) confirmed hook BLOCKS commits with cspell-flagged content; revert + clean run passes.
+- **Reversibility:** cheap to remove; expensive to retroactively catch typos that have shipped to public.
+- **Affects:** every commit going forward (5-step hook chain). Expanded scope (code files) deferred to a later MS if proven valuable.

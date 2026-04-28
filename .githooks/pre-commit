@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# UnoAi pre-commit hook — four-step chain (per DEC-024 / DEC-026 / DEC-027 /
-# MS-006 Scope F3).
+# UnoAi pre-commit hook — five-step chain (per DEC-024 / DEC-026 / DEC-027 /
+# MS-006 Scope F3 / DEC-033).
 #
 # Order (fail-fast — one tool's failure aborts the rest):
 #   1. gitleaks scan staged content (DEC-024 / Procedure 8) — secrets first.
 #   2. scripts/validate.sh structural-integrity check (DEC-026 / Procedure 9).
 #   3. Prettier --check on staged files (formatting).
 #   4. ESLint on staged files (semantics + naming conventions per DEC-027).
-# All four must exit 0 for the commit to proceed.
+#   5. cspell on staged .md files (spelling per DEC-033 / MS-008 Scope B4).
+# All five must exit 0 for the commit to proceed.
 #
 # Setup (one-time per clone):
 #   git config core.hooksPath .githooks
@@ -113,6 +114,26 @@ if [ -n "$STAGED_FILES" ]; then
   echo "[pre-commit] ESLint: clean."
 else
   echo "[pre-commit] no staged code files for Prettier/ESLint."
+fi
+
+# Step 5: cspell on staged .md files (per MS-008 Scope B4 + DEC-033).
+STAGED_MD=$(git diff --cached --name-only --diff-filter=ACMR | grep '\.md$' || true)
+if [ -n "$STAGED_MD" ]; then
+  echo "[pre-commit] running cspell on staged .md files..."
+  if ! npx cspell --no-summary $STAGED_MD; then
+    echo "" >&2
+    echo "[pre-commit] FAIL: cspell flagged staged .md files." >&2
+    echo "  Fix:" >&2
+    echo "    - Real typos: correct in source." >&2
+    echo "    - Project terms: add to .cspell.json 'words' array." >&2
+    echo "    - npm run spell-check  # re-run across all .md files" >&2
+    echo "" >&2
+    echo "Commit blocked." >&2
+    exit 1
+  fi
+  echo "[pre-commit] cspell: clean."
+else
+  echo "[pre-commit] no staged .md files for cspell."
 fi
 
 exit 0

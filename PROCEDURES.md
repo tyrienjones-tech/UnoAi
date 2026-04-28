@@ -56,11 +56,13 @@ Wait for operator approval. Do not start work until approved.
 - Acceptance criteria copied verbatim from the method statement
 - **Proof attached** — see division of labour below
 
-**Proof division (per DEC-011):**
+**Proof division (per DEC-011 + MS-008 Scope C clarification):**
 - **Builder produces:** test output (paste or path), git diffs (SHA range), deployed/staging URL, console logs.
-- **Operator captures:** screenshots, screen recordings, visual UI confirmation against the Builder-produced live URL.
+- **Operator captures (where applicable to the work):**
+  - For code-producing MSes: screenshots, screen recordings, visual UI confirmation against the Builder-produced live URL.
+  - For doc-only MSes (no UI surface): visual inspection of the rendered files on GitHub is sufficient. Operator-captured proof is the chat sign-off itself (per DEC-032 magic-string mechanism).
 
-A description of expected behaviour is **not proof**. "It works on my machine" is not proof. "I'm confident it's correct" is not proof. The DONE entry must cite at least one Builder-produced artefact and at least one Operator-captured artefact (where applicable to the phase).
+A description of expected behaviour is **not proof**. "It works on my machine" is not proof. "I'm confident it's correct" is not proof. The DONE entry must still cite at least one Builder-produced artefact; the operator-captured artefact is work-type-dependent.
 
 **Form:** `forms/DONE.md` (append-only, DONE-001 onwards)
 

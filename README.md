@@ -55,6 +55,7 @@ unoai/
 ├── LICENSE              ← PolyForm Noncommercial 1.0.0
 ├── CONTRIBUTING.md      ← bug reports yes, PRs no (per DEC-018)
 ├── CONTEXT.md           ← what UnoAi is, conceptually (agent onboarding)
+├── GLOSSARY.md          ← canonical project terminology (acronyms, roles, decisions)
 ├── PROJECT.md           ← read first, every session
 ├── PLAN.md              ← phased build with acceptance criteria
 ├── PROCEDURES.md        ← the nine rules

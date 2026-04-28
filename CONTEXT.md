@@ -7,6 +7,7 @@ For phased build plan: read [`PLAN.md`](./PLAN.md).
 For decisions and incidents: read [`forms/`](./forms/).
 For current state and counters: read [`state/current.md`](./state/current.md).
 For session-start onboarding: read [`prompts/engineer-session-start.md`](./prompts/engineer-session-start.md).
+For terminology: read [`GLOSSARY.md`](./GLOSSARY.md).
 
 ## What UnoAi is
 

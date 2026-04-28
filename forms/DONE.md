@@ -436,7 +436,7 @@ VALIDATOR: PASS
 | `forms/METHOD_STATEMENT.md` | MS-004 entry filed pre-work; approval status updated post-approval. |
 | `forms/DONE.md` | DONE-004 appended (this entry). |
 | `PROCEDURES.md` | Procedure 9 added; "Eight procedures" → "Nine procedures"; summary table extended. |
-| `PROJECT.md` | H1 organizing-principle paragraph at top. |
+| `PROJECT.md` | H1 organising-principle paragraph at top. |
 | `README.md` | "eight rules" → "nine rules" (2 places); agent step list updated with `state/current.md` + validator-run steps; sign-in heading-line format documented; file-map updated with `state/`, `scripts/`, `.githooks/`, `.gitleaks.toml`, `CONTRIBUTING.md`. |
 
 **Validator-size design-review trigger (per operator's R3 acknowledgment):**
@@ -513,7 +513,7 @@ Both bugs are documented in DEC-026 reproduction notes and in `scripts/validate.
 - `scripts/validate.sh` has 9 checks; new check is MS-chain dependency. Header comment block updated to enumerate 9 checks. Line count: 237 (vs target ≤220). Per-MS-005 RFI resolution: accepted as-is per working agreement #7. ✓
 - Synthetic violation test for chain check produced FAIL output verbatim, captured in DONE-005 proof. Final clean run: PASS. ✓ Both branches verified (target-missing + target-undone).
 - `PROJECT.md` has "For agents reading the code" section after "Sensitive content" section, containing file-header convention, DEC-reference rule, tests-as-documentation rule, naming conventions, "When in doubt" closer per operator's Scope B1 verbatim. ✓
-- `PROJECT.md` organizing-principle line at top: confirmed already present from MS-004; B2 was a no-op. ✓
+- `PROJECT.md` organising-principle line at top: confirmed already present from MS-004; B2 was a no-op. ✓
 - `README.md` "Self-hosting" section has `##` heading marker restored. ✓
 - `README.md` "Status" section reads: "Phase 0b complete. Infrastructure phase in progress (MS-005). Phase 1 begins after MS-006 DONE." ✓
 - `PROCEDURES.md` Procedure 9 has a sentence about README Status section sync at sign-out (trust-based through MS-005, mechanical enforcement deferred to MS-006). ✓
@@ -846,7 +846,7 @@ VALIDATOR: PASS
 - `prompts/engineer-prompt-checklist.md` exists with operator's Scope C1 content verbatim **plus a one-paragraph scope-note** at the top per the friendly amendment from MS-007 approval (clarifies the checklist covers prompt-writing only). ✓
 - `CONTEXT.md` exists at repo root with operator's Scope B1 content verbatim. ✓
 - `README.md` has cross-reference to `prompts/engineer-session-start.md` before step 1; file map includes `CONTEXT.md` and `prompts/`. ✓
-- `PROJECT.md` has cross-reference to `prompts/engineer-session-start.md` immediately after the organizing-principle blockquote. ✓
+- `PROJECT.md` has cross-reference to `prompts/engineer-session-start.md` immediately after the organising-principle blockquote. ✓
 - `PROCEDURES.md` Procedure 1 has the Engineer-role addendum about reading `prompts/engineer-prompt-checklist.md` before writing prompts. ✓
 - `scripts/validate.sh` header comments document the deferred 11th check (DONE sign-off enforcement, deferred to MS-008+ until DONE-002..006 retroactive cleanup). 289 lines. ✓
 - `forms/DECISION.md` has DEC-032 (DONE sign-off recording mechanism — magic-string-in-chat). Closes RFI-010. ✓
@@ -906,7 +906,7 @@ The "no staged code files for Prettier/ESLint" line is expected — MS-007 commi
 | `prompts/engineer-prompt-checklist.md` | Created. 14-item checklist Engineer runs through before writing any prompt to Builder. Plus scope-note at top (friendly amendment) clarifying it covers prompt-writing only. |
 | `CONTEXT.md` | Created at repo root. Agent-onboarding context — what UnoAi is, what it isn't, why constraints exist, architecture differences, who's building. |
 | `README.md` | +cross-reference sentence to `prompts/engineer-session-start.md` before "Start here every session" list. File-map updated to include `CONTEXT.md` and `prompts/`. |
-| `PROJECT.md` | +cross-reference sentence to `prompts/engineer-session-start.md` immediately after the organizing-principle blockquote. |
+| `PROJECT.md` | +cross-reference sentence to `prompts/engineer-session-start.md` immediately after the organising-principle blockquote. |
 | `PROCEDURES.md` | +Engineer-role addendum to Procedure 1 about reading `prompts/engineer-prompt-checklist.md` before writing prompts. |
 | `scripts/validate.sh` | +12 lines of header comment documenting the deferred 11th check (DONE sign-off enforcement) per Scope D3. No actual check code. 277 → 289 lines. |
 | `forms/DECISION.md` | +DEC-032 (DONE sign-off recording mechanism — magic-string-in-chat). Closes RFI-010. |
@@ -948,9 +948,9 @@ The "no staged code files for Prettier/ESLint" line is expected — MS-007 commi
 
 3. **MS-008 sneak-peek** confirmed in state's MS chain section: "pending; depends on MS-007 (pre-Phase-1 deep check, 8 sections, section-by-section sign-off model)." Engineer drafts MS-008 at next session.
 
-**Operator sign-off:** pending.
+**Operator sign-off:** DONE-007 signed off by operator on 2026-04-28.
 **Sign-off notes:**
-[Operator fills. Run `bash scripts/validate.sh`; confirm PASS. Verify via API endpoint per agreement #14. Per DEC-032, sign-off magic-string format: "DONE-007 signed off by operator on YYYY-MM-DD" — Builder copies that into the line above at next session sign-in.]
+[Builder note 2026-04-28 (MS-008 sign-in): magic-string copied verbatim per DEC-032 — first real exercise of the mechanism. Operator's chat message "DONE-007 SIGNED OFF" followed by "DONE-007 signed off by operator on 2026-04-28." Subsequent additional acknowledgments (working agreement #14 refinement etc.) handled at MS-008 sign-in proper. The MS-007 sneak-peek line above ("MS-008 sneak-peek... pre-Phase-1 deep check") is now stale — operator inserted a glossary MS between MS-007 and the deep check; this MS-008 is the glossary work; deep check renumbered to MS-009. Captured here for the trail; not retroactively rewriting the original sign-off-notes block.]
 
 
 
