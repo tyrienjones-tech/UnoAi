@@ -139,6 +139,70 @@ Enforcement is the `gitleaks` pre-commit hook in `.githooks/pre-commit` (activat
 
 ---
 
+## For agents reading the code
+
+This project is built by stateless AI agents. Code lives inside an infrastructure designed to make context recoverable from cold start. The following conventions are mandatory for all code committed to this repo (per DEC-027).
+
+### File header convention
+
+Every code file (`.ts`, `.js`, `.svelte`, `.sh`) begins with a header comment block. Format:
+
+```
+// File: <path from repo root>
+// Purpose: <one sentence — what this file does>
+// Depends on: <list of imports, env vars, other modules, or "none">
+// Used by: <list of files that import this, or "entry point" / "no internal callers">
+// Decisions: <list of DEC-NNN references that govern this file's design, or "none">
+// Failure modes: <list of how this can break and what happens when it does>
+```
+
+For `.svelte` files, place the header inside an HTML comment block at the top.
+For `.sh` files, use `#` shell comments.
+For `.json` files (no comment support), maintain a corresponding `.md` sibling with the same name documenting the file's role.
+
+Header is mandatory at file creation. Header is updated when "Depends on / Used by / Decisions / Failure modes" change — not on every edit.
+
+### DEC references in code
+
+When code implements a decision recorded in `forms/DECISION.md`, the code links to the DEC inline:
+
+```
+// per DEC-007 (Ed25519 over HMAC)
+const signature = signEd25519(payload, privateKey);
+```
+
+The reference is one-line. The "(short reason)" parens are optional but recommended — they save a round-trip to `DECISION.md` when the agent already has enough context.
+
+### Tests as documentation
+
+Test files describe behavior in plain language at the top, before any test code:
+
+```
+// Tests for: src/lib/auth/sign-token.ts
+// Behavior under test: signs license tokens with Ed25519,
+//   validates payload structure, throws on missing key
+// Edge cases covered: empty payload, malformed payload,
+//   missing private key, oversized payload
+```
+
+A future agent reading the test file should understand what the code does without reading the code itself.
+
+### Naming conventions
+
+- Files: kebab-case for `.ts`/`.js`/`.svelte` (e.g. `sign-token.ts`)
+- Functions: camelCase (e.g. `signLicenseToken`)
+- Types/Interfaces: PascalCase (e.g. `LicensePayload`)
+- Constants: SCREAMING_SNAKE_CASE (e.g. `MAX_PAYLOAD_BYTES`)
+- Environment variables: SCREAMING_SNAKE_CASE matching Cloudflare convention (e.g. `LICENSE_PRIVATE_KEY`)
+
+Deviations from these conventions require a DEC.
+
+### When in doubt
+
+File an RFI before writing the code. The cost of an RFI is minutes; the cost of inconsistent conventions surfacing in Phase 5 is hours of refactoring.
+
+---
+
 ## Current state
 
 Nothing built. Repo not yet initialised.

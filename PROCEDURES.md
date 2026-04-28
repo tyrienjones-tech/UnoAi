@@ -165,7 +165,9 @@ A session that starts without a sign-in is a procedural incident. Catch it immed
 
 **Form:** this procedure uses `forms/SITE_LOG.md` (sign-in / sign-out) and `state/current.md` (persistent state). No new form template — the SITE_LOG templates and the validator are the form.
 
-**Enforcement:** `scripts/validate.sh` runs as the second step of the pre-commit hook (after gitleaks). The validator hard-fails if a session-start has no matching session-end from a prior session, or if state counters drift from actual entry counts, or on numbering gaps / cross-reference breaks.
+**Enforcement:** `scripts/validate.sh` runs as the second step of the pre-commit hook (after gitleaks). The validator hard-fails if a session-start has no matching session-end from a prior session, if state counters drift from actual entry counts, on numbering gaps / cross-reference breaks, or on MS chain dependencies that aren't yet DONE (per DEC-026 + INC-006).
+
+**README Status sync (trust-based through MS-005):** if `state/current.md` is updated at sign-out, `README.md`'s "Status" section must be updated to match. Mechanical enforcement of this sync was scoped for MS-005 (Scope C3) but deferred to MS-006 to keep the validator under its size budget. Until that lands, agents updating state at sign-out also update README's Status line by hand. Drift between state and README is a procedural incident worth filing.
 
 **Why:** AI agents are stateless across sessions. The lifecycle gives every session a known start state and a known end state, so handovers don't degrade. Trust-based procedure breaks under fatigue, time pressure, or agent reset; mechanical lifecycle enforcement does not.
 

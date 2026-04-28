@@ -206,6 +206,25 @@ Fixtures stored at `/test/fixtures/destructive_prompts.json`. Test runner feeds 
 
 ---
 
+### RFI-010 — DONE sign-off recording mechanism
+**Blocking:** not blocking MS-005 (chain check uses "DONE-exists" semantics for now). Will block any future enforcement that depends on "operator-signed" status.
+**Filed:** 2026-04-27 (during MS-005, per operator's MS-005 approval)
+
+**Question:** How should operator sign-off on a DONE entry be recorded mechanically?
+
+**Current state:** Operator sign-off has been chat-only. DONE-002/003/004 all still say "Operator sign-off: pending" in the file even though they're chat-signed. The validator currently has no way to distinguish "DONE filed" from "DONE signed."
+
+**Options:**
+- **(a)** Add a step to operator sign-off chat response: operator includes a magic string ("DONE-NNN signed by operator on YYYY-MM-DD") that Builder copies into the DONE entry in the next session. Validator can then check for the signed line.
+- **(b)** Builder updates DONE entries' sign-off line at the start of each session based on the prior session's chat sign-off. Requires Builder to track chat state across sessions.
+- **(c)** Engineer files a follow-up MS that marks all prior DONE entries signed retroactively, then operator sign-offs become mandatory file edits going forward.
+
+**Engineer's lean:** (a). Lowest friction, no retroactive cleanup, validator can enforce going forward. Operator says "DONE-NNN signed" + date in chat, Builder copies it into the file at next sign-in.
+
+**Operator decision:** pending. Defer to MS-006 design discussion.
+
+---
+
 ## New entries
 
 <!-- Append below this line. -->

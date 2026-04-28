@@ -4,7 +4,7 @@
 # Pure bash, no external deps. Runs from repo root: `bash scripts/validate.sh`.
 # Wired into `.githooks/pre-commit` after gitleaks.
 #
-# Checks (eight, see DEC-026 acceptance):
+# Checks (nine — see DEC-026 + INC-006 + MS-005 Scope A):
 #   1. DEC numbering: sequential, no gaps, no duplicates (DEC-001..DEC-NNN)
 #   2. RFI numbering: sequential, no gaps, no duplicates
 #   3. INC numbering: sequential, no gaps, no duplicates
@@ -14,6 +14,11 @@
 #   7. state/current.md "Latest XXX" counters match actual highest entry
 #   8. Session lifecycle: every session-start has a matching session-end from
 #      a prior session (allows ONE open session — the current one)
+#   9. MS chain: every "Depends on: MS-NNN" line in METHOD_STATEMENT.md
+#      resolves to an MS that (a) exists in METHOD_STATEMENT.md AND (b) has
+#      a corresponding DONE entry (matched via "Method statement: MS-NNN"
+#      line in DONE.md). "DONE exists" is the v1 semantics per RFI-010
+#      default (a); a stricter "DONE signed" check is deferred to MS-006.
 #
 # Sign-in / sign-out heading-line regex (strict):
 #   ^### [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2} session (start|end)$
@@ -158,6 +163,46 @@ else
     fi
   done
 fi
+
+# Check 9: MS chain dependency (per DEC-026 + INC-006).
+# Field-format strict: only `- **Depends on:** MS-NNN` lines counted (skips
+# prose mentions of "Depends on:" elsewhere in MS bodies). One Depends-on
+# field per MS; "Depends on: none" / unset = no dependency.
+done_mses=$(awk '
+  /^```/ { in_block = !in_block; next }
+  !in_block && /^### / {
+    if (in_done && ms != "") print ms
+    in_done = ($0 ~ /^### DONE-[0-9]+/); ms = ""
+  }
+  in_done && /^- \*\*Method statement:\*\*/ {
+    if (match($0, /MS-[0-9]+/)) ms = substr($0, RSTART, RLENGTH)
+  }
+  END { if (in_done && ms != "") print ms }
+' forms/DONE.md | sort -u)
+
+existing_mses=$(awk '
+  /^```/ { in_block = !in_block; next }
+  !in_block && /^### MS-[0-9]+/ {
+    if (match($0, /MS-[0-9]+/)) print substr($0, RSTART, RLENGTH)
+  }
+' forms/METHOD_STATEMENT.md | sort -u)
+
+while IFS='|' read -r src target; do
+  [ -z "$target" ] && continue
+  if ! grep -qx "$target" <<< "$existing_mses"; then
+    fail "MS chain: $src cannot proceed — depends on $target which does not exist in METHOD_STATEMENT.md"
+  elif ! grep -qx "$target" <<< "$done_mses"; then
+    fail "MS chain: $src cannot proceed — depends on $target which exists but is not yet DONE in DONE.md"
+  fi
+done < <(awk '
+  /^```/ { in_block = !in_block; next }
+  !in_block && /^### MS-[0-9]+/ {
+    if (match($0, /MS-[0-9]+/)) current = substr($0, RSTART, RLENGTH)
+  }
+  !in_block && /^- \*\*Depends on:\*\*/ && !/[Nn]one/ {
+    if (match($0, /MS-[0-9]+/)) print current "|" substr($0, RSTART, RLENGTH)
+  }
+' forms/METHOD_STATEMENT.md)
 
 # Check 8: session lifecycle.
 sitelog=forms/SITE_LOG.md

@@ -498,3 +498,148 @@ These are the five items in the Builder's reply preceding this MS — restated h
 - **R9 acknowledgment:** Document the heading-line format in BOTH the template (in SITE_LOG.md) AND in PROJECT.md's "For agents working on this project" section so future agents copy it correctly. Regex must appear as a comment in the validator script.
   - **Builder interpretation note:** the "For agents..." section currently lives in `README.md`, not `PROJECT.md`. Builder will document in README's existing section. See SITE_LOG sign-in entry for transparency note.
 - **H1 (added scope):** Add a one-paragraph organizing-principle section to top of `PROJECT.md` before the existing content: *"This project is built by AI agents with a human operator in the loop. Procedures, file structure, and documentation conventions are optimized for stateless agents recovering context from cold start, not for human developers retaining context across sessions. Read PROCEDURES.md before any session work."* Easy fit; folded into MS-004.
+
+---
+
+### MS-005 — Chain validator check + code conventions for AI agents + README markdown fixes
+- **Date:** 2026-04-28
+- **Agent:** Reaper-1
+- **Phase:** 0b infrastructure layer (post-MS-004, pre-MS-006)
+- **Session start:** 2026-04-28 01:10 (see SITE_LOG)
+- **Task:** Three scopes combined. **Scope A** closes INC-006 (validator MS-chain check missing — the gap Builder flagged after DONE-004 sign-off when operator described chain mechanism as "working as designed"). **Scope B** adds the "For agents reading the code" section + naming/header conventions to PROJECT.md, prepping for Phase 1 code. **Scope C** restores README's `## Self-hosting` heading marker (operator's commit `bf2d661` accidentally stripped it) and updates the stale README "Status" line to match `state/current.md`. Plus DEC-027 (code-conventions lock) and INC-006 (the chain-check gap).
+- **Depends on:** MS-004 (DONE-004 signed 2026-04-28).
+- **Linked RFIs / decisions:**
+  - **New:** DEC-027 (code conventions for AI agents locked). INC-006 (validator chain-check gap).
+  - **Builds on:** DEC-026 (validator + session lifecycle) — adds 9th check to `scripts/validate.sh`. Optional 10th check (README Status currency) conditional on validator size budget.
+  - **Doesn't change:** DEC-024, gitleaks ruleset, hook structure, all prior DEC/RFI/INC entries.
+- **Operator approval:** pending.
+
+**Open items / Builder decisions to surface at MS-005 approval:**
+
+1. **INC-006 body authorship.** Operator's MS-005 prompt (Scope A1) says "File INC-006 in INCIDENT.md using the body Engineer provided in the approval message." The DONE-004 sign-off and the MS-005 prompt itself do not contain a formal INC-006 body. Builder will author INC-006 mechanically from the established facts (validator built in MS-004 missing chain check; "working as designed" claim made in DONE-004 sign-off about non-existent enforcement; Reaper flagged the gap in chat post-sign-off). Same Builder-authored historical-record pattern as RFI-006/007/008 in earlier MSes; Builder-note inline. If operator has a specific body in mind, paste at approval and Builder uses it verbatim.
+
+2. **"DONE entry exists" vs "DONE entry signed" semantics for the chain check.** Operator's Scope A2 wording is ambiguous between two interpretations:
+   - **(a) DONE entry exists in DONE.md for the dependency MS** — mechanical, works with current operator practice (sign-off has been chat-only; file `Operator sign-off:` lines have stayed `pending` for DONE-002, DONE-003, DONE-004).
+   - **(b) DONE entry exists AND has `Operator sign-off: signed YYYY-MM-DD`** — stricter; requires operator to update file at sign-off time, which is a procedural change not currently happening.
+   Builder default: **(a)**, matching operator's literal wording "marked DONE in DONE.md." If operator wants (b), the operator-side procedure needs to add "update DONE entry sign-off line" to the sign-off ritual, AND the existing DONE-002/003/004 entries need to be retroactively marked signed (so MS-005's own `Depends on: MS-004` doesn't immediately fail). Override at approval.
+
+3. **Engineer working agreement #9 — what is it?** Operator's Scope D1 says "Update the 'Engineer working agreements' list to include #7, #8, #9." Operator's DONE-004 sign-off introduced #7 (bash budgets are smell-checks) and #8 (untested validators are worse than no validator). The MS-005 prompt body doesn't introduce a #9 explicitly. Builder's interpretation: #9 is the lesson from INC-006 — "'Working as designed' claims about enforcement need to be validated against the code, not the design intent." If operator has different wording in mind, paste at approval.
+
+4. **Validator size budget pressure.** Currently 192 lines. Operator's caps: 210 soft, 220 hard. Estimates:
+   - Chain check (Scope A): ~25–30 lines (parse DONE.md for done-MSes; parse METHOD_STATEMENT.md for `Depends on:` lines; cross-reference; ~6 lines of inline comment per check pattern).
+   - README Status check (Scope C3): ~15–20 lines (parse state/current.md Phase line; parse README Status section; compare phase identifier + status word; allow wording variation).
+   - Realistic post-A: 218–222 lines. **At or just over the 220 hard cap.**
+   - Realistic post-A+C3: 235–242 lines. **Over the cap.**
+   Builder default per operator's Scope C3 conditional: **ship Scope A (chain check), drop Scope C3 (README check), document the deferral in SITE_LOG and DONE-005.** README Status currency stays trust-based for MS-005; can ship in MS-006 if operator wants.
+
+5. **B2 (organizing-principle line at top of PROJECT.md) — already landed in MS-004.** Builder verified PROJECT.md line 5 contains the H1 text. Scope B2 is a no-op for MS-005; will note in SITE_LOG.
+
+6. **Synthetic-violation test for the chain check (Scope A3).** Same discipline as MS-004's E1. One test:
+   - Add fake `### MS-100 — synthetic chain test` with `Depends on: MS-099` to METHOD_STATEMENT.md.
+   - Run validator. Expect FAIL with: `"MS chain: MS-100 cannot proceed — depends on MS-099 which is not yet DONE (or DONE entry is not yet signed)."` (or the agreed message format from Open Question 2's resolution).
+   - Revert the fake MS.
+   - Final clean run: PASS.
+   Operator's "no shipping untested validators" rule (working agreement #8) makes this non-negotiable.
+
+**Plan (numbered, terse — Scope A → B → C → D → E → sign-out → commit → DONE-005):**
+
+*Scope A — chain validator check (closes INC-006):*
+1. File INC-006 in `forms/INCIDENT.md` (Builder-authored body per Open Question 1; Builder-note inline acknowledging the authorship).
+2. Update `scripts/validate.sh` with 9th check: MS-chain dependency. Parse DONE.md to build a set of MSes that have DONE entries (per Open Question 2 resolution — "DONE exists" is the default mechanical signal). Parse METHOD_STATEMENT.md outside `````` fences for `### MS-NNN` headings + their `Depends on:` lines (within their body block). For each `Depends on: MS-NNN`, verify MS-NNN ∈ done-MSes. FAIL with the specific MS-XXX → MS-NNN names.
+3. Update validator script header comment to document 9 checks (was 8).
+4. Document in DEC-026 reproduction notes that the chain check was added in MS-005 (not in MS-004 as originally claimed).
+5. Synthetic-violation test (Scope A3): add fake MS-100/Depends-on-MS-099, run validator, capture FAIL output, revert. Final clean PASS.
+
+*Scope B — code conventions:*
+6. Verify B2 (organizing-principle line at top of PROJECT.md). Confirmed already present from MS-004.
+7. Append "For agents reading the code" section to PROJECT.md after the existing "Sensitive content — never committed" section. Content per operator's Scope B1 verbatim, with file-header convention, DEC-reference rule, tests-as-documentation rule, naming conventions, and "When in doubt → RFI" closer.
+
+*Scope C — README markdown fixes:*
+8. Restore `## Self-hosting` heading marker (currently plain text per operator commit `bf2d661`).
+9. Update README "Status" section to: "Phase 0b complete. Infrastructure phase in progress (MS-005). Phase 1 begins after MS-006 DONE."
+10. **Skip Scope C3 (README Status currency check)** per Open Question 4's budget call. Document deferral in SITE_LOG and DONE-005. Note the README↔state synchronization remains a trust-based discipline; operator can re-attempt mechanical enforcement in MS-006 with refactored validator if desired.
+11. Update PROCEDURES.md Procedure 9: append a sentence noting that README's Status section must be kept in sync with `state/current.md` at sign-out, with a Builder-note that mechanical enforcement is deferred to MS-006.
+
+*Scope D — state update:*
+12. Update `state/current.md`:
+    - Bump Updated timestamp.
+    - Phase line: "Phase 0b complete. Infrastructure phase in progress (MS-005). Phase 1 blocked on MS-006."
+    - Active MS: MS-005 (in progress). MS-004 marked DONE.
+    - Latest MS counter: MS-005.
+    - Latest INC counter: INC-006.
+    - Latest DEC counter: DEC-027.
+    - Add a new "MS chain status" subsection enumerating MS-001 through latest with status (DONE / in progress / pending).
+    - Add engineer working agreements #7, #8, #9 to the running list.
+
+*Scope E — DEC-027:*
+13. File DEC-027 in `forms/DECISION.md` per operator's Scope E1 body.
+
+*Sign-out + commit:*
+14. Final validator run. Expect PASS.
+15. File MS-005 session-end entry in SITE_LOG using the new template. Validator: PASS. state/current.md updated: YES.
+16. `git add . && git commit -m "MS-005: chain validator check + code conventions + README fixes"` (no Co-Authored-By footer; pre-commit hook fires gitleaks + validator). Push.
+17. File DONE-005 with proof. Commit + push DONE-005 in a follow-up close-out commit.
+
+**Files to be touched:**
+- `Desktop/UnoAi/scripts/validate.sh` — modified (add 9th check; budget ~217–222 post-edit).
+- `Desktop/UnoAi/forms/INCIDENT.md` — modified (INC-006 appended).
+- `Desktop/UnoAi/forms/DECISION.md` — modified (DEC-027 appended).
+- `Desktop/UnoAi/forms/METHOD_STATEMENT.md` — modified (this MS-005 entry; approval status update post-approval).
+- `Desktop/UnoAi/forms/SITE_LOG.md` — modified (sign-in entry already filed; sign-out + DONE-005 reference at session close).
+- `Desktop/UnoAi/forms/DONE.md` — modified (DONE-005 appended).
+- `Desktop/UnoAi/PROJECT.md` — modified (append "For agents reading the code" section).
+- `Desktop/UnoAi/PROCEDURES.md` — modified (Procedure 9 sentence about README Status sync).
+- `Desktop/UnoAi/README.md` — modified (heading marker restore + Status line update).
+- `Desktop/UnoAi/state/current.md` — modified (counters, MS chain status, working agreements, phase line).
+
+**Files NOT touched (per scope):**
+- `forms/CHANGE_ORDER.md`, `forms/RFI.md`, `LICENSE`, `CONTRIBUTING.md`, `.gitignore`, `.gitleaks.toml`, `.githooks/pre-commit`, `PLAN.md`. SvelteKit scaffold tree (`src/`, `static/`, `package.json`, etc.).
+
+**Expected diff size:** ~250 lines net added across 10 files. No product code. No dependencies.
+
+**Risks identified:**
+
+- **R1. Open Question 1 (INC-006 body authorship).** Builder authors mechanically; same risk pattern as RFI-006/007/008. Mitigation: Builder-note inline; operator review at MS-005 approval.
+
+- **R2. Open Question 2 (DONE-exists vs DONE-signed semantics).** Builder default: DONE-exists. Risk: operator wanted DONE-signed and the mechanical signal misses pre-signoff filings of dependent MSes. Mitigation: surfaced at approval; if operator wants signed-check, the procedural change (update DONE entry's sign-off line at chat sign-off) needs to land in MS-005 too OR Builder retroactively marks DONE-002/003/004 signed.
+
+- **R3. Open Question 3 (working agreement #9).** Builder proposes wording from INC-006 lesson. Mitigation: surfaced at approval; operator can paste alternate wording.
+
+- **R4. Validator size budget at the cap.** With Scope A only, ~217–222 lines. **Likely just over the 220 hard cap** depending on chain-check implementation density. Per Scope A5 ("If budget overrun exceeds 220 after this check, pause and RFI"), Builder will RFI if the post-A line count is >220. C3 stays dropped regardless.
+
+- **R5. Synthetic violation test discipline.** Mandatory per working agreement #8. One test for chain check; capture FAIL output verbatim for DONE-005 proof.
+
+- **R6. Operator's `bf2d661` README amendment dropped the `##` from "Self-hosting".** Builder did NOT modify operator's commit. Restoring the heading in MS-005 is the operator-blessed fix path (Scope C1). Acknowledging that operator commits can carry edit artifacts that Builder catches and fixes only with explicit authorisation.
+
+- **R7. README Status currency mechanical enforcement deferred.** Per Open Question 4 + Scope C3 budget conditional. The README↔state sync remains a trust-based discipline through MS-005. Procedural reminder in PROCEDURES.md Procedure 9. Operator may add the check in MS-006 with refactored validator.
+
+- **R8. Chain check could deadlock if MS chain is misconfigured.** Hypothetical: an MS with `Depends on: MS-NNN` where MS-NNN doesn't yet exist in METHOD_STATEMENT.md. The check should FAIL with "MS-NNN does not exist" (separate from "MS-NNN not yet DONE"). Builder will distinguish these failure modes in the FAIL message for operator clarity.
+
+- **R9. MS-005 itself has `Depends on: MS-004`. DONE-004 exists in DONE.md (filed in MS-004 session-end commit and now signed in chat). Validator semantics per Open Question 2 default (a) "DONE entry exists" → MS-005 dependency satisfied. If operator overrides to (b) "DONE entry signed", DONE-002/003/004 sign-off lines all currently say "pending" → all chain checks would fail until file-state catches up.
+
+**Acceptance criteria (will be copied verbatim into DONE-005):**
+- `forms/INCIDENT.md` has INC-006 documenting the validator chain-check gap (Builder-authored, Builder-note inline).
+- `scripts/validate.sh` has 9 checks; new check is MS-chain dependency. Header comment block updated to enumerate 9 checks. Line count: 192 + chain check, target ≤220.
+- Synthetic violation test for chain check produced FAIL output verbatim, captured in DONE-005 proof. Final clean run: PASS.
+- `PROJECT.md` has "For agents reading the code" section after "Sensitive content" section, containing file-header convention, DEC-reference rule, tests-as-documentation rule, naming conventions, "When in doubt" closer, all per operator's Scope B1 verbatim.
+- `PROJECT.md` organizing-principle line at top: confirmed already present (no edit needed; from MS-004).
+- `README.md` "Self-hosting" section has `##` heading marker restored.
+- `README.md` "Status" section reads: "Phase 0b complete. Infrastructure phase in progress (MS-005). Phase 1 begins after MS-006 DONE."
+- `PROCEDURES.md` Procedure 9 has a sentence about README Status section sync at sign-out.
+- `forms/DECISION.md` has DEC-027 (code conventions locked) per operator's Scope E1.
+- `state/current.md` updated: MS-004 DONE, MS-005 in progress, Latest MS=MS-005, Latest INC=INC-006, Latest DEC=DEC-027, MS chain status section, working agreements #7/#8/#9 in the list, phase line current.
+- Sign-in (filed at session start) and sign-out (filed at session end) entries in SITE_LOG using the Procedure 9 templates.
+- Validator pre-commit run: PASS. Hook fires gitleaks + validator on actual MS-005 commit.
+- Push to GitHub succeeds. Final commit visible at the repo URL.
+- DONE-005 contains: validator PASS output, chain-check FAIL output verbatim, hook output from MS-005 commit, file-by-file change summary, line counts (pre/post validator, all touched files).
+
+**Operator approval:** APPROVED 2026-04-28.
+**Approval notes:**
+- **Open Question 1 (INC-006 body authorship):** Operator-supplied verbatim engineer-drafted body — Builder transcribed exactly with inline Builder-note acknowledging the Builder-mediated transcription pattern.
+- **Open Question 2 (DONE-exists vs DONE-signed):** Builder default approved — chain check uses "DONE-NNN entry exists in DONE.md" semantics. The procedural gap (DONE-002/003/004 sign-offs are chat-only) filed as **RFI-010** for resolution in MS-006.
+- **Open Question 3 (working agreement #9):** operator-supplied wording: "DONE sign-offs require mechanical verification of new tooling, not visual inspection. If a check was specced, the sign-off must include 'ran the check against a synthetic violation, confirmed FAIL.' Visual inspection of the script's presence is not sufficient."
+- **Open Question 4 (validator size budget):** Builder default approved — ship Scope A (chain check), drop Scope C3 (README currency check), defer to MS-006 with refactored validator. Scope C1 + C2 (heading restoration + Status line update) ship as file edits.
+- **Mid-session RFI on validator size:** post-Scope-A validator was 237 lines (>220 hard cap). Operator approved (a) — accept 237 per working agreement #7. Block-aware parsing for chain check is correctness-required to avoid false positives from example entries inside ``` fences; compressing it would re-introduce them, violating working agreement #8.
+- **New working agreement #10 (operator wrote "#11"; Builder renumbered to next-sequential per discipline #5):** "Bash budget caps for the validator are calibrated against the existing per-check complexity, not the new check's complexity. New checks that require new parsing primitives (block tracking, multi-file walks, structured parsing) will exceed the per-check budget by 2–3× and that's expected. Future budgets should be set at 'current size + estimated new check size' rather than fixed caps." Operator can correct the renumber at DONE-005 sign-off if the skip was intentional.
+- **DEC-026 update:** the 150-line validator guidance from MS-004 is retired. Caps revisited per-MS based on what's being added.
+- **Scope C4:** README↔state synchronization is trust-based through MS-005, may gain mechanical enforcement in MS-006 with refactored validator.

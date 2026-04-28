@@ -10,7 +10,7 @@ Browser-based AI companion. Buy once, BYOK, conversations stay on your device.
 
 ---
 
-Self-hosting
+## Self-hosting
 
 The source is public — verify what it does, fork it, run it yourself if you want. PolyForm Noncommercial license permits personal self-hosting (see LICENSE).
 
@@ -75,4 +75,4 @@ unoai/
 
 ## Status
 
-Phase 0b in progress (MS-003). See [`PLAN.md`](./PLAN.md).
+Phase 0b complete. Infrastructure phase in progress (MS-005). Phase 1 begins after MS-006 DONE. See [`PLAN.md`](./PLAN.md).

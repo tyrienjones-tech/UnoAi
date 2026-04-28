@@ -239,3 +239,26 @@ None to product. Documentation + working-folder migration only. No code committe
 - "Empty repo" via GitHub UI is not actually empty if "Add a README file" was checked at create-time. For future repos: uncheck that option at GitHub-create-time. If it's already there, decide force-push-vs-layer at first-commit time, never silently. Pattern named so future MSes around new-repo-creation can verify upfront.
 - Migration via `cp -r` was clean on Windows bash; `diff -rq` is the right verification step.
 
+---
+
+### INC-006 — Chain mechanism partially shipped in MS-004; validator dependency check missing
+- **Date:** 2026-04-27
+- **Severity:** medium (not blocking, but creates false confidence)
+- **Discovered by:** Reaper at MS-005 prep
+
+**What happened:**
+MS-004 approval H2 added MS chain mechanism in four parts (H2a–H2e). Three of the four shipped: state/current.md "MS chain" section (H2a), MS template "Depends on / Blocks" fields (H2b), retroactive lines on MS-001/002/003 (H2c). The fourth part — H2d, validator check enforcing that no MS proceeds while dependencies are open — did not ship. Engineer's DONE-004 sign-off claimed "working as designed" without verifying H2d was actually built.
+
+**Why it matters:**
+Chain documentation without enforcement is trust-based discipline, which is exactly what MS-004 existed to replace. Operator could file Phase 1's first MS with `Depends on: MS-006` and nothing would block the commit. The intention is there; the mechanism is not.
+
+**Root cause:**
+Engineer's DONE-004 verification was visual (read the repo, saw the chain section in state/current.md, assumed the validator check shipped alongside it) instead of mechanical (run the validator with a synthetic dependency violation, confirm FAIL).
+
+**Resolution:**
+H2d (chain check) folded into MS-005 scope. Validator gains a 9th check. Synthetic violation added to test set.
+
+**Linked to:** MS-004 (DONE-004 sign-off), MS-005 (Scope A), DEC-026 (validator), engineer working agreement #9.
+
+**Builder note:** INC-006 body authored by operator (engineer-drafted) and copied verbatim by Reaper-1 in MS-005 per the operator approval message. Same Builder-mediated historical-record pattern as RFI-006/007/008 — content is operator/engineer-supplied; Builder transcribes.
+

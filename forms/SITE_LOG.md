@@ -393,3 +393,42 @@ INF  no leaks found
     2. Piping into a function (`real_headings DEC ... | check_sequential DEC`) runs the function in a subshell; FAILS array mutations don't propagate. Fix: switch to process substitution (`check_sequential DEC < <(real_headings DEC ...)`). This bug had silently disabled the DEC/RFI/INC/MS numbering checks. Caught only because E1e (duplicate DEC) returned PASS when it should have FAILed.
   - **Builder interpretation flagged in sign-in entry above** (R9 format-spec documentation went into README, not PROJECT.md, because the "For agents..." section lives in README). Easy fix if operator wants.
   - **Bootstrap recursion was a one-time event.** Future sessions sign in BEFORE any work, not retroactively.
+
+---
+
+### 2026-04-28 01:10 session start
+
+- Role: Builder
+- Session goal: implement MS-005 — chain validator check (closes INC-006), code conventions for AI agents (PROJECT.md "For agents reading the code"), README markdown fixes (Self-hosting heading + Status currency), DEC-027.
+- Resuming from: DONE-004 (signed 2026-04-28). Operator added engineer working agreements #7 (bash budgets are smell-checks not hard limits) and #8 (validators must be tested against synthetic violations before shipping) in DONE-004 sign-off. State will be updated at sign-out.
+- Context loaded: PROJECT.md, PROCEDURES.md, state/current.md.
+- Open MSes: none (MS-004 closed).
+- Open RFIs awaiting me: none. RFI-009 (TLD) is open but not Builder-blocking.
+- Pre-session validator run: **PASS** (verified at 2026-04-28 01:10 before this entry was filed).
+
+---
+
+### 2026-04-28 01:50 session end
+
+- Role: Builder
+- Outcome: DONE-005 to follow this commit. MS-005 scope complete: INC-006 + RFI-010 filed, validator chain check (9th) added with synthetic-test verification on both branches (target-missing, target-undone), PROJECT.md "For agents reading the code" section appended, README `## Self-hosting` heading restored + Status line updated, PROCEDURES.md Procedure 9 note about README sync, DEC-026 update (150-line cap retired), DEC-027 (code conventions locked).
+- Files touched:
+  - `Desktop/UnoAi/scripts/validate.sh` (added 9th check; now 237 lines, 9 checks)
+  - `Desktop/UnoAi/forms/INCIDENT.md` (INC-006 verbatim from operator)
+  - `Desktop/UnoAi/forms/RFI.md` (RFI-010 verbatim from operator)
+  - `Desktop/UnoAi/forms/DECISION.md` (DEC-026 update + DEC-027)
+  - `Desktop/UnoAi/forms/METHOD_STATEMENT.md` (MS-005 entry + approval status update)
+  - `Desktop/UnoAi/forms/SITE_LOG.md` (this session's sign-in + sign-out)
+  - `Desktop/UnoAi/PROJECT.md` ("For agents reading the code" section appended)
+  - `Desktop/UnoAi/PROCEDURES.md` (Procedure 9 note about README sync trust-based + chain check enforcement)
+  - `Desktop/UnoAi/README.md` (heading marker restored + Status line updated)
+  - `Desktop/UnoAi/state/current.md` (counters: MS-005, DEC-027, RFI-010, INC-006; MS chain status section added; agreements #7/#8/#9/#10 added; phase line current)
+- Validator run at end: **PASS** (verified at 2026-04-28 01:50 before commit).
+- state/current.md updated: **YES** (counters, MS chain section, working agreements, phase line all current).
+- Next action: commit + push (hook fires gitleaks + validator). Then file DONE-005 + close-out commit. Then hold for MS-006 prompt.
+- Handover note:
+  - **RFI on validator size at 237 lines was approved (a)** — ship as-is per working agreement #7. Block-aware parsing of the chain check would re-introduce false positives if compressed (working agreement #8 protects against that).
+  - **Working agreement renumber:** operator wrote "#11" for the new bash-budget-calibration agreement; Builder renumbered to **#10** per discipline #5 (sequential numbering, no skip). Operator can correct at DONE-005 sign-off.
+  - **INC-006 body has factual claims about "H2a-H2c shipped" in MS-004 that don't match MS-004's actual file content.** Builder transcribed verbatim per operator instruction with inline Builder-note. The substantive claim (chain enforcement didn't ship) is correct; the H2a-e labeling appears to reference an internal operator/engineer mental model not visible in MS-004's literal scope. Flagging here in case operator wants to revise.
+  - **Synthetic-test co-fires:** the chain-check synthetic tests (MS-100/Depends-on-MS-099 and MS-100/Depends-on-MS-001) also triggered the numbering-gap check and state-counter checks, because adding a synthetic MS-100 breaks both. The chain-check FAIL message fires with the correct MS-NNN naming on both branches. Captured in DONE-005 proof.
+  - **Builder interpretation note carried from sign-in:** R9 documentation went into README's "For agents..." section because that section lives in README, not PROJECT.md. PROJECT.md's "For agents reading the code" section is *new content* added in this MS for code conventions, distinct from README's session-onboarding section. Both sections coexist as intended.

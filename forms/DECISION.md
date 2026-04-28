@@ -380,7 +380,15 @@ These are locked at project start. Override only via a new DECISION entry that e
   - Sign-in template: `forms/SITE_LOG.md` top section. Heading-line regex documented inline.
   - Validator regex source-of-truth: comments in `scripts/validate.sh` header.
   - Hook order: gitleaks → validator. Fail-fast on secrets first (cheaper than rerunning structural checks).
-- **Validator size:** ~180 lines of bash, ~20% over operator's ~150-line guidance. Overage is mostly mandatory header documentation (per R8 + R9). Operator-flagged at MS-004 approval as a design-review trigger; surfaced explicitly in DONE-004 for review at sign-off. Compression option exists (~155 lines achievable by trimming header comments) if operator prefers; otherwise the script ships as-is.
+- **Validator size:** the original 150-line guidance from MS-004 is **retired** as of MS-005 (per Engineer working agreement #11 / Builder-renumbered #10). The validator grows with the procedure surface. Caps will be revisited per-MS based on what's being added, calibrated against existing per-check complexity rather than fixed against a baseline. As of MS-005 the validator is 237 lines (9 checks). MS-005's chain check added ~32 lines because block-aware parsing of DONE.md and METHOD_STATEMENT.md is correctness-required to avoid false positives from example entries inside ``` fences.
 - **Reason:** AI agents are stateless across sessions. Trust-based procedure breaks under reset, fatigue, or agent change. INC-003 (DECs reference RFIs not in source) and INC-004 (sweep-miss across files) named the failure pattern twice; mechanical lifecycle is the only thing that survives long-term solo + AI development.
 - **Reversibility:** cheap to remove the validator if it gets in the way (`git config --unset core.hooksPath` and delete `scripts/validate.sh`); expensive to recover from procedural drift the validator would have caught.
 - **Affects:** every session, every commit, all phases going forward. All future DECs / RFIs / INCs / MSes are validator-checked. All future commits run gitleaks + validator before proceeding.
+
+### DEC-027 — Code conventions for AI agents locked
+- **Date:** 2026-04-28
+- **Decided by:** operator
+- **Decision:** All code committed to this repo follows the file header convention, DEC-reference rule, test-as-documentation rule, and naming conventions in `PROJECT.md` "For agents reading the code" section. Conventions enforced via review at each MS sign-off; future enforcement may add lint rules.
+- **Reason:** stateless agents need code that documents itself. Comments are not decoration; they're load-bearing infrastructure for cold-start context recovery. Convention drift in early files surfaces as hours of refactoring in Phase 5+.
+- **Reversibility:** relaxing conventions is cheap; tightening later means retroactive header additions across all files. Lock now, before Phase 1 introduces the first code file.
+- **Affects:** every code file in Phase 1 onward. Validator does not currently enforce these conventions — review at MS sign-off is the enforcement layer through Phase 1; lint rules considered for MS-006.
