@@ -644,4 +644,189 @@ EXIT: 0
 **Sign-off notes:**
 [Operator fills. Run `bash scripts/validate.sh` once locally and confirm PASS. Confirm working-agreement #10 renumber, INC-006 H2 labeling note, and validator size posture. Caveats or follow-ups go here.]
 
+---
+
+### DONE-006 — Code structure + dev tooling (MS-006 closed)
+- **Date:** 2026-04-28
+- **Agent:** Reaper-1
+- **Phase:** 0b infrastructure layer (complete pending sign-off)
+- **Method statement:** MS-006
+- **Session start:** 2026-04-28 02:00 (see SITE_LOG)
+- **Session end:** 2026-04-28 03:00 (see SITE_LOG)
+- **Depends on:** MS-005 (DONE-005 signed 2026-04-28). Chain check verified at validator run-time.
+
+**Acceptance criteria (copied from MS-006):**
+- `PROJECT.md` "For agents reading the code" section has 4 new subsections (Code directory structure, Test layout, Errors and logging, Dependency policy) per Scopes A1/C1/D1/H1. ✓ Plus `+`-prefix filename exception added to Naming conventions.
+- Directory skeleton created: `src/lib/{auth,chat,crisis,persona,storage,shared,server}/.gitkeep`, `src/routes/api/.gitkeep`, `test/fixtures/.gitkeep`, `test/e2e/.gitkeep`. ✓
+- `.gitignore` includes `test/fixtures/private/`. ✓
+- `.env.example` created with placeholder values per Scope E1. ✓
+- `.gitleaks.toml` updated: explicit env-var rules for `LEMON_SQUEEZY_WEBHOOK_SECRET` and `LICENSE_PRIVATE_KEY`; placeholder allowlist extended; existing `lemon-squeezy-webhook-secret` rule's capture-group fixed to capture VALUE (was LABEL). ✓
+- `eslint.config.js` updated with `@typescript-eslint/naming-convention` rule; **0 false positives** on existing scaffold (under <5 threshold). Severity `'error'` (was `'warn'` initially — fixed mid-session after first synthetic test failed to block). ✓
+- `.githooks/pre-commit` runs gitleaks → validator → Prettier --check (staged) → ESLint (staged). All four must PASS. ✓
+- Hook tests: ESLint snake_case violation BLOCKED, Prettier mis-format BLOCKED, both revert + commit succeeds. ✓
+- `scripts/validate.sh` has 10 checks; G1 README ↔ state sync works; synthetic violation FAIL captured. Validator size: **277 lines** (8 over Scope G4's 270 cap; per working agreement #10 this is the same overrun-from-block-aware-parsing pattern as MS-005). ✓
+- `PROCEDURES.md` Procedure 9 — README ↔ state sync no longer trust-based; validator enforces. Note re-worded. ✓
+- `forms/DECISION.md` has DEC-028 (directory structure), DEC-029 (test layout), DEC-030 (errors+logging), DEC-031 (dependency policy). ✓
+- `state/current.md` updated: Latest MS=MS-006, Latest DEC=DEC-031, MS-005 DONE, MS-006 in progress, agreement #11 added, phase line current. Format-spec comment extended for check 10. ✓
+- Sign-in (filed at session start) and sign-out (at session end) entries in SITE_LOG using Procedure 9 templates. ✓
+- Validator pre-commit run: PASS. Hook fires all four steps on actual MS-006 commit. ✓ (`cabfa8c`)
+- Push to GitHub succeeds. ✓
+
+**Builder-produced proof:**
+
+*Git state (post-push):*
+```
+$ git log --oneline (final)
+cabfa8c MS-006: code structure + dev tooling     ← this MS
+6882efb MS-005 close-out: DONE-005
+63ab6d2 MS-005: chain validator check + code conventions + README fixes
+4a6c1a7 MS-004 close-out: DONE-004
+ed87926 MS-004: session lifecycle + validator + state persistence
+bf2d661 Update README.md
+15b7751 MS-003 close-out: DONE-003 + final SITE_LOG entry
+0cf45cd Migrate handover package + LICENSE + SvelteKit scaffold
+372902c Initial commit
+```
+
+- This commit: <https://github.com/tyrienjones-tech/UnoAi/commit/cabfa8c>
+- Diff: 29 files changed, 630 insertions(+), 43 deletions(-).
+
+*Pre-commit hook output verbatim (4-step chain firing on the MS-006 commit):*
+```
+[pre-commit] gitleaks scanning staged content...
+INF  no leaks found
+[pre-commit] gitleaks: clean.
+[pre-commit] running scripts/validate.sh...
+VALIDATOR: PASS
+[pre-commit] running Prettier --check on staged files...
+Checking formatting...
+All matched files use Prettier code style!
+[pre-commit] Prettier: clean.
+[pre-commit] running ESLint on staged files...
+  package.json   0:0  warning  File ignored because no matching configuration was supplied
+  tsconfig.json  0:0  warning  File ignored because no matching configuration was supplied
+✖ 2 problems (0 errors, 2 warnings)
+[pre-commit] ESLint: clean.
+[main cabfa8c] MS-006: code structure + dev tooling
+ 29 files changed, 630 insertions(+), 43 deletions(-)
+```
+
+The two ESLint warnings ("file ignored because no matching configuration") are emitted because `package.json` and `tsconfig.json` aren't covered by the `.ts/.js/.svelte` ESLint config — ESLint exits 0 (warnings, not errors), hook proceeds correctly.
+
+*Synthetic violation test outputs:*
+
+```
+==========================================
+F4 Test 1: ESLint violation (snake_case `some_var`)
+==========================================
+[pre-commit] gitleaks: clean.
+[pre-commit] VALIDATOR: PASS
+[pre-commit] Prettier: clean.
+[pre-commit] running ESLint on staged files...
+  src/lib/shared/_synthetic_eslint_test.ts
+    4:7  error  Variable name `some_var` must match one of the following formats:
+                camelCase, UPPER_CASE, PascalCase  @typescript-eslint/naming-convention
+  ✖ 1 problem (1 error, 0 warnings)
+[pre-commit] FAIL: ESLint flagged staged files with rule violations.
+Commit blocked.
+[exit 1]
+
+==========================================
+F4 Test 2: Prettier violation (deliberate mis-format)
+==========================================
+[pre-commit] gitleaks: clean.
+[pre-commit] VALIDATOR: PASS
+[pre-commit] running Prettier --check on staged files...
+  [warn] src/lib/shared/_synthetic_prettier_test.ts
+  [warn] Code style issues found in the above file.
+[pre-commit] FAIL: Prettier flagged staged files with formatting issues.
+Commit blocked.
+[exit 1]
+
+==========================================
+G2 synthetic test: state.Current = "Phase 99 in progress"
+==========================================
+VALIDATOR: FAIL
+  - README Status section out of sync with state/current.md.
+    README says 'phase 0b complete'; state says 'phase 99 in'.
+[exit 1]
+
+==========================================
+Final clean-state run
+==========================================
+VALIDATOR: PASS
+[exit 0]
+```
+
+*Validator size:*
+- Pre-MS-006: 237 lines (9 checks).
+- Post-MS-006: 277 lines (10 checks). +40 lines.
+- Operator's Scope G4 cap: 270. Overrun: 8 lines.
+- Per working agreement #10: cap is calibrated against existing per-check complexity, not new check's complexity. The G1 check is two awk programs (state-Phase parser + README-Status parser) plus comparison logic — block-aware parsing of structured markdown sections. ~35 lines + ~5 lines of header comment update = 40 lines added. Same overrun-from-correctness pattern as MS-005's chain check.
+- Surfaced explicitly here for design-review at sign-off. Compression options exist (factor common phase-extraction into a helper function) but trade readability for line count; Builder default ships as-is per working agreement #7 / #10.
+
+*File-by-file change summary (29 files):*
+
+| File | Change |
+|---|---|
+| `PROJECT.md` | +4 subsections under "For agents reading the code"; +1 sentence in Naming conventions for `+`-prefix exception. |
+| `PROCEDURES.md` | Procedure 9 — README ↔ state sync re-worded from trust-based to mechanical-via-validator. |
+| `README.md` | (no change) |
+| `.gitignore` | +`test/fixtures/private/` |
+| `.gitleaks.toml` | +2 explicit env-var rules (`LEMON_SQUEEZY_WEBHOOK_SECRET`, `LICENSE_PRIVATE_KEY`); existing `lemon-squeezy-webhook-secret` rule restructured (capture group around VALUE not LABEL); allowlist extended with full KEY=placeholder patterns. |
+| `.env.example` | Created with placeholder values for LS webhook secret + Ed25519 private key + Anthropic key (commented). |
+| `.githooks/pre-commit` | +Prettier --check (staged) + ESLint (staged) steps after validator. Both run on `git diff --cached --name-only --diff-filter=ACMR` filtered to `.ts/.js/.svelte/.css/.html/.json`. Fail-fast. |
+| `.prettierignore` | +`*.md`, +`state/`, +`*.jsonc` (author-formatted docs / generated configs). |
+| `eslint.config.js` | +`@typescript-eslint/naming-convention` rule, severity `error`, `$`-prefix carve-out for Svelte 5 runes, module-scope `const` allows UPPER_CASE/PascalCase/camelCase. Reformatted by Prettier mid-session. |
+| `package.json` | `lint` = `eslint .` (Prettier separated); `format:check` script added; `format` unchanged. Reformatted by Prettier mid-session. |
+| `scripts/validate.sh` | +Check 10 (README ↔ state sync). Header comments updated to enumerate 10 checks. 237 → 277 lines. |
+| `forms/DECISION.md` | +DEC-028..031 (4 new entries). |
+| `forms/METHOD_STATEMENT.md` | MS-006 entry filed pre-work; approval status updated post-approval. |
+| `forms/SITE_LOG.md` | Sign-in + sign-out entries for this session. |
+| `forms/DONE.md` | DONE-006 (this entry). |
+| `state/current.md` | Counters bumped (MS=006, DEC=031); MS chain advanced; agreement #11 added; format-spec comment extended for check 10; phase line + last-verified-state updated. |
+| `src/lib/{auth,chat,crisis,persona,storage,shared,server}/.gitkeep` (×7) | Created (skeleton). |
+| `src/routes/api/.gitkeep` | Created. |
+| `test/fixtures/.gitkeep`, `test/e2e/.gitkeep` | Created. |
+| `svelte.config.js`, `tsconfig.json`, `src/app.d.ts`, `src/lib/vitest-examples/Welcome.svelte.spec.ts` | Reformatted by Prettier (no semantic change). |
+| `.prettierrc` | Reformatted by Prettier (no semantic change). |
+
+**What to look for in the proof:**
+- Repo at GitHub now shows 9 commits on `main` ending in `cabfa8c`.
+- `PROJECT.md` "For agents reading the code" section has the 4 new subsections.
+- `scripts/validate.sh` has 10 checks documented in the header. Validator runs PASS on clean state.
+- Pre-commit hook fires all 4 steps; each prints its tool name + status.
+- `forms/DECISION.md` has DEC-028..031 (sequential, no skip).
+- `state/current.md` "Engineer working agreements" list now has #1..#11.
+
+**Operator-captured proof (operator fills at sign-off):**
+- Run `bash scripts/validate.sh` from repo root; confirm `VALIDATOR: PASS`.
+- Run `npm run lint` and `npm run format:check`; confirm both pass cleanly.
+- Visual inspection of `PROJECT.md` "For agents reading the code" section on GitHub renders correctly.
+
+**Anything skipped or deferred:**
+- **RFI-010 (DONE sign-off recording mechanism)** — explicitly MS-007 scope per operator's MS-006 prompt rules of engagement.
+- **CONTEXT.md and prompts/** — explicitly MS-007 scope.
+- **Vitest + Playwright config tightening** — sv scaffold defaults are permissive supersets of the convention. Scaffold demo files (`src/lib/vitest-examples/`, `src/routes/demo/`) would be excluded if config tightened. Deferred until those demo files are removed in a future MS.
+- **Engineer prompt template / checklist** (per operator's MS-006 sign-off note about agreement #5 violations) — operator placed in MS-006 scope preview but didn't include in MS-006 prompt body. Likely MS-007 scope alongside RFI-010 + CONTEXT.md.
+
+**Linked incidents:** none. Two real bugs caught during F4 testing (ESLint severity, gitleaks capture-group) were fixed in-session before any contaminated commit shipped to remote — the SHA `7d4b513` accidental local commit was reset via `git reset HEAD~1` (mixed). Documented in DEC-026 / SITE_LOG handover note for the trail.
+
+**Linked DECs filed in MS-006:** DEC-028 (directory structure), DEC-029 (test layout), DEC-030 (errors+logging), DEC-031 (dependency policy).
+
+**Linked RFIs:** none filed in MS-006. RFI-010 remains OPEN, deferred to MS-007.
+
+**Open items for operator at sign-off:**
+
+1. **Validator at 277 lines** (8 over Scope G4's 270 cap). Same overrun-from-correctness pattern as MS-005 (working agreement #10 covers). Compression possible (~265 by factoring phase-extraction helper) but trades readability. Builder default: ship as-is.
+
+2. **ESLint severity bug + gitleaks capture-group bug both caught by synthetic tests F4 / scope E.** Working agreement #8 worked exactly as designed — untested validators are worse than no validator, and these two bugs would have shipped silent failures otherwise.
+
+3. **One accidental local commit** (`7d4b513`) landed during ESLint F4 testing because the rule severity was `'warn'` not `'error'`. Reset via `git reset HEAD~1` (mixed) before any push. Not in remote history.
+
+**Operator sign-off:** pending.
+**Sign-off notes:**
+[Operator fills. Run `bash scripts/validate.sh`, `npm run lint`, `npm run format:check`; confirm all pass. Confirm validator size posture (277 lines). Caveats / follow-ups go here.]
+
+
 
