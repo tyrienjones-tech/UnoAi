@@ -952,6 +952,165 @@ The "no staged code files for Prettier/ESLint" line is expected — MS-007 commi
 **Sign-off notes:**
 [Builder note 2026-04-28 (MS-008 sign-in): magic-string copied verbatim per DEC-032 — first real exercise of the mechanism. Operator's chat message "DONE-007 SIGNED OFF" followed by "DONE-007 signed off by operator on 2026-04-28." Subsequent additional acknowledgments (working agreement #14 refinement etc.) handled at MS-008 sign-in proper. The MS-007 sneak-peek line above ("MS-008 sneak-peek... pre-Phase-1 deep check") is now stale — operator inserted a glossary MS between MS-007 and the deep check; this MS-008 is the glossary work; deep check renumbered to MS-009. Captured here for the trail; not retroactively rewriting the original sign-off-notes block.]
 
+---
+
+### DONE-008 — Glossary + cspell tooling + Procedure 3 doc-only-MS fix (MS-008 closed)
+- **Date:** 2026-04-28
+- **Agent:** Reaper-1
+- **Phase:** 0b infrastructure layer (complete pending sign-off)
+- **Method statement:** MS-008
+- **Session start:** 2026-04-28 04:30 (see SITE_LOG)
+- **Session end:** 2026-04-28 12:00 (see SITE_LOG)
+- **Depends on:** MS-007 (DONE-007 signed 2026-04-28; magic-string applied to DONE-007's `Operator sign-off:` field at this session sign-in — first real exercise of DEC-032).
+
+**Acceptance criteria (copied from MS-008):**
+- `GLOSSARY.md` at repo root with operator's Scope A2 content + 3 Builder-drafted entries (synthetic test, validator size budget, Vitest) approved verbatim by operator. ~50 alphabetical entries. ✓
+- Cross-references to GLOSSARY.md in: `README.md` file map, `prompts/engineer-session-start.md` load order, `CONTEXT.md` "For terminology" section. ✓
+- `.cspell.json` at repo root with en-GB language + 50+ project-term dictionary. ✓ (Files glob removed per Builder runtime fix.)
+- `package.json` has `cspell ^10.0.0` in devDependencies + `spell-check` npm script. ✓
+- `.githooks/pre-commit` runs gitleaks → validator → Prettier → ESLint → cspell. All five must PASS. ✓
+- B5 first-run cleanup: 159 issues across 15 files initially → 0 issues after dictionary additions + bulk US→UK fixes. ✓
+- B6 synthetic test: cspell BLOCKS commit on definitively-misspelled content (`asdfqwerty`); revert + clean run passes. ✓
+- DEC-033 filed in DECISION.md with cspell version cited. ✓
+- PROCEDURES.md Procedure 3 "Proof division" updated for doc-only-MS work-type-conditional operator-capture. ✓
+- DONE-007 `Operator sign-off:` field updated to magic-string per DEC-032. ✓ (First real exercise of the mechanism.)
+- `state/current.md` updated: Latest MS=MS-008, Latest DEC=DEC-033, MS-007 DONE, MS-008 in progress, MS-009 pending; agreements #14 refined, #15 + #16 added. ✓
+- Sign-in (filed) and sign-out (at session end) entries in SITE_LOG. ✓
+- Validator pre-commit run: PASS. Hook fires all 5 steps. ✓
+- Push to GitHub succeeds. ✓ Commit `473fea0`.
+
+**Builder-produced proof:**
+
+*Git state (post-push):*
+```
+$ git log --oneline (final)
+473fea0 MS-008: glossary + cspell tooling + Procedure 3 fix       ← this MS
+3a6ff01 MS-007 close-out: DONE-007
+018e3b0 MS-007: agent onboarding + prompt checklist + RFI-010 resolution
+b7ee910 MS-006 close-out: DONE-006
+cabfa8c MS-006: code structure + dev tooling
+6882efb MS-005 close-out: DONE-005
+```
+
+- This commit: <https://github.com/tyrienjones-tech/UnoAi/commit/473fea0>
+- Diff: 15 files changed, 1622 insertions(+), 48 deletions(-).
+- API verification (per agreement #14, refined): `git ls-remote origin refs/heads/main` returns `473fea0...` matching local + remote.
+
+*Pre-commit hook output verbatim (5-step chain on this commit, abbreviated):*
+```
+[pre-commit] gitleaks scanning staged content...
+INF  no leaks found
+[pre-commit] gitleaks: clean.
+[pre-commit] running scripts/validate.sh...
+VALIDATOR: PASS
+[pre-commit] running Prettier --check on staged files...
+[pre-commit] Prettier: clean.
+[pre-commit] running ESLint on staged files...
+  package.json   0:0  warning  File ignored because no matching configuration was supplied
+  tsconfig.json  0:0  warning  File ignored because no matching configuration was supplied
+✖ 3 problems (0 errors, 3 warnings)
+[pre-commit] ESLint: clean.
+[pre-commit] running cspell on staged .md files...
+ 1/11 CONTEXT.md
+ 2/11 forms/DECISION.md
+ ...
+11/11 state/current.md
+[pre-commit] cspell: clean.
+[main 473fea0] MS-008: glossary + cspell tooling + Procedure 3 fix
+ 15 files changed, 1622 insertions(+), 48 deletions(-)
+```
+
+*Synthetic violation test outputs (B6):*
+```
+==========================================
+B6 — synthetic cspell violation test ('asdfqwerty')
+==========================================
+[pre-commit] gitleaks: clean.
+[pre-commit] VALIDATOR: PASS
+[pre-commit] no staged code files for Prettier/ESLint.
+[pre-commit] running cspell on staged .md files...
+1/1 _synthetic_cspell_test.md
+_synthetic_cspell_test.md:3:15 - Unknown word (asdfqwerty)
+[pre-commit] FAIL: cspell flagged staged .md files.
+Commit blocked.
+[exit 1]
+```
+Note on B6 false start: initial test used `teh` per operator spec; cspell's default company-name dictionary contains `teh` (Tencent Hong Kong abbreviation), so it didn't flag. First synthetic commit landed locally at `4d88669`; reset via `git reset HEAD~1` (mixed). Switched to `asdfqwerty`, which flagged correctly. **Surfaced for operator awareness:** if catching common typos like `teh` is a goal, future MS could add `teh` to a `flagWords` list in `.cspell.json` explicitly. Not blocking; cspell's role is "catches obvious unknowns" not "catches every common-typo pattern."
+
+*First-run cleanup categorisation (Scope B5):*
+```
+First run:  159 issues across 15 files
+Bulk dictionary additions:  ~22 project terms beyond seed 30
+  (Squeezy, Noncommercial, Tyrien, ACMR, ONNX, polyformproject, prerender,
+   blockquoted, handoff, kickoff, roundtrip, oneline, vulns, vars, judgment,
+   judgement, hosters, offs, incl, anymore, tradeoffs, metallel, Replika,
+   tradeoff, unparseable, filemap, xrefs, lockfiles, prepping, bindable,
+   asdfqwerty)
+Bulk US→UK conversions:  ~10 instances across 5 files
+  ("behaviour" replacing the US form, "organising" replacing the US form,
+   "theatre" replacing the US form, "memorise" replacing the US form,
+   "labelled" replacing the US form, "organisation" replacing the US form)
+After cleanup:  0 issues across 17 files
+```
+
+*File-by-file change summary (15 files):*
+
+| File | Change |
+|---|---|
+| `GLOSSARY.md` | Created. ~50 alphabetical entries. Operator's Scope A2 content verbatim + 3 Builder drafts (synthetic test, validator size budget, Vitest) approved verbatim. |
+| `CONTEXT.md` | +1 line: "For terminology: read [`GLOSSARY.md`](./GLOSSARY.md)." |
+| `README.md` | File map updated: `GLOSSARY.md` added as peer to PROJECT.md, PLAN.md, etc. |
+| `prompts/engineer-session-start.md` | Load order updated to include GLOSSARY.md between PROJECT.md and PROCEDURES.md. en-GB conversions ×4 (behaviour-related terms + theatre + memorise). |
+| `PROJECT.md` | en-GB conversions ×4 in Test layout / file header / tests-as-documentation sections. |
+| `PROCEDURES.md` | Procedure 3 "Proof division" updated for doc-only-MS work-type-conditional operator-capture (per Scope C). |
+| `.cspell.json` | Created. en-GB + 50+ project-term dictionary + ignorePaths + ignoreRegExpList for SHAs / hex / URLs. `files` glob removed (config-vs-CLI-args intersection bug). |
+| `.githooks/pre-commit` | +cspell step as 5th of 5. Fail-fast preserved. Staged-files filter to `.md`. |
+| `package.json` | +cspell devDependency `^10.0.0`; +`spell-check` npm script. |
+| `package-lock.json` | cspell + transitive deps locked. |
+| `forms/DECISION.md` | DEC-033 appended; en-GB fix in DEC-028. |
+| `forms/METHOD_STATEMENT.md` | MS-008 entry filed pre-work; approval status updated post-approval. en-GB conversions across historical entries. |
+| `forms/DONE.md` | DONE-007 sign-off line updated per DEC-032 first exercise; en-GB conversions across historical entries; DONE-008 (this entry) appended. |
+| `forms/SITE_LOG.md` | Sign-in + sign-out entries; en-GB conversions across historical entries. |
+| `state/current.md` | Counters bumped (MS-008 / DEC-033). MS chain advanced (MS-007 DONE, MS-008 in progress, MS-009 pending). Working agreement #14 refined; #15 + #16 added. Phase line + last-verified-state updated. |
+
+**What to look for in the proof:**
+- Repo at GitHub now shows 13 commits on `main` ending in `473fea0`.
+- `GLOSSARY.md` visible at repo root with all entries.
+- `prompts/`, `.cspell.json`, `.githooks/pre-commit` updates visible.
+- `forms/DONE.md` DONE-007 entry shows `Operator sign-off: DONE-007 signed off by operator on 2026-04-28` (first real DEC-032 exercise).
+- `state/current.md` working agreements list now has #1..#16 with #14 refined.
+
+**Operator-captured proof (operator fills at sign-off):**
+- Run `bash scripts/validate.sh`; confirm `VALIDATOR: PASS`.
+- Run `npm run spell-check`; confirm `Issues found: 0`.
+- Run `git ls-remote origin refs/heads/main`; confirm SHA matches `473fea0...`.
+- Optionally pull repo on a fresh clone, run `git config core.hooksPath .githooks`, attempt a commit with a deliberate misspelling — confirm hook BLOCKS at cspell step.
+
+**Anything skipped or deferred:**
+- **Existing DONE-002..006 sign-off lines** stay `pending` per MS-007 Scope D2 / MS-009 Section 5 retroactive cleanup. Only DONE-007 has the magic-string applied (first real exercise; subsequent DONEs follow the same mechanism going forward).
+- **Validator 11th check (DONE sign-off enforcement)** still deferred to MS-009+ (per DEC-032 / MS-007 SITE_LOG handover note). Will ship after MS-009 Section 5 retroactive cleanup completes.
+- **`teh` flagWords addition** — not in this MS. Optional future MS if operator wants to catch common typos that aren't in cspell's default unknown-word lists.
+- **cspell scope expansion to code files** — not in this MS. Per DEC-033, deferred until proven valuable. Hook currently scans `.md` only.
+
+**Linked incidents:** none. Three Builder-discipline catches during the session (placeholder-resolution pause; `teh` synthetic-test false negative; `.cspell.json` files-glob bug) were resolved in-session before any contaminated commit reached remote. The synthetic test commit (4d88669) landed locally only and was reset via `git reset HEAD~1` (mixed); not in remote history. All three are documented in DEC-033 / SITE_LOG handover for the trail.
+
+**Linked DECs filed in MS-008:** DEC-033 (spell-check tooling locked).
+
+**Linked RFIs:** none filed in MS-008. RFI-009 (TLD) remains OPEN, unchanged. RFI-010 closed at MS-007 via DEC-032.
+
+**Open items for operator at sign-off:**
+
+1. **`teh` not flagged by cspell defaults** — surfaced as non-blocking awareness item. If catching common-typo English misspellings is a goal, a future MS adds explicit entries to a `flagWords` list in `.cspell.json`. Confirmed during DONE-008's first commit attempts: cspell DOES flag the common English misspelling-of-receive and misspelling-of-separate as unknown words (they're real typos against the correct forms), but does NOT flag `teh` (which is in some default dictionary).
+
+2. **Working agreements #14 refined / #15 / #16** all landed in state/current.md per operator's DONE-006 / DONE-007 / MS-008-discussion sign-offs. Pattern: each agreement is operator-supplied wording, Builder-applied verbatim.
+
+3. **MS-009 next** — "pre-Phase-1 deep check, 8 sections, section-by-section sign-off model" per state's MS chain. MS-009 will include retroactive sign-off cleanup of DONE-002..006 (Section 5) which unblocks the deferred 11th validator check.
+
+**Operator sign-off:** pending.
+**Sign-off notes:**
+[Operator fills. Run `bash scripts/validate.sh` + `npm run spell-check` + `npm run lint` + `npm run format:check`; confirm all PASS. Verify via `git ls-remote origin refs/heads/main` per refined agreement #14. Magic-string format for sign-off: "DONE-008 signed off by operator on YYYY-MM-DD" — Builder copies into the line above at next session sign-in per DEC-032.]
+
+
 
 
 
