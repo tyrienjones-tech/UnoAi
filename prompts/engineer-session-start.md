@@ -67,7 +67,7 @@ What this prompt is NOT:
 - It is not a request for you to add the doctrine's content to UnoAi's own files. The doctrine lives in the skills folder; UnoAi inherits it by reading, not by copying.
 - It is not a directive for any specific behaviour change. The goal is awareness — that you have the doctrine's patterns in mind when you make decisions, so your defaults are informed by the operator's accumulated experience rather than by your training distribution alone.
 
-What this prompt IS:
+What this prompt is:
 
 - A loading instruction. Read the doctrine before working.
 - A self-awareness primer. The doctrine names patterns you will exhibit. Knowing the names makes them catchable in yourself.
