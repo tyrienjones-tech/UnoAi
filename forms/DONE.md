@@ -495,3 +495,153 @@ Both bugs are documented in DEC-026 reproduction notes and in `scripts/validate.
 **Sign-off notes:**
 [Operator fills. Run `bash scripts/validate.sh` once locally and confirm PASS. Decide: (a) accept the 192-line validator as-is, or (b) ask Builder to compress to ~165 lines by trimming header comments. Optional: confirm whether the README `## Self-hosting` → `Self-hosting` heading-marker change in bf2d661 was intentional.]
 
+---
+
+### DONE-005 — Chain validator check + code conventions for AI agents + README markdown fixes (MS-005 closed)
+- **Date:** 2026-04-28
+- **Agent:** Reaper-1
+- **Phase:** 0b infrastructure layer (complete pending sign-off)
+- **Method statement:** MS-005
+- **Session start:** 2026-04-28 01:10 (see SITE_LOG)
+- **Session end:** 2026-04-28 01:50 (see SITE_LOG)
+- **Depends on:** MS-004 (DONE-004 signed 2026-04-28). Chain check verified MS-005's own dependency satisfied at validator run-time.
+
+**Acceptance criteria (copied from MS-005):**
+- `forms/INCIDENT.md` has INC-006 documenting the validator chain-check gap. ✓ (operator-supplied body, Builder-transcribed verbatim with Builder-note inline)
+- `scripts/validate.sh` has 9 checks; new check is MS-chain dependency. Header comment block updated to enumerate 9 checks. Line count: 237 (vs target ≤220). Per-MS-005 RFI resolution: accepted as-is per working agreement #7. ✓
+- Synthetic violation test for chain check produced FAIL output verbatim, captured in DONE-005 proof. Final clean run: PASS. ✓ Both branches verified (target-missing + target-undone).
+- `PROJECT.md` has "For agents reading the code" section after "Sensitive content" section, containing file-header convention, DEC-reference rule, tests-as-documentation rule, naming conventions, "When in doubt" closer per operator's Scope B1 verbatim. ✓
+- `PROJECT.md` organizing-principle line at top: confirmed already present from MS-004; B2 was a no-op. ✓
+- `README.md` "Self-hosting" section has `##` heading marker restored. ✓
+- `README.md` "Status" section reads: "Phase 0b complete. Infrastructure phase in progress (MS-005). Phase 1 begins after MS-006 DONE." ✓
+- `PROCEDURES.md` Procedure 9 has a sentence about README Status section sync at sign-out (trust-based through MS-005, mechanical enforcement deferred to MS-006). ✓
+- `forms/DECISION.md` has DEC-027 (code conventions locked). DEC-026 updated to retire the 150-line guidance. ✓
+- `state/current.md` updated: Latest MS=MS-005, Latest DEC=DEC-027, Latest RFI=RFI-010, Latest INC=INC-006; MS chain status section added; engineer working agreements #7/#8/#9/#10 added; phase line current. ✓
+- Sign-in (filed at session start) and sign-out (filed at session end) entries in SITE_LOG using the Procedure 9 templates. ✓
+- Validator pre-commit run: PASS. Hook fires gitleaks + validator on actual MS-005 commit. ✓
+- Push to GitHub succeeds. ✓ Commit `63ab6d2`.
+
+**Builder-produced proof:**
+
+*Git state (post-push):*
+```
+$ git log --oneline (final)
+63ab6d2 MS-005: chain validator check + code conventions + README fixes  ← this MS
+4a6c1a7 MS-004 close-out: DONE-004
+ed87926 MS-004: session lifecycle + validator + state persistence
+bf2d661 Update README.md
+15b7751 MS-003 close-out: DONE-003 + final SITE_LOG entry
+0cf45cd Migrate handover package + LICENSE + SvelteKit scaffold
+372902c Initial commit
+```
+
+- This commit: <https://github.com/tyrienjones-tech/UnoAi/commit/63ab6d2>
+- Commit diff: 10 files changed, 377 insertions(+), 16 deletions(-).
+
+*Pre-commit hook output verbatim:*
+```
+[pre-commit] gitleaks scanning staged content...
+INF  0 commits scanned.
+INF  scanned ~35159 bytes (35.16 KB) in 176ms
+INF  no leaks found
+[pre-commit] gitleaks: clean.
+[pre-commit] running scripts/validate.sh...
+VALIDATOR: PASS
+[main 63ab6d2] MS-005: chain validator check + code conventions + README fixes
+ 10 files changed, 377 insertions(+), 16 deletions(-)
+```
+
+*Synthetic violation test outputs (chain check, Scope A3):*
+
+```
+==========================================
+Synthetic test 1: MS-100 with Depends on: MS-099 (target doesn't exist)
+==========================================
+VALIDATOR: FAIL
+  - MS: numbering gap — expected MS-006, found MS-100
+  - state/current.md 'Latest MS' counter (MS-004) does not match actual highest entry (MS-100)
+  - state/current.md 'Latest RFI' counter (RFI-009) does not match actual highest entry (RFI-010)
+  - state/current.md 'Latest INC' counter (INC-005) does not match actual highest entry (INC-006)
+  - MS chain: MS-100 cannot proceed — depends on MS-099 which does not exist in METHOD_STATEMENT.md
+[exit 1]
+
+==========================================
+Synthetic test 2: MS-100 with Depends on: MS-001 (target exists, no DONE)
+==========================================
+VALIDATOR: FAIL
+  - MS: numbering gap — expected MS-006, found MS-100
+  - state/current.md 'Latest MS' counter (MS-004) does not match actual highest entry (MS-100)
+  - state/current.md 'Latest RFI' counter (RFI-009) does not match actual highest entry (RFI-010)
+  - state/current.md 'Latest INC' counter (INC-005) does not match actual highest entry (INC-006)
+  - MS chain: MS-100 cannot proceed — depends on MS-001 which exists but is not yet DONE in DONE.md
+[exit 1]
+```
+
+Note on co-fires: synthetic tests ran while state counters were mid-update (Latest MS still said MS-004, Latest RFI still RFI-009, Latest INC still INC-005). The chain-check FAIL message fires correctly with the right MS-NNN naming and the right branch ("does not exist" vs "exists but is not yet DONE") in both tests. The state-counter and numbering-gap fails are separate checks correctly catching the same artefact — expected, not chain-check noise.
+
+*Final clean-state run (post-state-update, post-revert):*
+```
+VALIDATOR: PASS
+EXIT: 0
+```
+
+*Validator size:*
+- Pre-MS-005: 192 lines (8 checks).
+- Post-MS-005 chain check: 237 lines (9 checks). +45 lines.
+- Operator's 220 hard cap exceeded by 17 lines. Mid-session RFI raised; operator approved (a) — accept as-is per working agreement #7. The 150-line guidance from MS-004 is retired per DEC-026 update.
+
+*File-by-file change summary:*
+
+| File | Change |
+|---|---|
+| `scripts/validate.sh` | +45 lines (chain check + header docs). Now 237 lines, 9 checks. |
+| `forms/INCIDENT.md` | INC-006 appended. Operator-supplied body verbatim. |
+| `forms/RFI.md` | RFI-010 appended. Operator-supplied body verbatim. |
+| `forms/DECISION.md` | DEC-026 update (150-line guidance retired) + DEC-027 appended (code conventions locked). |
+| `forms/METHOD_STATEMENT.md` | MS-005 entry filed pre-work; approval status updated post-approval. |
+| `forms/DONE.md` | DONE-005 appended (this entry). |
+| `forms/SITE_LOG.md` | This session's sign-in + sign-out entries. |
+| `PROJECT.md` | "For agents reading the code" section appended after "Sensitive content" section. ~70 lines. |
+| `PROCEDURES.md` | Procedure 9 Enforcement section extended (chain check + README sync trust-based note). |
+| `README.md` | `## Self-hosting` heading marker restored; Status line updated. |
+| `state/current.md` | Counters bumped (MS-005, DEC-027, RFI-010, INC-006); MS chain status section added; agreements #7/#8/#9/#10 added; phase line + last-verified-state updated. |
+
+**What to look for in the proof:**
+- The repo at GitHub shows 7 commits on `main` ending in `63ab6d2`.
+- `forms/INCIDENT.md` INC-006 has the verbatim operator-drafted body + Builder-note inline.
+- `forms/RFI.md` RFI-010 has the verbatim operator-drafted body.
+- `scripts/validate.sh` has 9 checks documented in the header comment block, including the new chain check.
+- Validator runs PASS on clean state. Synthetic violations FAIL with chain-specific messages.
+- `PROJECT.md` "For agents reading the code" section is present, with all five subsections (file header, DEC references, tests as documentation, naming, when in doubt).
+- `state/current.md` has the new "MS chain status" section and the four new working agreements (#7/#8/#9/#10).
+
+**Operator-captured proof (operator fills at sign-off):**
+- Run `bash scripts/validate.sh` from repo root; confirm `VALIDATOR: PASS`.
+- Visual inspection of `README.md` Status line on GitHub matches `state/current.md`.
+- Visual inspection of `PROJECT.md` "For agents reading the code" section is present and well-formed.
+
+**Anything skipped or deferred:**
+- **Scope C3 (README Status currency check)** — deferred to MS-006 per operator's MS-005 approval (validator size budget). README↔state sync is trust-based discipline through MS-005.
+- **RFI-010 (DONE sign-off recording mechanism)** — filed; operator decision pending; deferred to MS-006 design.
+- **GitHub repo description update** — still showing "Name is place holder" per state/current.md pending operator actions. Operator-handled outside any MS.
+- **README self-hosting wording amendment (operator's MS-003 follow-up #2)** — partially landed in operator commit `bf2d661`. The heading-marker artifact from that commit is now fixed in this MS-005 commit. Wording itself was operator's choice and remains as `bf2d661` set it.
+
+**Linked incidents:** INC-006 (chain mechanism partially shipped in MS-004; validator dependency check missing — closed by this MS).
+
+**Linked DECs filed in MS-005:** DEC-027 (code conventions for AI agents locked). DEC-026 updated (150-line guidance retired).
+
+**Linked RFIs:** RFI-010 (DONE sign-off recording mechanism — filed, OPEN, deferred to MS-006).
+
+**Open items for operator at sign-off:**
+
+1. **Working agreement #10 numbering.** Operator wrote "#11" when introducing the new bash-budget-calibration agreement. Builder renumbered to **#10** per discipline #5 (sequential numbering, no skip). If operator intended #10 to be something else, paste the alternate at sign-off.
+
+2. **INC-006 body factual accuracy.** Builder transcribed the operator-supplied body verbatim. The body references "H2a–H2e" as a 4-part plan with "H2a, H2b, H2c shipped" — but Builder's review of MS-004's literal scope (from MS-004 prompt + the actual files committed) doesn't match those H2 labels. The substantive claim (H2d chain enforcement didn't ship) is correct and exactly what this MS closes. The H2a–c labels appear to reference an internal operator/engineer mental model not visible in MS-004's committed scope. Flagging here so a future audit doesn't read INC-006 as conflicting with MS-004's commit history.
+
+3. **Validator size at 237 lines.** Per operator's mid-session RFI resolution + working agreements #7 and #10, this is the new baseline. MS-006 may include a refactor pass that compresses without losing correctness; for now, ships as-is.
+
+**Operator sign-off:** pending.
+**Sign-off notes:**
+[Operator fills. Run `bash scripts/validate.sh` once locally and confirm PASS. Confirm working-agreement #10 renumber, INC-006 H2 labeling note, and validator size posture. Caveats or follow-ups go here.]
+
+
