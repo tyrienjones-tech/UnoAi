@@ -481,3 +481,45 @@ INF  no leaks found
   - **Working agreement #11** (operator-supplied wording from DONE-005 sign-off) appended to the running list. No paraphrase. Matches the pattern of the prior agreements.
   - **Vitest + Playwright config defaults** are a permissive superset of the convention. No edits — convention enforced at review level. Tightening deferred until sv scaffold demo files are removed in a future MS.
   - **Markdown + state/ added to .prettierignore.** PROJECT.md, PROCEDURES.md, PLAN.md, README.md, all forms, state/current.md are author-formatted; Prettier reformat would mangle tables, blockquotes, numbered lists.
+
+---
+
+### 2026-04-28 03:30 session start
+
+- Role: Builder
+- Session goal: implement MS-007 — agent onboarding (`prompts/engineer-session-start.md`, `prompts/engineer-prompt-checklist.md`, `CONTEXT.md`), Engineer prompt-writing checklist as mechanical fix for working agreements #5/#10/#11 drift, RFI-010 resolution via DEC-032 (magic-string-in-chat sign-off recording).
+- Resuming from: DONE-006 (signed 2026-04-28). Operator added engineer working agreements #12/#13/#14 in DONE-006 sign-off — to be folded into state/current.md at this session's sign-out.
+- Context loaded: PROJECT.md, PROCEDURES.md, state/current.md.
+- Open MSes: none (MS-006 closed).
+- Open RFIs awaiting me: RFI-010 (DONE sign-off recording mechanism) — closure path is in MS-007 Scope D. RFI-009 (TLD) still open but not Builder-blocking.
+- Pre-session validator run: **PASS** (verified at 2026-04-28 03:30 before this entry was filed).
+- Working-agreement-#1 verification: `RFI-010` confirmed open in `forms/RFI.md` (status "pending. Defer to MS-006 design discussion." — actually MS-007 closes it per this MS Scope D). DEC-031 is highest in DECISION.md; next sequential is DEC-032 per discipline #5.
+
+---
+
+### 2026-04-28 04:00 session end
+
+- Role: Builder
+- Outcome: DONE-007 to follow this commit. MS-007 scope complete: `prompts/engineer-session-start.md`, `prompts/engineer-prompt-checklist.md`, `CONTEXT.md` at repo root, cross-references in README and PROJECT.md, PROCEDURES.md Procedure 1 Engineer-role addendum, DEC-032 (DONE sign-off recording mechanism — closes RFI-010), DONE.md template annotation, validator script header comment for deferred 11th check, working agreements #12/#13/#14 added to state/current.md.
+- Files touched (~13 files):
+  - `Desktop/UnoAi/prompts/engineer-session-start.md` (created, operator's Scope A2 verbatim)
+  - `Desktop/UnoAi/prompts/engineer-prompt-checklist.md` (created, operator's Scope C1 verbatim + one-paragraph scope-note at top per friendly amendment)
+  - `Desktop/UnoAi/CONTEXT.md` (created at repo root, operator's Scope B1 verbatim)
+  - `Desktop/UnoAi/README.md` (cross-reference + file-map updated to include CONTEXT.md, prompts/)
+  - `Desktop/UnoAi/PROJECT.md` (cross-reference after organizing-principle blockquote)
+  - `Desktop/UnoAi/PROCEDURES.md` (Procedure 1 Engineer-role addendum)
+  - `Desktop/UnoAi/scripts/validate.sh` (header comment for deferred check 11; 289 lines)
+  - `Desktop/UnoAi/forms/DECISION.md` (DEC-032)
+  - `Desktop/UnoAi/forms/RFI.md` (RFI-010 ANSWERED)
+  - `Desktop/UnoAi/forms/DONE.md` (template annotation for Operator sign-off line)
+  - `Desktop/UnoAi/forms/METHOD_STATEMENT.md` (MS-007 entry + approval status)
+  - `Desktop/UnoAi/forms/SITE_LOG.md` (sign-in + sign-out)
+  - `Desktop/UnoAi/state/current.md` (counters bumped, MS chain advanced, agreements #12/#13/#14 added, last-verified-state, RFI-010 removed from open list with closure note)
+- Validator run at end: **PASS** (verified at 2026-04-28 04:00 before commit; 289 lines).
+- state/current.md updated: **YES** (counters bumped to MS-007 / DEC-032; RFI-010 marked closed; agreements #12/#13/#14 appended; phase line current).
+- Next action: commit + push (hook fires gitleaks + validator + Prettier + ESLint). Then DONE-007 + close-out commit. Then hold for MS-008 prompt.
+- Handover note:
+  - **No validator code changes** — only header documentation for deferred check 11. Working agreement #8 (synthetic tests) doesn't trigger because no tooling enforces a new discipline in this MS.
+  - **Friendly amendment taken:** added a one-paragraph scope-note at top of `prompts/engineer-prompt-checklist.md` clarifying the checklist covers prompt-writing only. DONE sign-off discipline (#9, #12, #14) and Builder-execution discipline (#3, #7, #8) stay in their own domains (the canonical agreements list in state/current.md). This is the operator-flagged friendly amendment from the MS-007 approval message.
+  - **DEC-032 mechanism (magic-string-in-chat):** going forward, when operator signs off in chat with the string "`DONE-NNN signed off by operator on YYYY-MM-DD`", Builder copies that verbatim into the DONE entry's `Operator sign-off:` line at the next session sign-in. Existing DONE-002..006 stay "pending" in this MS; retroactive cleanup is MS-008 Section 5 work.
+  - **Deferred check 11** documented in validator script header. Will ship after MS-008 retroactive cleanup of DONE-002..006 sign-off lines (otherwise the chain check would block since chains depend on those DONEs).

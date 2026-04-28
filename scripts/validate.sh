@@ -24,6 +24,18 @@
 #      "Phase X status" identifier (case-insensitive substring match).
 #      Hard-fail on parse error per DEC-026's fail-closed precedent.
 #
+# Deferred check 11 (per MS-007 Scope D3 + DEC-032):
+#   DONE sign-off enforcement. Verify any DONE-NNN referenced as a chain
+#   dependency target by another MS has its "Operator sign-off:" field
+#   populated (not "pending"). Implementing now would block the chain check
+#   for every existing MS that depends on DONE-002..006 — all currently say
+#   "pending" because operator sign-off has been chat-only. Per DEC-032,
+#   future sign-offs use a magic string ("DONE-NNN signed off by operator
+#   on YYYY-MM-DD") that Builder copies into the DONE entry at the next
+#   session sign-in. Once retroactive cleanup completes at MS-008 Section 5
+#   (form integrity audit), this check ships and the chain check tightens
+#   from "DONE-exists" to "DONE-signed."
+#
 # Sign-in / sign-out heading-line regex (strict):
 #   ^### [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2} session (start|end)$
 #

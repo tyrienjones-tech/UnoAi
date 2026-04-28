@@ -15,6 +15,8 @@ Nine procedures govern this project. Each maps to a form template in `/forms/`, 
 4. File a SITE_LOG entry: "Arrived. Read induction. Working on phase X."
 5. Then begin work.
 
+**Engineer-role addendum (per MS-007):** sessions that will be writing prompts to Builder also read `prompts/engineer-prompt-checklist.md` before drafting any prompt. The checklist is the mechanical fix for the chat-vs-file drift patterns named in working agreements #5, #10, and #11 — going through it takes ~2 minutes and catches known failure modes that have cost real time across multiple MSes. Fresh Engineer sessions additionally start with `prompts/engineer-session-start.md` (the operator-pasted onboarding prompt that loads the agentic-doctrine context).
+
 **Form:** `forms/SITE_LOG.md` (append-only)
 
 **Why:** agents that skip induction reinvent decisions, drift scope, and break governance. Five minutes of reading prevents hours of rework. This is non-negotiable.

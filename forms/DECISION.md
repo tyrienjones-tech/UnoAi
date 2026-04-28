@@ -426,3 +426,17 @@ These are locked at project start. Override only via a new DECISION entry that e
 - **Reason:** dependency creep is how privacy stories die and how indie projects accumulate maintenance burden. DEC-level review is cheap; reversing a misjudged dependency post-launch is not. The "<50 lines of our own code" alternative test is the gate — if we can write it, we should.
 - **Reversibility:** trivial to relax; costly to enforce retroactively.
 - **Affects:** all future dependency additions. Anticipated near-term: Ed25519 signing library (Phase 1), IndexedDB wrapper (Phase 3), `@anthropic-ai/sdk` (Phase 6) — each requires its own DEC at use.
+
+### DEC-032 — DONE sign-off recording mechanism
+- **Date:** 2026-04-28
+- **Decided by:** operator
+- **Decision:** Operator sign-off on a DONE entry is recorded via magic-string-in-chat ("`DONE-NNN signed off by operator on YYYY-MM-DD`"), copied verbatim by Builder into the DONE entry's `Operator sign-off:` field at the next session sign-in.
+- **Mechanism:** when operator signs off in chat, the sign-off message contains the recognizable string. At Builder's next session sign-in (after operator confirms), Builder:
+  1. Locates the `DONE-NNN` entry in `forms/DONE.md`.
+  2. Updates the entry's `Operator sign-off:` line from `pending` to the magic-string text.
+  3. Files this as part of the session's normal work, not as its own MS.
+- **Reason:** lowest-friction path that preserves both chat flow and file-based audit trail. Builder doesn't need to track chat state across sessions; operator doesn't need to make file edits to sign off. Resolves RFI-010 with operator's preferred Option (a).
+- **Reversibility:** cheap. The mechanism is purely procedural; no tooling depends on the magic-string format until a future validator check (deferred to MS-008+) enforces it.
+- **Affects:** every future DONE sign-off. Existing DONE-002 through DONE-006 to be cleaned up retroactively at MS-008 (Section 5 — form integrity audit).
+- **Closes:** RFI-010.
+- **Future enforcement (deferred to MS-008+):** validator gains an 11th check verifying any DONE-NNN referenced as a chain dependency target has its `Operator sign-off:` field populated (not `pending`). Implementing now would block existing chain-check passes; deferred until retroactive sign-offs are cleaned up at MS-008.

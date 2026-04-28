@@ -831,3 +831,148 @@ These are the five items in the Builder's reply preceding this MS — restated h
   2. gitleaks rule `lemon-squeezy-webhook-secret` had its capture group around the LABEL not the VALUE — value-based placeholder allowlist didn't trigger. Restructured to capture the value; `.env.example` and METHOD_STATEMENT.md prose mentions now allowlist-clean.
 - **Vitest + Playwright config:** Builder verified scaffold defaults are a permissive superset of the convention (Vitest glob `src/**/*.{test,spec}.{js,ts}` catches `__tests__/` paths plus more; Playwright `testMatch: **/*.e2e.{ts,js}` permissive). No edits needed; convention enforced at review level. Tightening deferred until sv scaffold demo files are removed in a future MS.
 - **Markdown + state/ added to .prettierignore:** PROJECT.md, PROCEDURES.md, PLAN.md, README.md, all forms, state/current.md are author-formatted. Prettier reformatting them would mangle tables, blockquotes, numbered lists, and intentional whitespace. Builder-runtime decision; documented inline in `.prettierignore`.
+
+---
+
+### MS-007 — Agent onboarding + Engineer prompt-writing checklist + RFI-010 resolution
+- **Date:** 2026-04-28
+- **Agent:** Reaper-1
+- **Phase:** 0b infrastructure layer (post-MS-006, pre-MS-008)
+- **Session start:** 2026-04-28 03:30 (see SITE_LOG)
+- **Task:** Four scopes covering agent-facing onboarding infrastructure. **Scope A** `prompts/engineer-session-start.md` (the prompt operator pastes at the start of a fresh Engineer session) + cross-references to it from README and PROJECT.md. **Scope B** `CONTEXT.md` at repo root (agent-onboarding-focused, distinct from PROJECT.md/README.md) + file-map listing. **Scope C** `prompts/engineer-prompt-checklist.md` (mechanical fix for working agreements #5/#10/#11 drift) + Procedure 1 cross-reference. **Scope D** RFI-010 closure via DEC-032 (magic-string-in-chat sign-off recording) + DONE.md template annotation + deferred 11th validator check note. **Scope E** state update with working agreements #12/#13/#14, MS-006 → DONE, MS-007 → in progress.
+- **Depends on:** MS-006 (DONE-006 signed 2026-04-28).
+- **Linked RFIs / decisions:**
+  - **New:** DEC-032 (DONE sign-off recording mechanism — closes RFI-010).
+  - **Closes:** RFI-010 via DEC-032.
+  - **Doesn't touch:** validator script (Scope D3 explicitly defers the 11th check to MS-008+); CI/CD; product code. RFI-009 (TLD) remains open, not blocking.
+- **Operator approval:** pending.
+
+**Open items / Builder decisions to surface at MS-007 approval:**
+
+1. **DEC numbering DEC-032.** Sequential after DEC-031 per discipline #5. Working-agreement-#1 verification done at sign-in: DEC-031 confirmed highest in DECISION.md; RFI-010 confirmed open in RFI.md.
+
+2. **Operator-supplied content verbatim (Scopes A2, B1, C1).** Builder's rules of engagement say "do not paraphrase or improve" for Engineer session-start prompt, CONTEXT.md, and Engineer prompt-writing checklist. Builder will copy verbatim. Builder-runtime adjustments limited to: (a) markdown rendering coherence (heading levels, code-fence languages, list indentation), (b) absolute-path fixes if any (e.g. relative paths within the markdown that Builder needs to verify resolve to actual files in the repo). If any wording adjustment seems needed, Builder will RFI rather than edit.
+
+3. **Engineer-session-start prompt references `/mnt/skills/user/eco-agentic-doctrine/SKILL.md` (Anthropic-environment paths).** The prompt itself acknowledges this with the disclaimer "If running in a different environment, the doctrine source needs to be located there first." Self-aware. Builder copies verbatim. No action.
+
+4. **PROJECT.md cross-reference placement (Scope A4).** Operator says "near the top after the organizing-principle line." The organizing-principle line is the blockquoted paragraph at the top of PROJECT.md added in MS-004 H1. Builder will place the cross-reference sentence immediately after that blockquote, before the existing `---` separator.
+
+5. **README.md cross-reference placement (Scope A3).** Operator says "before step 1" of "For agents working on this project". Builder will insert the sentence immediately above step 1 (currently `Read PROJECT.md`).
+
+6. **PROCEDURES.md update for engineer-prompt-checklist (Scope C2).** Operator gives Builder choice: "in Procedure 1 (read PROJECT.md before session) or as a new sub-procedure." Builder picks **add a note in Procedure 1** rather than introducing a sub-procedure or new numbered procedure — adding a Procedure 10 would also bump the "Nine procedures" count to ten and require sweep across README ("the nine rules" → "the ten rules"), Procedure summary table, etc. The note in Procedure 1 stays under existing structure. The fact that the Engineer reads the prompt-checklist before writing prompts is essentially a sub-task of Procedure 1's "Read PROJECT.md and PROCEDURES.md and state/current.md" induction, not a separate procedure with its own form template.
+
+7. **Existing DONE-002..006 sign-off lines (Scope D2).** Per operator: "Existing DONE-002 through DONE-006 entries: leave as 'pending' for now. Retroactive sign-off marking is operator's call at MS-008 deep-check time." Builder does not touch these in MS-007. The DONE.md template annotation in Scope D2 applies to FUTURE DONE entries.
+
+8. **Validator 11th check deferral (Scope D3).** Builder will add a comment block to the validator script header noting the deferred 11th check (DONE sign-off enforcement) per DEC-032. No actual check code added in this MS. The validator stays at 277 lines + a few documentation lines.
+
+9. **Working agreements #12/#13/#14 verbatim.** Per operator's DONE-006 sign-off, all three agreement texts are operator-supplied with exact wording. Builder copies verbatim into state/current.md "Engineer working agreements" section. Same posture as #11 fold-in pattern. No paraphrase, no Builder-renumber surprises (operator wrote #12/#13/#14 sequentially correctly this time).
+
+10. **The Engineer prompt-checklist (Scope C1) covers working agreements #1, #2, #4, #5, #6, #10, #11, #13, #14 by inline citation.** Agreements #3 (wc -l snapshot), #7 (bash budget framing), #8 (synthetic tests), #9 (mechanical sign-off verification), and #12 (HTML cache vs git) are not explicitly cited in the checklist's items — though #12 is the underlying principle behind item 13 (which cites #14). Operator's checklist content is operator-reviewed; Builder copies verbatim. If operator wants additional items for #3/#7/#8/#9/#12, paste the wording at approval.
+
+**Plan (numbered, terse, scope-letter order):**
+
+*Scope A — prompts/engineer-session-start.md + cross-refs:*
+1. Create `prompts/` directory at repo root.
+2. Create `prompts/engineer-session-start.md` with operator's Scope A2 content verbatim. Two top-level headings: "How to use this file" and "The prompt." All sub-content nested appropriately.
+3. Add cross-reference sentence to README.md "For agents working on this project" immediately above step 1 (per Scope A3).
+4. Add cross-reference sentence to PROJECT.md immediately after the organizing-principle blockquote (per Scope A4).
+
+*Scope B — CONTEXT.md:*
+5. Create `CONTEXT.md` at repo root with operator's Scope B1 content verbatim.
+6. Add `CONTEXT.md` to README.md file map (under root files alongside `PROJECT.md`, `PLAN.md`, `PROCEDURES.md`).
+
+*Scope C — Engineer prompt-writing checklist:*
+7. Create `prompts/engineer-prompt-checklist.md` with operator's Scope C1 content verbatim.
+8. Add note to PROCEDURES.md Procedure 1 referencing the prompt-writing checklist for Engineer-role sessions.
+
+*Scope D — RFI-010 resolution + DEC-032:*
+9. File DEC-032 in DECISION.md with operator's Scope D4 content (DONE sign-off recording mechanism). Closes RFI-010.
+10. Update RFI-010 status in RFI.md to `ANSWERED 2026-04-28 via DEC-032`.
+11. Update DONE.md template "Operator sign-off:" annotation per Scope D2 (annotate that operator's chat magic-string gets copied verbatim by Builder at next session sign-in).
+12. Add a comment block to `scripts/validate.sh` header documenting the deferred 11th check (DONE sign-off enforcement) per Scope D3.
+
+*Scope E — state update + sign-out:*
+13. Update `state/current.md`:
+    - Bump Updated timestamp.
+    - Phase line: "Phase 0b complete. Infrastructure phase in progress (MS-007). Phase 1 blocked on MS-008."
+    - Active MS: MS-007. MS-006 marked DONE.
+    - Counters: Latest MS=MS-007, Latest DEC=DEC-032, Latest INC=INC-006 (unchanged), Latest RFI=RFI-010 (unchanged — still highest, just status changes).
+    - MS chain status: MS-006 DONE, MS-007 in progress, MS-008 pending depends on MS-007, [first Phase 1 MS] pending depends on MS-008.
+    - Add engineer working agreements #12/#13/#14 verbatim from DONE-006 sign-off.
+    - Update last-verified-state with MS-007 results.
+14. Sign-out entry in SITE_LOG using the new template.
+
+*Sign-out + commit:*
+15. Final validator run: PASS.
+16. `git add . && git commit -m "MS-007: agent onboarding + prompt checklist + RFI-010 resolution"`. Hook fires gitleaks + validator + Prettier + ESLint; all four must pass. Push.
+17. File DONE-007 with proof. Commit + push close-out.
+
+**Files to be touched:**
+- `Desktop/UnoAi/prompts/engineer-session-start.md` — created.
+- `Desktop/UnoAi/prompts/engineer-prompt-checklist.md` — created.
+- `Desktop/UnoAi/CONTEXT.md` — created at repo root.
+- `Desktop/UnoAi/README.md` — modified (cross-reference + file-map CONTEXT.md entry).
+- `Desktop/UnoAi/PROJECT.md` — modified (cross-reference after organizing-principle line).
+- `Desktop/UnoAi/PROCEDURES.md` — modified (Procedure 1 note about prompt-writing checklist for Engineer sessions).
+- `Desktop/UnoAi/scripts/validate.sh` — modified (header comment documenting deferred 11th check). No actual check code added.
+- `Desktop/UnoAi/forms/DECISION.md` — modified (DEC-032 appended).
+- `Desktop/UnoAi/forms/RFI.md` — modified (RFI-010 status update).
+- `Desktop/UnoAi/forms/DONE.md` — modified (template "Operator sign-off:" annotation; DONE-007 appended at session close).
+- `Desktop/UnoAi/forms/METHOD_STATEMENT.md` — modified (this MS-007 entry; approval status update post-approval).
+- `Desktop/UnoAi/forms/SITE_LOG.md` — modified (sign-in already filed; sign-out at session close).
+- `Desktop/UnoAi/state/current.md` — modified (counters, MS chain, agreements #12/#13/#14, phase line, last-verified-state).
+
+**Files NOT touched (per scope):**
+- `forms/CHANGE_ORDER.md`, `forms/INCIDENT.md` (no incidents expected — no synthetic tests in this MS).
+- `LICENSE`, `CONTRIBUTING.md`, `PLAN.md`, `.gitignore`, `.gitleaks.toml`, `.githooks/pre-commit`, `eslint.config.js`, `package.json`, `.prettierignore`, `.prettierrc`, scaffold config files, `src/`, `static/`, `test/`. SvelteKit scaffold tree.
+- Existing DONE-002..006 entries (per operator instruction, retroactive sign-off marking is MS-008 work).
+
+**Expected diff size:** ~250 lines net added across ~13 files. ~70% is operator-supplied prompt/checklist/context content copied verbatim. No code, no dependencies, no validator changes.
+
+**Risks identified:**
+
+- **R1. Verbatim copy of operator-supplied content.** Three files contain ~200+ lines of operator-supplied text. Risk: typo or paste error. Mitigation: Builder will copy via heredoc/Write tool with explicit content matching operator's prompt body exactly. Post-write `diff` against operator's spec (mentally — there's no machine-readable spec) for a final verify.
+
+- **R2. PROJECT.md cross-reference placement adjacent to existing organizing-principle line.** The current organizing-principle is a blockquote (` > This project is built by AI agents...`). The new cross-reference is plain text. Builder will place it as a separate paragraph after the blockquote, before the `---` separator that follows. Tested mentally; should render cleanly.
+
+- **R3. README.md cross-reference placement.** "Before step 1" of the numbered list. Markdown numbered lists may auto-renumber when items are inserted. Builder's insertion is a sentence-level paragraph BEFORE the list, not a list item, so numbering should not shift.
+
+- **R4. PROCEDURES.md "Nine procedures" sweep.** No new procedure added (Builder picks add-note-to-Procedure-1 over add-Procedure-10 per Open Item 6). Header "Nine procedures" stays. Summary table stays at 9 rows. README "the nine rules" stays. No sweep needed.
+
+- **R5. DEC-032 closes RFI-010 — verify RFI-010 is open.** Already verified at sign-in (working agreement #1 compliance). Listed in SITE_LOG sign-in entry.
+
+- **R6. Validator deferred-check documentation.** Adding ~10 lines of comment to `scripts/validate.sh` header. Validator goes from 277 → ~287 lines. Still well above operator's now-retired 270 cap, but per working agreement #10, caps are no longer hard limits. No RFI needed.
+
+- **R7. State update timing.** Per Scope I-early pattern from MS-006 (where state was bumped mid-session so validator could pass during synthetic tests), this MS doesn't have synthetic tests. State update happens at sign-out. Validator should pass throughout because no MS-007 entries are filed in METHOD_STATEMENT.md until this approval lands and Scope D's DEC-032 is filed — which will require state counter bumping in tandem.
+
+- **R8. RFI-010 closure body text.** Operator's Scope D4 content includes `Closes: RFI-010` line. Builder's job is to verify the close target exists in RFI.md (working agreement #1) — already done.
+
+- **R9. CONTEXT.md content references "the nine procedures" via PROCEDURES.md.** Wait — no, CONTEXT.md says "For procedure: read PROCEDURES.md." Doesn't cite a count. Safe from any rule-count drift. ✓
+
+**Acceptance criteria (will be copied verbatim into DONE-007):**
+- `prompts/engineer-session-start.md` exists with operator's Scope A2 content verbatim. ✓
+- `prompts/engineer-prompt-checklist.md` exists with operator's Scope C1 content verbatim. ✓
+- `CONTEXT.md` exists at repo root with operator's Scope B1 content verbatim. ✓
+- `README.md` has cross-reference to `prompts/engineer-session-start.md` before step 1; file map includes `CONTEXT.md`.
+- `PROJECT.md` has cross-reference to `prompts/engineer-session-start.md` after the organizing-principle blockquote.
+- `PROCEDURES.md` Procedure 1 has a note about the Engineer prompt-writing checklist.
+- `scripts/validate.sh` header comments document the deferred 11th check (DONE sign-off enforcement).
+- `forms/DECISION.md` has DEC-032 (DONE sign-off recording mechanism — magic-string-in-chat). Closes RFI-010.
+- `forms/RFI.md` shows RFI-010 status `ANSWERED 2026-04-28 via DEC-032`.
+- `forms/DONE.md` template has updated annotation on the "Operator sign-off:" line per Scope D2.
+- `state/current.md` updated: Latest MS=MS-007, Latest DEC=DEC-032, MS-006 DONE, MS-007 in progress, MS-008 pending, agreements #12/#13/#14 added, phase line current.
+- Sign-in (filed) and sign-out (at session end) entries in SITE_LOG using Procedure 9 templates.
+- Validator pre-commit run: PASS. Hook fires all four steps on MS-007 commit.
+- Push to GitHub succeeds.
+- DONE-007 contains: validator PASS output, hook output verbatim from MS-007 commit, file-by-file change summary, GitHub URLs.
+
+**Operator approval:** APPROVED 2026-04-28.
+**Approval notes:**
+- **Open Item 1 (DEC numbering DEC-032):** Approved sequential per discipline #5. Working-agreement-#1 verification done at sign-in.
+- **Open Item 2 (operator-supplied content verbatim):** Approved. Builder copied operator's Scope A2 / B1 / C1 content as-is. Friendly amendment opportunity flagged at approval was taken (one-paragraph scope-note added at top of Engineer prompt-checklist clarifying it covers prompt-writing only — DONE sign-off and Builder-execution disciplines stay in their own domains).
+- **Open Item 6 (Procedure 1 vs new sub-procedure):** Approved Builder default — note inside Procedure 1 as Engineer-role addendum. The Engineer reading the checklist before writing a prompt is structurally a sub-task of Procedure 1's induction read, not a new procedure category. Procedure count stays at nine.
+- **Open Item 7 (existing DONE sign-off lines):** Approved — DONE-002..006 stay "pending" in MS-007. Retroactive sign-off marking is MS-008 Section 5 work (form integrity audit).
+- **Open Item 10 (checklist citation completeness):** Approved Builder's reading. Agreements #3/#7/#8 are Builder-execution disciplines; #9/#12 apply to DONE sign-off (with #14 the actionable form of #12). Friendly amendment scope-note added at top of checklist clarifying the prompt-writing-only scope and pointing future Engineers at the right places for the other domains.
+- **DEC-032 closes RFI-010** verified — RFI-010 was open in `forms/RFI.md` at sign-in time per working agreement #1.
+- **Validator stays at ~287 lines** (header comment for deferred check 11 added). No code changes. Per working agreement #10, no hard cap. No synthetic test required since no tooling enforces a new discipline (working agreement #8 only triggers when tooling is added).
+- **Working agreements #12/#13/#14** added to state/current.md verbatim from DONE-006 sign-off. Operator's sequential numbering correct this time; no Builder renumber needed.

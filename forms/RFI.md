@@ -221,7 +221,7 @@ Fixtures stored at `/test/fixtures/destructive_prompts.json`. Test runner feeds 
 
 **Engineer's lean:** (a). Lowest friction, no retroactive cleanup, validator can enforce going forward. Operator says "DONE-NNN signed" + date in chat, Builder copies it into the file at next sign-in.
 
-**Operator decision:** pending. Defer to MS-006 design discussion.
+**Operator decision:** ANSWERED 2026-04-28 via DEC-032. Option (a) selected — magic-string-in-chat ("`DONE-NNN signed off by operator on YYYY-MM-DD`"), Builder copies verbatim into DONE entry's `Operator sign-off:` field at next session sign-in. Existing DONE-002 through DONE-006 retroactive cleanup deferred to MS-008 Section 5 (form integrity audit). Validator 11th-check enforcement deferred to MS-008+ until retroactive cleanup completes.
 
 ---
 

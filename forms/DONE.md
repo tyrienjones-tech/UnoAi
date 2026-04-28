@@ -39,9 +39,11 @@ DONE entries must cite at least one Builder-produced artefact and at least one O
 
 **Linked incidents:** [INC-NNN if any happened during this task]
 
-**Operator sign-off:** [pending / signed YYYY-MM-DD]
+**Operator sign-off:** [pending / `DONE-NNN signed off by operator on YYYY-MM-DD`]
 **Sign-off notes:**
 [Optional. Caveats, follow-ups, observations.]
+
+> Per DEC-032: when operator signs off in chat, they include the magic string "`DONE-NNN signed off by operator on YYYY-MM-DD`". Builder copies this verbatim into the `Operator sign-off:` line above at the next session sign-in. Future validator check (deferred to MS-008+) will enforce that any DONE referenced as a chain dependency has this field populated.
 ```
 
 ---

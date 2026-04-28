@@ -22,6 +22,8 @@ If you self-host, you are responsible for your own deployment, your own users, a
 
 ## For agents working on this project
 
+Fresh Engineer sessions on this project should start by reading [`prompts/engineer-session-start.md`](./prompts/engineer-session-start.md).
+
 **Start here every session:**
 
 1. Read [`PROJECT.md`](./PROJECT.md) — what this is, who you are, what's banned
@@ -52,11 +54,15 @@ unoai/
 ├── README.md            ← you are here
 ├── LICENSE              ← PolyForm Noncommercial 1.0.0
 ├── CONTRIBUTING.md      ← bug reports yes, PRs no (per DEC-018)
+├── CONTEXT.md           ← what UnoAi is, conceptually (agent onboarding)
 ├── PROJECT.md           ← read first, every session
 ├── PLAN.md              ← phased build with acceptance criteria
 ├── PROCEDURES.md        ← the nine rules
 ├── .gitleaks.toml       ← secrets ruleset (per DEC-024)
-├── .githooks/           ← pre-commit hook (gitleaks + validator)
+├── .githooks/           ← pre-commit hook (gitleaks + validator + Prettier + ESLint)
+├── prompts/
+│   ├── engineer-session-start.md     ← paste at fresh Engineer session start
+│   └── engineer-prompt-checklist.md  ← Engineer reads before writing prompts to Builder
 ├── scripts/
 │   └── validate.sh      ← structural-integrity validator (per DEC-026)
 ├── state/
