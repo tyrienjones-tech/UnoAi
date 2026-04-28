@@ -830,5 +830,128 @@ VALIDATOR: PASS
 **Sign-off notes:**
 [Operator fills. Run `bash scripts/validate.sh`, `npm run lint`, `npm run format:check`; confirm all pass. Confirm validator size posture (277 lines). Caveats / follow-ups go here.]
 
+---
+
+### DONE-007 — Agent onboarding + Engineer prompt-writing checklist + RFI-010 resolution (MS-007 closed)
+- **Date:** 2026-04-28
+- **Agent:** Reaper-1
+- **Phase:** 0b infrastructure layer (complete pending sign-off)
+- **Method statement:** MS-007
+- **Session start:** 2026-04-28 03:30 (see SITE_LOG)
+- **Session end:** 2026-04-28 04:00 (see SITE_LOG)
+- **Depends on:** MS-006 (DONE-006 signed 2026-04-28). Chain check verified at validator run-time.
+
+**Acceptance criteria (copied from MS-007):**
+- `prompts/engineer-session-start.md` exists with operator's Scope A2 content verbatim. ✓
+- `prompts/engineer-prompt-checklist.md` exists with operator's Scope C1 content verbatim **plus a one-paragraph scope-note** at the top per the friendly amendment from MS-007 approval (clarifies the checklist covers prompt-writing only). ✓
+- `CONTEXT.md` exists at repo root with operator's Scope B1 content verbatim. ✓
+- `README.md` has cross-reference to `prompts/engineer-session-start.md` before step 1; file map includes `CONTEXT.md` and `prompts/`. ✓
+- `PROJECT.md` has cross-reference to `prompts/engineer-session-start.md` immediately after the organizing-principle blockquote. ✓
+- `PROCEDURES.md` Procedure 1 has the Engineer-role addendum about reading `prompts/engineer-prompt-checklist.md` before writing prompts. ✓
+- `scripts/validate.sh` header comments document the deferred 11th check (DONE sign-off enforcement, deferred to MS-008+ until DONE-002..006 retroactive cleanup). 289 lines. ✓
+- `forms/DECISION.md` has DEC-032 (DONE sign-off recording mechanism — magic-string-in-chat). Closes RFI-010. ✓
+- `forms/RFI.md` shows RFI-010 status `ANSWERED 2026-04-28 via DEC-032`. ✓
+- `forms/DONE.md` template has updated `Operator sign-off:` annotation per Scope D2. ✓
+- `state/current.md` updated: Latest MS=MS-007, Latest DEC=DEC-032, MS-006 DONE, MS-007 in progress, agreements #12/#13/#14 added, phase line current, RFI-010 removed from open list with closure note. ✓
+- Sign-in (filed) and sign-out (at session end) entries in SITE_LOG using Procedure 9 templates. ✓
+- Validator pre-commit run: PASS. Hook fires gitleaks + validator on actual MS-007 commit (no staged code files for Prettier/ESLint — doc-only commit). ✓
+- Push to GitHub succeeds. ✓ Commit `018e3b0`.
+
+**Builder-produced proof:**
+
+*Git state (post-push):*
+```
+$ git log --oneline (final)
+018e3b0 MS-007: agent onboarding + prompt checklist + RFI-010 resolution  ← this MS
+b7ee910 MS-006 close-out: DONE-006
+cabfa8c MS-006: code structure + dev tooling
+6882efb MS-005 close-out: DONE-005
+63ab6d2 MS-005: chain validator check + code conventions + README fixes
+4a6c1a7 MS-004 close-out: DONE-004
+ed87926 MS-004: session lifecycle + validator + state persistence
+bf2d661 Update README.md
+15b7751 MS-003 close-out: DONE-003 + final SITE_LOG entry
+0cf45cd Migrate handover package + LICENSE + SvelteKit scaffold
+372902c Initial commit
+```
+
+- This commit: <https://github.com/tyrienjones-tech/UnoAi/commit/018e3b0>
+- Diff: 13 files changed, 418 insertions(+), 14 deletions(-).
+- Note for verification (per working agreement #14): `https://api.github.com/repos/tyrienjones-tech/UnoAi/git/refs/heads/main` should return SHA matching local `018e3b0...`.
+
+*Pre-commit hook output verbatim (4-step chain):*
+```
+[pre-commit] gitleaks scanning staged content...
+INF  0 commits scanned.
+INF  scanned ~41209 bytes (41.21 KB) in 176ms
+INF  no leaks found
+[pre-commit] gitleaks: clean.
+[pre-commit] running scripts/validate.sh...
+VALIDATOR: PASS
+[pre-commit] no staged code files for Prettier/ESLint.
+[main 018e3b0] MS-007: agent onboarding + prompt checklist + RFI-010 resolution
+ 13 files changed, 418 insertions(+), 14 deletions(-)
+ create mode 100644 CONTEXT.md
+ create mode 100644 prompts/engineer-prompt-checklist.md
+ create mode 100644 prompts/engineer-session-start.md
+```
+
+The "no staged code files for Prettier/ESLint" line is expected — MS-007 commits markdown + bash header comments only; no `.ts`/`.js`/`.svelte`/`.css`/`.html`/`.json` files were staged, so Prettier and ESLint had no files to check. Hook semantics are correct: when the staged set has no relevant code files, both tools skip cleanly.
+
+*File-by-file change summary (13 files):*
+
+| File | Change |
+|---|---|
+| `prompts/engineer-session-start.md` | Created. Operator-pasted prompt for fresh Engineer sessions; loads Anthropic-environment doctrine + UnoAi-specific files. |
+| `prompts/engineer-prompt-checklist.md` | Created. 14-item checklist Engineer runs through before writing any prompt to Builder. Plus scope-note at top (friendly amendment) clarifying it covers prompt-writing only. |
+| `CONTEXT.md` | Created at repo root. Agent-onboarding context — what UnoAi is, what it isn't, why constraints exist, architecture differences, who's building. |
+| `README.md` | +cross-reference sentence to `prompts/engineer-session-start.md` before "Start here every session" list. File-map updated to include `CONTEXT.md` and `prompts/`. |
+| `PROJECT.md` | +cross-reference sentence to `prompts/engineer-session-start.md` immediately after the organizing-principle blockquote. |
+| `PROCEDURES.md` | +Engineer-role addendum to Procedure 1 about reading `prompts/engineer-prompt-checklist.md` before writing prompts. |
+| `scripts/validate.sh` | +12 lines of header comment documenting the deferred 11th check (DONE sign-off enforcement) per Scope D3. No actual check code. 277 → 289 lines. |
+| `forms/DECISION.md` | +DEC-032 (DONE sign-off recording mechanism — magic-string-in-chat). Closes RFI-010. |
+| `forms/RFI.md` | RFI-010 status updated from `pending` to `ANSWERED 2026-04-28 via DEC-032`. |
+| `forms/DONE.md` | Template `Operator sign-off:` line annotated with the magic-string format + a blockquote explaining the DEC-032 mechanism. Existing DONE-002..006 entries unchanged (retroactive cleanup is MS-008 work). |
+| `forms/METHOD_STATEMENT.md` | MS-007 entry filed pre-work; approval status updated post-approval. |
+| `forms/SITE_LOG.md` | Sign-in + sign-out entries for this session. |
+| `state/current.md` | Counters bumped (MS=007, DEC=032); MS chain advanced (MS-006 DONE, MS-007 in progress, MS-008 pending depends on MS-007); agreements #12/#13/#14 added verbatim from DONE-006 sign-off; RFI-010 removed from open list with closure note; phase line + last-verified-state updated. |
+
+**What to look for in the proof:**
+- Repo at GitHub now shows 11 commits on `main` ending in `018e3b0`.
+- `prompts/` directory visible at repo root with both files (`engineer-session-start.md`, `engineer-prompt-checklist.md`).
+- `CONTEXT.md` visible at repo root, listed in README's file map.
+- `forms/DECISION.md` has DEC-032 sequential after DEC-031.
+- `forms/RFI.md` RFI-010 marked ANSWERED.
+- `state/current.md` working agreements list now has #1..#14.
+
+**Operator-captured proof (operator fills at sign-off):**
+- Run `bash scripts/validate.sh`; confirm `VALIDATOR: PASS`.
+- Verify via API endpoint per working agreement #14: `curl -s https://api.github.com/repos/tyrienjones-tech/UnoAi/git/refs/heads/main` should show SHA matching `018e3b0...`.
+- Optionally paste `prompts/engineer-session-start.md` content into a fresh Engineer chat to verify the prompt loads correctly.
+
+**Anything skipped or deferred:**
+- **Validator 11th check (DONE sign-off enforcement)** — explicitly deferred to MS-008+ per Scope D3 + DEC-032. Documented in validator script header. Implementation blocked on MS-008 Section 5 retroactive cleanup of DONE-002..006 sign-off lines.
+- **Existing DONE-002..006 sign-off lines** stay `pending` per Scope D2. Retroactive cleanup is MS-008 work.
+- **Future Engineer working agreements** that arise during MS-008 will be added to state/current.md sequentially per discipline #5; if they affect prompt-writing, also added to `prompts/engineer-prompt-checklist.md`.
+
+**Linked incidents:** none. No synthetic tests in this MS (no validator code added — working agreement #8 doesn't trigger).
+
+**Linked DECs filed in MS-007:** DEC-032 (DONE sign-off recording mechanism — closes RFI-010).
+
+**Linked RFIs:** RFI-010 closed via DEC-032. RFI-009 (TLD) remains OPEN, unchanged.
+
+**Open items for operator at sign-off:**
+
+1. **Friendly amendment taken (Open Item 10 from MS-007 approval):** scope-note added at top of `prompts/engineer-prompt-checklist.md` clarifying prompt-writing-only scope. If operator preferred no scope-note, easy to remove in a follow-up commit.
+
+2. **Validator at 289 lines** (12 lines added for deferred-check-11 documentation). No code changes. Per working agreement #10, no hard cap. The header comment block ensures future Engineers reading the script see the planned-but-deferred 11th check rather than re-deriving the gap from chain-check semantics.
+
+3. **MS-008 sneak-peek** confirmed in state's MS chain section: "pending; depends on MS-007 (pre-Phase-1 deep check, 8 sections, section-by-section sign-off model)." Engineer drafts MS-008 at next session.
+
+**Operator sign-off:** pending.
+**Sign-off notes:**
+[Operator fills. Run `bash scripts/validate.sh`; confirm PASS. Verify via API endpoint per agreement #14. Per DEC-032, sign-off magic-string format: "DONE-007 signed off by operator on YYYY-MM-DD" — Builder copies that into the line above at next session sign-in.]
+
+
 
 
