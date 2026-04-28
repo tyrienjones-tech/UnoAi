@@ -759,3 +759,75 @@ INF  no leaks found
 6. **Section 3 was a single-section session per MS-009 prompt rules of engagement.** Sections 3+4 in one session was not authorised. Next session: operator chat sign-off of Section 3 → Section 4 (state integrity) unlocks → next Builder session begins Section 4. The prompt explicitly authorises multi-session resumption per Procedure 9.
 
 7. **Pause-at-blocker discipline operated cleanly.** No genuine ambiguities surfaced during Section 3 audit — the structural questions (validator check 10 design, banned-moves direction) were RFI'd rather than fixed unilaterally per working agreement #18 + the prompt's findings-discipline guidance. The four current-state staleness fixes were unambiguous (carry-forward findings explicitly approved in Section 3 prompt + the cspell parenthetical and file-map omissions being mechanical doc-currency work) and applied without RFI.
+
+---
+
+### 2026-04-28 23:16 session start
+
+- Role: Builder
+- Session goal: File INSP-002 (external review consolidation) + INC-008 + RFI-013/014. Not MS-009 work; MS-009 Section 4 deferred to subsequent sessions.
+- Resuming from: MS-009 Section 3 chat sign-off (applied this sign-in per DEC-032 — sixth exercise of the mechanism, fourth on SIGN_OFF.md surface). MS-009 Sections 0-3 signed off; Sections 4-8 deferred to subsequent sessions.
+- Context loaded: PROJECT.md, PROCEDURES.md, state/current.md, forms/SIGN_OFF.md, forms/INSPECTION.md, forms/RFI.md tail, forms/INCIDENT.md tail, prior SITE_LOG entries (Builder MS-009 Section 3 second-session sign-out + Inspector INSP-001).
+- Open MSes: MS-009 (in progress; Section 3 signed off this sign-in; Sections 4-8 pending).
+- Open RFIs awaiting me: none. RFI-009 (TLD), RFI-011 (validator check 10), RFI-012 (banned moves) all open and pending Engineer / operator.
+- Pre-session validator run: **PASS** (verified at 2026-04-28 23:15 before this entry was filed; HEAD `16a70c9`; validator at 289 lines).
+
+**Mechanical sign-in actions completed (per INSP-002 filing prompt steps 2-5):**
+
+1. **Push state verified:** `git ls-remote origin refs/heads/main` returns `16a70c9261280027c56263bf7187a678088e0f41`, matching local main. No mismatch; no RFI needed.
+
+2. **DEC-032 fourth SIGN_OFF.md exercise — Section 3 sign-off line:** `forms/SIGN_OFF.md` Section 3 entry updated from `Status: in progress` / `Date signed: pending` / `Operator sign-off: pending` to `Status: signed off` / `Date signed: 2026-04-28` / `Operator sign-off: Section 3 signed off by operator on 2026-04-28.` (sixth DEC-032 exercise overall, fourth on SIGN_OFF.md surface).
+
+3. **MS chain status section updated** in `state/current.md`: MS-009 line bumps from "Sections 0-2 signed off" to "Sections 0-3 signed off"; Active MS line reflects Section 3 signed and Sections 4-8 pending.
+
+4. **Counters carried over:** Latest MS = MS-009; Latest DEC = DEC-033; Latest RFI = RFI-012; Latest INC = INC-006; Latest INSP = INSP-001. INC counter advances to INC-008 during this session's INC-008 filing; INSP counter advances to INSP-002; RFI counter advances to RFI-014.
+
+**Session goal sequence:**
+1. Sign-in mechanical actions (Section 3 sign-off, MS chain bump, validator PASS).
+2. File INC-008 verbatim per Engineer-supplied body (Engineer verification miss in INSP-002 action plan PDF v1.0).
+3. File INSP-002 entry per Engineer-supplied body (external review consolidation — security + supply chain + architecture + procedural drift).
+4. File RFI-013 verbatim (Cloudflare Pages → Workers migration timing) and RFI-014 verbatim (email delivery mechanism for license tokens).
+5. Update state/current.md counters (Latest INC, Latest INSP, Latest RFI), Open RFIs section, and Last verified working state.
+6. Run validator at end of session — confirm PASS before commit.
+7. File sign-out entry.
+8. Single commit: `INSP-002: external review consolidation + INC-008 + RFI-013/014`.
+
+---
+
+### 2026-04-28 23:31 session end
+
+- Role: Builder
+- Outcome: **INSP-002 filed** at `forms/INSPECTION.md` (external review consolidation — security + supply chain + architecture + procedural drift; 0 CRITICAL, 0 new HIGH, 8 MEDIUM, 5 LOW, 4 INFO; supplements but does not supersede INSP-001; recommends INSP-003 after MS-010). **INC-007 + INC-008 + INC-009 filed** at `forms/INCIDENT.md`. **RFI-013 + RFI-014 filed** at `forms/RFI.md`. **Section 3 sign-off magic-string applied** at sign-in (DEC-032 sixth exercise, fourth on SIGN_OFF.md surface). MS-009 Sections 4-8 still pending in subsequent sessions; this session deliberately did not touch them.
+- Files touched:
+  - `forms/INCIDENT.md` — three new entries appended after INC-006 in sequence: INC-007 (operator personal email caught in INSP-001 by gitleaks; long-deferred from Inspector handover note 3 / MS-009 Section 5; resolved here per operator's Option-A direction after Builder pause-at-blocker on INC-008-without-INC-007 sequence gap), INC-008 (Engineer verification miss in INSP-002 action plan PDF v1.0; Engineer-supplied body verbatim with H2→H3 heading conversion authorised by operator), INC-009 (Engineer heading-level transcription drift across the INSP-002 session prompt — H2 used for all five new entries when INCIDENT.md and RFI.md convention is H3; Builder caught at validator FAIL pre-commit; operator authorised mechanical conversion + this INC entry per the standing rule of engagement on validator failures).
+  - `forms/INSPECTION.md` — INSP-002 entry appended after INSP-001 (Engineer-supplied body verbatim; H2 retained per INSPECTION.md convention).
+  - `forms/RFI.md` — two new entries appended after RFI-012 in sequence: RFI-013 (Cloudflare Pages → Workers migration timing; Engineer's lean: migrate before v1 deploy; blocks Phase 1 first deploy) and RFI-014 (email delivery mechanism for license tokens; Engineer has no lean; blocks Phase 1 webhook handler implementation). Engineer-supplied bodies verbatim with H2→H3 heading conversion authorised by operator.
+  - `forms/SIGN_OFF.md` — Section 3 entry updated from `Status: in progress` / `Date signed: pending` / `Operator sign-off: pending` to `Status: signed off` / `Date signed: 2026-04-28` / `Operator sign-off: Section 3 signed off by operator on 2026-04-28.` (sixth DEC-032 exercise overall, fourth on SIGN_OFF.md surface).
+  - `forms/SITE_LOG.md` — sign-in (filed at session start) + this sign-out.
+  - `state/current.md` — `Updated:` timestamp refreshed; `Active MS` line updated to "Sections 0-3 signed off"; MS chain MS-009 line refined to reflect Section 3 signed and Sections 4-8 pending in subsequent sessions; `Latest RFI` counter advanced RFI-012 → RFI-014; `Latest INC` counter advanced INC-006 → INC-009; `Latest INSP` counter advanced INSP-001 → INSP-002; `Open RFIs` section adds RFI-013 + RFI-014; new dated paragraph at top of `Last verified working state` documents the full INSP-002 filing session arc including both pause-at-blocker resolutions.
+- Validator run at end: **PASS** (verified before commit; HEAD `16a70c9`; validator at 289 lines unchanged — no validator code change in this session). check_sequential clean across DEC/RFI/INC/MS after the H2→H3 conversion.
+- gitleaks scan at end: pending — pre-commit hook will run gitleaks as step 1 of 5.
+- cspell run at end: pending — pre-commit hook will run cspell as step 5 of 5.
+- Format / Lint at end: pending — pre-commit hook will run Prettier as step 3 and ESLint as step 4. No staged code files in this session, so steps 3 and 4 short-circuit cleanly per the hook's `[ -n "$STAGED_FILES" ]` guard.
+- state/current.md updated: **YES**.
+- Next action: commit + push (5-step hook fires gitleaks → validator → Prettier → ESLint → cspell). Then operator chat acknowledges INSP-002 + INC-007 + INC-008 + INC-009 + RFI-013 + RFI-014 landed cleanly. **No sign-off magic-string needed** for Inspector-class work (INSP-002 is filed-and-acted-on, not approval-gated). Operator reviews INSP-002 contents in repo and proceeds to MS-009 Section 4 work in a subsequent Builder session when ready.
+
+**Handover notes:**
+
+1. **Two pause-at-blocker resolutions operated cleanly during this session.** First: the Engineer-supplied INC-008 body assumed INC-007 was already filed (it wasn't — INC-007 had been deferred since INSP-001 sign-out / MS-009 Section 5). Filing INC-008 alone would have created a numbering gap that working agreement #5 prohibits and validator's check_sequential would have caught at sign-out anyway. Builder paused with three options (A: file INC-007 body now, B: renumber INC-008 to INC-007, C: defer entire INC-008 filing). Operator approved A and supplied INC-007 body verbatim. Second: validator FAILed after the new INC and RFI entries appended because Engineer-supplied bodies used H2 (`## `) headings while INCIDENT.md and RFI.md convention is H3 (`### `) — the validator's `real_headings()` regex (`scripts/validate.sh:60-70`) only counts H3 entries for INC and RFI, so the four new entries were invisible to check_sequential. Builder paused with three options (A: H2→H3 conversion + INC-009, B: validator code change without an MS, C: defer all four entries). Operator approved A and authorised INC-009 filing per the standing rule of engagement on validator failures.
+
+2. **Three Engineer working-agreement candidates queued for MS-011 consolidation, all sub-cases of "verify before asserting":** (i) #21 — Engineer must cite the verification method used for any claim about repo state; rendered HTML pages are never sufficient verification (per INC-008). (ii) #22 — Engineer counter-state references in prompts must be verified against the actual form files at prompt-write time; the `Latest INC` counter in `state/current.md` is the canonical source (per the INC-007/INC-008 sequencing failure named in operator's Option-A direction). (iii) candidate from INC-009 — Engineer draft of numbered form entries must inspect the destination form's existing entries to verify heading level, status field syntax, and any other form-specific conventions before authoring (form conventions are established by existing entries, not documented as central rules). MS-011 should treat all three as instances of one principle.
+
+3. **Counter state at sign-out:** Latest MS = MS-009; Latest DEC = DEC-033; **Latest RFI = RFI-014** (advanced from RFI-012); **Latest INC = INC-009** (advanced from INC-006); **Latest INSP = INSP-002** (advanced from INSP-001).
+
+4. **MS-009 Section 4 (state integrity) is the next Builder session's work.** This session was explicitly INSP-002 + INC + RFI filing only per the prompt's rules of engagement; Section 4 was not in scope and was not touched. Section 3 sign-off (applied at this session's sign-in) unlocks Section 4 procedurally per `forms/SIGN_OFF.md` ordering rule. Operator initiates the Section 4 session when ready.
+
+5. **No DEC, MS filed this session.** Three INCs (INC-007, INC-008, INC-009), one INSP (INSP-002), and two RFIs (RFI-013, RFI-014) are the new numbered entries.
+
+6. **Cross-references in INSP-002 reflect Engineer-supplied content verbatim.** The INSP-002 body's "Cross-references" section names INC-008 + RFI-013 + RFI-014 + RFI-012 + INSP-001 but does not name INC-007 or INC-009 — those were either pre-existing-deferred (INC-007) or surfaced after INSP-002 was drafted (INC-009). Per the verbatim rule, Builder did not retroactively edit INSP-002's Cross-references section. The fuller cross-reference picture lives in this SITE_LOG entry and in state/current.md's Last verified working state paragraph.
+
+7. **INSP-002 is filed-and-acted-on, not approval-gated.** Engineer drafts MSes from INSP-002 findings (likely a single MS-010 bundling MEDIUM-1 through MEDIUM-8 + LOW cleanup + the open INFO design decisions, plus the existing INSP-001 cluster). RFI-013 and RFI-014 are operator-decision-blocking for Phase 1 first deploy and Phase 1 webhook handler implementation respectively; both pending operator answer. RFI-009 + RFI-011 + RFI-012 remain open from prior sessions; not blocking this session.
+
+8. **Push posture per operator's standing preference.** Reaper's last MS-009 Section 3 session held push for operator manual completion. This session may follow the same pattern OR push immediately — Builder's call. Reaper will push immediately after commit unless operator signals otherwise; INSP-002 contents are the operator-facing deliverable and faster availability on remote serves the workflow.
+
+9. **Pause-at-blocker discipline operated twice this session, both resolved cleanly via operator chat.** Working agreement #18 territory throughout. The second pause (validator FAIL on heading levels) is itself the subject of INC-009 — the discipline's success is what produced the INC entry rather than a silent broken commit.

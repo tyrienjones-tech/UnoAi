@@ -289,3 +289,94 @@ None — Section 3 surfaces the question; Engineer decides direction.
 **Operator decision:** pending
 **Answer:**
 [Engineer scopes into MS-010 / MS-011 or addresses inline at section close-out.]
+
+---
+
+### RFI-013 — Cloudflare Pages → Workers migration timing
+
+**Date:** 2026-04-28
+**From:** Engineer (consolidating INSP-002 external review)
+**To:** Operator
+**Phase:** 0b — pre-Phase-1 deep check (INSP-002 follow-up)
+**Blocking task:** Phase 1 first deploy decision
+
+### Question
+
+Stay on Cloudflare Pages for v1 (lower migration risk, 
+feature parity holds for current scope) or migrate to 
+Workers Static Assets before v1 deploy (cleaner future, 
+~half-day of work, SvelteKit's adapter-cloudflare handles 
+both targets)?
+
+### Context
+
+Cloudflare is folding Pages into Workers. No formal 
+deprecation but new features (Secrets Store, Workflows, 
+Containers, Dynamic Workers) are Workers-only. Workers 
+Sites already deprecated in Wrangler v4. Multiple 
+practitioners report migration is configuration-only for 
+SvelteKit projects (2-5 seconds of downtime during domain 
+switchover; otherwise configuration changes only).
+
+Verified by Engineer via web search (Jan-Apr 2026 
+sources). Cloudflare's official migration guide exists at 
+developers.cloudflare.com/workers/static-assets/migration-guides/migrate-from-pages/.
+
+### Engineer's lean
+
+Migrate before v1 deploy. While scope is small and 
+decision is reversible. Eliminates the migration as 
+future work, future-proofs against further Pages feature 
+stagnation.
+
+### Operator decision
+
+pending
+
+### Answer
+
+[Operator scopes into MS-010 design or Phase 1 
+implementation]
+
+---
+
+### RFI-014 — Email delivery mechanism for license tokens
+
+**Date:** 2026-04-28
+**From:** Engineer (consolidating INSP-002 external review)
+**To:** Operator
+**Phase:** 0b — pre-Phase-1 deep check (INSP-002 follow-up)
+**Blocking task:** Phase 1 webhook handler implementation
+
+### Question
+
+How does the license token reach the buyer? Lemon Squeezy's 
+order-confirmation email (zero new dependency, less 
+control over email template) or a separate email service 
+like Resend or Postmark (more control, +1 vendor in 
+trusted computing base)?
+
+### Context
+
+PLAN.md Phase 1 says "sends license token via email" but 
+the architecture diagram has only Worker + Lemon Squeezy + 
+browser. Mechanism isn't specified. If LS confirmation 
+email is the delivery vehicle, plan should say so 
+explicitly. If a separate service is needed, it's an 
+unaccounted Phase 1 dependency that needs a DEC.
+
+### Engineer's lean
+
+None — both options have legitimate trade-offs and the 
+choice depends on operator's preference for vendor count 
+vs email template control. Worth scoping into Phase 1 
+design MS rather than blocking on it now.
+
+### Operator decision
+
+pending
+
+### Answer
+
+[Operator scopes into Phase 1 design or chooses ahead of 
+MS-010]

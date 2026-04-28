@@ -228,3 +228,236 @@ Cadence beyond INSP-002:
 Inspector did not file any RFI in `forms/RFI.md` this session — the doctrine question was resolved inline (RFI-011 in chat, option a), and the Open Questions above are for operator-direction-not-blocking-Inspector. RFI-011 is documented in this session's SITE_LOG sign-in entry but does not appear in `forms/RFI.md` because its scope was Inspector-environment-only, not project-state.
 
 **Procedural note on cross-role state/current.md overlap:** at session start the working tree had two uncommitted Builder edits from MS-009 Section 2 in-progress work — `forms/SIGN_OFF.md` (Section 2 checklist + findings; outside Inspector write scope; not modified by Inspector) and `state/current.md` (one-line MS-chain-status update reflecting Sections 0+1 sign-offs; in the MS-chain section, outside Inspector's authorised write area within `state/current.md`). Inspector wrote its own additive edits to `state/current.md` (the `Latest INSP: INSP-001` counter line and a new dated paragraph at the top of `Last verified working state`) without disturbing Builder's pending line. Inspector originally proposed committing only `forms/INSPECTION.md` + `forms/SITE_LOG.md` and leaving `state/current.md` for Builder to fold into MS-009 Section 2 close-out, on the basis that selective hunk-staging via `git add -p` is interactive and forbidden by Inspector posture and `git stash` is destructive. **Operator overrode that proposal at commit time** and directed Inspector to commit `state/current.md` (combined Inspector + Builder edits) under the Inspector commit. Builder's MS-009 Section 2 close-out commit will therefore not include `state/current.md`. Engineer should note this cross-role overlap pattern (Builder mid-flight working-tree state intersecting Inspector cadence) for any future Inspector-role-prompt revision, or as a working-agreement-#17 candidate that names the pattern and its current resolution rule (operator-decision-at-commit-time).
+
+---
+
+## INSP-002 — External review consolidation (security + supply chain + architecture + procedural drift)
+
+**Date:** 2026-04-28
+**Inspector:** Independent external reviewer (audit conducted 
+  against public repo HEAD 16a70c9)
+**Filed by:** Builder (Reaper) on Engineer's instruction, 
+  consolidating the external review's findings with 
+  Engineer's verification and additional catches
+**Scope:** Security + privacy + supply chain + architecture + 
+  procedural drift
+**Repo state:** commit 16a70c9 on main (MS-009 Section 3 
+  work landed; chat sign-off applied at this session sign-in)
+**Files reviewed:** comprehensive — entire repo cloned and 
+  walked by external reviewer; verified by Engineer via 
+  direct file fetch (per refined working agreement #14, 
+  after the failure mode documented in INC-008)
+**Methodology:** independent external audit; verified 
+  against ground truth by Engineer; consolidated with 
+  INSP-001 findings; cross-checked by operator via local 
+  clone before filing. Full action plan in 
+  /mnt/user-data/outputs/UnoAi_External_Review_Action_Plan_v1_1.pdf 
+  (Engineer-produced, operator-reviewed, v1.1 corrected 
+  per INC-008).
+
+### Summary
+
+Posture is sound but has actionable gaps. Zero CRITICAL 
+findings. INSP-001's HIGH-1 (security contact missing) 
+remains the only HIGH. The most important MEDIUM addition 
+is Content Security Policy design for Phase 2 — without it, 
+any XSS in the chat UI compromises the user's Anthropic API 
+key, which is load-bearing for the BYOK privacy claim.
+
+Several procedural gaps are embarrassing-but-real: CO-001 
+numbering gap (validator's check_sequential covers 
+DEC/RFI/INC/MS but not CO/DONE/INSP/SIGN_OFF; CO-002 exists 
+without CO-001), cspell dictionary noise (asdfqwerty 
+synthetic-test value remains in dictionary; multiple 
+tokenization or bulk-add artifacts; judgement AND judgment 
+both present despite en-GB lang setting).
+
+Cloudflare's Pages-to-Workers consolidation is verified real 
+(no formal deprecation but new features Workers-only; 
+Workers Sites already deprecated in Wrangler v4) and 
+warrants a migration decision before Phase 1 deploy. Filed 
+as RFI-013.
+
+License token revocation, webhook replay protection, webhook 
+idempotency, and email delivery mechanism need explicit DECs 
+before Phase 1 implementation. Email delivery filed as 
+RFI-014.
+
+### Findings
+
+#### CRITICAL findings
+None.
+
+#### HIGH findings
+None new beyond INSP-001's HIGH-1 (CONTRIBUTING.md security 
+contact [TBD], unresolved).
+
+#### MEDIUM findings
+
+**MEDIUM-1**: No Content Security Policy or security headers. 
+src/app.html is bare SvelteKit scaffold; no _headers file in 
+static/. BYOK direct + browser-resident Anthropic API key + 
+assistant-rendered output = XSS-to-key-exfiltration path. 
+CSP is load-bearing for Phase 2. Recommendation: design CSP 
+in MS-010; implement in Phase 2.
+
+**MEDIUM-2**: No _headers file (Cloudflare Pages security 
+headers). HSTS, X-Frame-Options DENY, X-Content-Type-Options 
+nosniff, Referrer-Policy strict-origin-when-cross-origin 
+all currently inheriting Cloudflare defaults rather than 
+explicit project decisions. Recommendation: drop _headers 
+in static/ during MS-010 or Phase 1 deploy.
+
+**MEDIUM-3**: No webhook replay protection design. Lemon 
+Squeezy sends signature without timestamp by default; 
+Worker needs timestamp window check + nonce store for 
+replay prevention. Recommendation: design DEC at MS-010; 
+implement Phase 1.
+
+**MEDIUM-4**: No webhook idempotency design. LS retries on 
+transient failures; without idempotency, retried call = two 
+license tokens issued. Recommendation: order-id 
+deduplication layer (Worker KV or D1); design at MS-010, 
+implement Phase 1.
+
+**MEDIUM-5**: No lockfile integrity layer. No npm ci 
+enforcement in pre-commit, no lockfile hash pinning. 
+Recommendation: CI workflow enforces npm ci (covered by 
+INSP-001 MEDIUM-3 work).
+
+**MEDIUM-6**: CI absence is more significant than INSP-001 
+treated. Pre-commit hooks run locally only; CI is the only 
+place tests will actually run reproducibly. Without CI, you 
+can't prove a commit was clean at the time it was pushed. 
+Recommendation: MS-010 CI workflow scope expands beyond 
+bypass detection to reproducible verification of every push.
+
+**MEDIUM-7**: Banned moves divergence (RFI-012 territory). 
+state/current.md banned moves labelled "(mirror of 
+PROJECT.md)" but PROJECT.md has different items. 
+"Co-Authored-By Claude footers" rule exists in 
+state/current.md but not PROJECT.md. Recommendation: 
+PROJECT.md becomes canonical; state/current.md mirrors 
+verbatim; add Co-Authored-By rule as PROJECT.md 10th item. 
+Filed as RFI-012; resolution at MS-010.
+
+**MEDIUM-8**: Validator chain check forward-only. Goes 
+MS → DONE direction only; a DONE entry referencing a 
+non-existent MS would pass undetected. Combined with the 
+CO/DONE/INSP/SIGN_OFF gap, the chain check has two 
+distinct holes. Recommendation: validator hardening at 
+MS-010.
+
+#### LOW findings
+
+**LOW-1**: CO-001 numbering gap. Validator's 
+check_sequential covers DEC/RFI/INC/MS but not 
+CO/DONE/INSP/SIGN_OFF. CO-002 exists in CHANGE_ORDER.md 
+without CO-001. Recommendation: extend validator 
+check_sequential to cover CO/DONE/INSP/SIGN_OFF, OR 
+backfill retroactive CO-001 entry.
+
+**LOW-2**: cspell dictionary noise. Dictionary contains 
+asdfqwerty (synthetic-test value, dangerous if it appears 
+in real commits), hase, rocedure, kickoff, roundtrip, 
+oneline, vulns (tokenization or bulk-add artifacts), 
+metallel, judgement AND judgment (en-GB inconsistency). 
+Recommendation: audit dictionary at MS-010; remove 
+asdfqwerty, retain documented tokenization artifacts (hase 
+and rocedure are POSIX-character-class artifacts already 
+documented in SIGN_OFF.md), resolve judgement vs judgment 
+per en-GB.
+
+**LOW-3**: prepare script silently swallows failures. 
+"prepare": "playwright install && svelte-kit sync || 
+echo ''" in package.json. Trade-off has legitimate reason 
+(CI-without-Chromium environments) but is genuinely the 
+wrong fail-mode for a prepare script. Real concern, lower 
+severity. Recommendation: MS-010 may add a wrapper that 
+distinguishes "playwright install failed (warn)" from 
+"svelte-kit sync failed (error)".
+
+**LOW-4**: engine-strict no-op. .npmrc has 
+engine-strict=true but package.json lacks "engines" field. 
+Strict-mode flag has nothing to enforce against. Trivial 
+fix. Recommendation: MS-010 — add 
+"engines": {"node": ">=22.0.0"}.
+
+**LOW-5**: DEC-013 Tailwind v4 sign-off line missing. 
+Operator chat-approved Tailwind v4 acceptance during 
+MS-006 Decision 2 but DEC-013 body lacks explicit 
+"Operator sign-off:" line. Decision is correct; 
+documentation trail incomplete. Recommendation: MS-010 
+small doc fix.
+
+#### INFO observations
+
+**INFO-1**: License token has no revocation mechanism. 
+Verified per DEC-007 — Ed25519 signing, no expiry, no 
+revocation, no per-user binding. INSP-001 INFO-6 noted; 
+external review extends with sharing economics. 
+Recommendation: explicit DEC at MS-010 — v1 accepts no-
+revocation as trade-off, v1.x revocation mechanism filed 
+as future work.
+
+**INFO-2**: License sharing economics. $9 + no revocation 
++ no expiry + no per-user binding = sharing economically 
+rational. Real but business model concern, not security. 
+Recommendation: explicit DEC at MS-010 — v1 accepts trade-
+off, monitor in production, address only if observed.
+
+**INFO-3**: DEC-032 magic-string mechanism has no audit 
+trail integrity. A magic-string is just text; anyone with 
+write access could backdate "DONE-006 signed off by 
+operator on 2026-04-25" to bypass real review. 
+Recommendation: document as accepted v1 trade-off; revisit 
+at v2 if scope expands beyond solo operator.
+
+**INFO-4**: Reaper's MEMORY.md is private to the agent. 
+Engineer working agreements (state/current.md) are public; 
+Reaper-private memory is asymmetric. LESSON-019 
+(observability) and LESSON-020 (operator-control-of-both) 
+territory. Recommendation: surface for design discussion 
+at MS-011 working agreements consolidation.
+
+#### Engineer-additional findings beyond external review
+
+**MEDIUM-7** above (banned moves) was Engineer-additional.
+**MEDIUM-6** above (CI as reproducible verifier framing) 
+was Engineer-additional.
+**LOW-5** above (DEC-013 sign-off line) was Engineer-
+additional.
+**INFO-3** and **INFO-4** above were Engineer-additional.
+
+### Open questions for operator
+
+1. RFI-013: Cloudflare Pages → Workers migration timing. 
+   Stay on Pages for v1 or migrate before v1 deploy? 
+   Engineer's lean: migrate before v1 deploy.
+2. RFI-014: Email delivery mechanism for license tokens. 
+   Lemon Squeezy confirmation email or separate service 
+   (Resend/Postmark)? Engineer has no lean.
+
+### Recommended next inspection
+
+INSP-003 after MS-010 closes, to verify MS-010 actioned 
+both INSP-001 and INSP-002 findings. Then routine cadence 
+per INSP-001's recommendation (post-Phase-1, ad-hoc on 
+architectural changes, pre-launch comprehensive, quarterly 
+post-launch).
+
+### Cross-references
+
+- INSP-001 (independent audit, c655dab) — supplemented, 
+  not superseded, by INSP-002
+- INC-008 (Engineer verification miss in v1.0 of action 
+  plan PDF) — filed alongside this entry
+- RFI-012 (banned moves divergence, open) — resolution 
+  routed to MS-010 per MEDIUM-7
+- RFI-013 (Cloudflare migration timing) — filed alongside 
+  this entry
+- RFI-014 (email delivery mechanism) — filed alongside 
+  this entry
+- Action plan PDF: 
+  /mnt/user-data/outputs/UnoAi_External_Review_Action_Plan_v1_1.pdf 
+  (v1.1, corrected per INC-008)

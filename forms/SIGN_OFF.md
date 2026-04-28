@@ -133,10 +133,10 @@ Operator decision recommended at Section 2 sign-off; resolution likely belongs i
 
 ## MS-009 Section 3 — Documentation accuracy
 
-Status: in progress
+Status: signed off
 Date filed: 2026-04-28
-Date signed: pending
-Operator sign-off: pending
+Date signed: 2026-04-28
+Operator sign-off: Section 3 signed off by operator on 2026-04-28.
 
 ### Checklist results
 

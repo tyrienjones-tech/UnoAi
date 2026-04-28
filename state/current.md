@@ -25,7 +25,7 @@ sign-out where state changes, per Procedure 9 (session lifecycle).
 
 # UnoAi — Current State
 
-Updated: 2026-04-28 17:20 (auto-updated at session sign-out — MS-009 second session, Section 3 work complete and awaiting chat sign-off).
+Updated: 2026-04-28 23:30 (auto-updated at session sign-out — INSP-002 filing session: external review consolidation + INC-007 + INC-008 + INC-009 + RFI-013 + RFI-014; MS-009 Section 3 chat sign-off applied at sign-in; Sections 4-8 deferred to subsequent sessions).
 
 ## Phase
 
@@ -35,15 +35,15 @@ Next: MS-009 remaining sections (2 through 8, multi-session) → Phase 1 (landin
 
 ## Active MS
 
-MS-009 in progress (pre-Phase-1 deep check, 8 sections, section-by-section sign-off via `forms/SIGN_OFF.md`). Sections 0-2 signed off (Section 2 magic-string applied at this session's sign-in per DEC-032 fifth exercise / third on SIGN_OFF.md surface); Section 3 (documentation accuracy) work completed this session and awaiting operator chat sign-off; Sections 4-8 pending.
+MS-009 in progress (pre-Phase-1 deep check, 8 sections, section-by-section sign-off via `forms/SIGN_OFF.md`). Sections 0-3 signed off (Section 3 magic-string applied at this session's sign-in per DEC-032 sixth exercise / fourth on SIGN_OFF.md surface); Sections 4-8 pending in subsequent sessions.
 
 ## Counters (latest of each)
 
 Latest MS:  MS-009
 Latest DEC: DEC-033
-Latest RFI: RFI-012
-Latest INC: INC-006
-Latest INSP: INSP-001
+Latest RFI: RFI-014
+Latest INC: INC-009
+Latest INSP: INSP-002
 
 ## MS chain status
 
@@ -55,7 +55,7 @@ Latest INSP: INSP-001
 - MS-006: DONE (DONE-006, signed 2026-04-28).
 - MS-007: DONE (DONE-007, signed 2026-04-28; sign-off recorded in DONE-007 entry per DEC-032 magic-string at MS-008 sign-in — first real exercise).
 - MS-008: DONE (DONE-008, signed 2026-04-28; second exercise of DEC-032 magic-string mechanism applied at MS-009 sign-in).
-- MS-009: in progress (pre-Phase-1 deep check, 8 sections, section-by-section sign-off via `forms/SIGN_OFF.md`; Sections 0-2 signed off 2026-04-28 — third, fourth, and fifth exercises of DEC-032 magic-string mechanism; Section 3 work complete 2026-04-28 and awaiting operator chat sign-off; Sections 4-8 pending).
+- MS-009: in progress (pre-Phase-1 deep check, 8 sections, section-by-section sign-off via `forms/SIGN_OFF.md`; Sections 0-3 signed off 2026-04-28 — third through sixth exercises of DEC-032 magic-string mechanism; Sections 4-8 pending in subsequent sessions).
 - MS-010: pending; depends on MS-009 (security cluster from INSP-001 findings: HIGH-1 + MEDIUM-1..5 + INC-007 backfill + doctrine to docs/).
 - INSP-002: pending; depends on MS-010 (verify MS-010 closed findings; cleaner friction surface for second inspection cycle).
 - MS-011: pending; depends on INSP-002 (working agreements consolidation: 20+ entries → ~10-12 distinct rules).
@@ -66,6 +66,8 @@ Latest INSP: INSP-001
 - RFI-009: TLD selection (`unoai.com` / `.app` / other) — pending operator decision, not blocking until pre-Phase-8.
 - RFI-011: validator check 10 design tightness (working as designed but narrow scope; tighten, accept, or replace?) — pending Engineer scoping into MS-010 / MS-011, not blocking. Filed at MS-009 Section 3.
 - RFI-012: banned moves divergence between `PROJECT.md` and `state/current.md` (state/current.md not actually a mirror; direction of reconciliation TBD) — pending Engineer direction, not blocking. Filed at MS-009 Section 3.
+- RFI-013: Cloudflare Pages → Workers migration timing (stay on Pages for v1 vs migrate before v1 deploy; Engineer's lean: migrate before v1 deploy) — pending operator decision, blocks Phase 1 first deploy. Filed at INSP-002.
+- RFI-014: email delivery mechanism for license tokens (LS confirmation email vs separate service like Resend/Postmark; Engineer has no lean) — pending operator decision, blocks Phase 1 webhook handler implementation. Filed at INSP-002.
 
 (RFI-010 closed 2026-04-28 via DEC-032 — magic-string-in-chat sign-off recording.)
 
@@ -79,6 +81,8 @@ Latest INSP: INSP-001
 - Optional: README self-hosting wording amendment (deferred to MS-003.5 or roll into Phase 1 prep).
 
 ## Last verified working state
+
+2026-04-28 (INSP-002 filing session — Builder) — Section 3 sign-off magic-string applied at sign-in (DEC-032 sixth exercise, fourth on SIGN_OFF.md surface). Push state verified clean (`git ls-remote origin refs/heads/main` returned `16a70c9` matching local main). Pre-session and mid-session validators PASS at HEAD `16a70c9` (289 lines unchanged). **INC-007** filed (operator personal email caught in INSP-001 by gitleaks — long-deferred from Inspector handover note 3 / MS-009 Section 5; resolved in same commit per operator's Option-A direction after Builder pause-at-blocker on the INC-008-without-INC-007 sequence gap). **INC-008** filed (Engineer verification miss in INSP-002 action plan PDF v1.0 — same family as working agreements #19 + #20; named MS-011 working-agreement candidate #21 by Engineer for verify-before-asserting principle). **INC-009** filed (Engineer heading-level transcription drift across the INSP-002 session prompt — H2 used for all five new entries when INCIDENT.md and RFI.md convention is H3; Builder caught at validator FAIL pre-commit, operator authorised mechanical H2→H3 conversion for the four INC/RFI entries while INSP-002 retained H2 per INSPECTION.md convention; named MS-011 working-agreement candidate for "verify form-specific conventions before drafting numbered entries"; sub-case of the broader "verify before asserting" principle). **INSP-002** filed (external review consolidation — security + supply chain + architecture + procedural drift; 0 CRITICAL, 0 new HIGH, 8 MEDIUM, 5 LOW, 4 INFO; supplements but does not supersede INSP-001; recommends INSP-003 after MS-010). **RFI-013** filed (Cloudflare Pages → Workers migration timing; Engineer's lean: migrate before v1 deploy; blocks Phase 1 first deploy). **RFI-014** filed (email delivery mechanism for license tokens; Engineer has no lean; blocks Phase 1 webhook handler). MS-009 Sections 4-8 still pending in subsequent sessions; this session deliberately ended at the INSP-002 + INC-007 + INC-008 + INC-009 + RFI-013 + RFI-014 boundary per the prompt's rules of engagement. Validator PASS at sign-out (counters reflect Latest INC = INC-009, Latest RFI = RFI-014, Latest INSP = INSP-002; check_sequential clean across DEC/RFI/INC/MS).
 
 2026-04-28 (MS-009 second session — Section 3) — Section 2 sign-off magic-string applied at sign-in (DEC-032 fifth exercise, third on SIGN_OFF.md surface); working agreements #17-#20 added to running list (cross-environment paths; explicit-approval; path-verification; new-agent-role first-session friction — all four traceable to INSP-001 first-inspection lessons). MS chain status updated for post-INSP-001 sequence (MS-009 → MS-010 (security cluster from INSP-001) → INSP-002 → MS-011 (working-agreements consolidation) → first Phase 1 MS). Section 3 (documentation accuracy) work complete: `PROCEDURES.md:67` DONE-001-onwards italicised footnote added explaining the MS-001 carve-out (closes Section 2 carry-forward Finding #1); `README.md:85` Status section updated to current-state phrasing (`Phase 0b complete. Infrastructure phase in progress (MS-009). Phase 1 begins after MS-009 → MS-010 → INSP-002 → MS-011.` — closes Section 2 carry-forward Finding #2 + INSP-001 LOW-3); `README.md:63` `.githooks/` parenthetical updated to include `cspell` as 5th hook step; `README.md:52-79` file map updated to add `forms/SIGN_OFF.md`, `forms/INSPECTION.md`, `.cspell.json` (tree connectors adjusted; INSPECTION.md becomes new last entry under `forms/`). RFI-011 filed (validator check 10 design tightness — Engineer to scope into MS-010 / MS-011); RFI-012 filed (banned moves divergence between PROJECT.md and state/current.md — Engineer to direct reconciliation; state/current.md banned moves header NOT modified in Section 3 per the section's audit-not-fix posture). All current-state stale-reference scans clean (`Chat2U`, `$39`, count drift across procedure / validator-check / hook-step / "X rules" — zero current-state hits); all seven MS-005 / MS-006-named "For agents reading the code" subsections present in PROJECT.md (plus 2 bonus). Validator PASS at sign-out (HEAD will be the close-out commit; validator at 289 lines unchanged — no validator code change in this section). Section 3 SIGN_OFF.md entry filed `Status: in progress`, awaiting operator chat sign-off; Section 4 (state integrity) is next session's work, not this session's.
 

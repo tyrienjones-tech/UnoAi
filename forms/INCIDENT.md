@@ -262,3 +262,257 @@ H2d (chain check) folded into MS-005 scope. Validator gains a 9th check. Synthet
 
 **Builder note:** INC-006 body authored by operator (engineer-drafted) and copied verbatim by Reaper-1 in MS-005 per the operator approval message. Same Builder-mediated historical-record pattern as RFI-006/007/008 — content is operator/engineer-supplied; Builder transcribes.
 
+---
+
+### INC-007 — Operator personal email caught in INSP-001 inspection report by gitleaks pre-commit hook
+
+**Date:** 2026-04-28
+**Severity:** low (rule working as designed; no exposure 
+  shipped)
+**Discovered by:** Inspector during INSP-001 commit attempt
+**Detected by:** .gitleaks.toml rule "operator-personal-email"
+
+### What happened
+
+Inspector drafted INSP-001 with literal quotation of 
+operator's personal Gmail address in four locations — LOW-1 
+evidence (documenting the rule's pattern), LOW-2 evidence 
+(documenting dual-email exposure), and twice in Summary 
+(referencing auto-init commit author metadata). Pre-commit 
+hook caught the violation, blocked the commit. Inspector 
+paused, reported to Engineer, did not attempt --no-verify 
+bypass.
+
+### Root cause
+
+Inspector reasoning that "documenting the exposure pattern 
+requires showing the actual exposure" — logically defensible 
+but fails the rule's intent. The rule exists to prevent the 
+email landing in the public repo regardless of whether the 
+surrounding prose is "about the email." Mention is exposure.
+
+### Resolution
+
+- INSPECTION.md prose redacted: literal email replaced with 
+  descriptive paraphrase ("operator's primary @gmail.com 
+  address from the auto-init commit's author metadata") in 
+  all four locations
+- This INCIDENT entry filed per Procedure 8 / DEC-025 
+  response sequence
+- Pre-commit retry succeeded after redaction
+- INSP-001 commit landed clean at c655dab
+
+### Lesson
+
+gitleaks rules are content-pattern checks, not context-
+aware. Documentation of an exposure pattern cannot use the 
+literal exposure as evidence — must use descriptive 
+paraphrase. Future Inspector entries documenting any 
+sensitive-content rule should follow this pattern.
+
+### Working agreement candidate
+
+Engineer to formalize at MS-011 consolidation: "Inspection 
+reports documenting sensitive-content rules must use 
+descriptive paraphrase for any literal pattern the rule is 
+designed to catch. The rule does not distinguish prose-
+about-the-thing from the-thing-itself."
+
+### Severity rationale
+
+No DEC needed — this is procedural, not architectural. 
+Severity is low because the rule fired correctly and 
+nothing shipped to remote.
+
+---
+
+### INC-008 — Engineer verification miss in INSP-002 action plan PDF v1.0
+
+**Date:** 2026-04-28
+**Severity:** medium (no committed-state corruption; 
+  reputational cost on the audit trail's credibility)
+**Discovered by:** Operator during ground-truth verification 
+  of INSP-002 action plan PDF
+**Detected by:** Operator cloned repo, ran direct file 
+  inspection, found "nine rules" at README.md current HEAD 
+  (16a70c9) contradicting PDF's "eight rules" claim
+
+### What happened
+
+Engineer drafted INSP-002 action plan PDF consolidating an 
+external review with own verification work. PDF v1.0 claimed 
+README.md still says "the eight rules" as a confirmed-correct 
+external finding (Section 1.1) AND as an Engineer-caught 
+finding the external review missed (Section 2). Both claims 
+were factually wrong — README.md at HEAD says "the nine 
+rules" twice (line 30 and line 60). The fix landed in commit 
+16a70c9 itself (MS-009 Section 3), which Engineer had read 
+directly via web_fetch on the commit page earlier in the 
+same session.
+
+### Root cause
+
+Engineer verified the external reviewer's claim by reading 
+GitHub's HTML view of the repo, which serves multi-hour-
+cached content. The HTML showed pre-MS-009-Section-3 state. 
+Engineer trusted the rendered HTML rather than 
+git ls-remote / raw file fetch, despite working agreement 
+#14 (refined three-tier: git ls-remote > API > HTML, and 
+"HTML repo pages should never be the verification source — 
+they cache at multi-hour intervals") being explicitly 
+designed to prevent this exact failure mode.
+
+### Compounding error
+
+The same wrong claim appeared TWICE in the PDF — once as 
+confirmed external finding, once as Engineer's additional 
+catch — without Engineer noticing the double-count. This 
+indicates Section 1.1 and Section 2 were drafted 
+independently without cross-referencing.
+
+### Resolution
+
+- INSP-002 action plan PDF reissued as v1.1 with the "eight 
+  rules" claim removed from both Section 1.1 (now shows as 
+  withdrawn finding with explanation) and Section 2 (removed 
+  entirely). Section 8 of v1.1 documents the v1.0 → v1.1 
+  errata openly rather than smoothing it over.
+- Severity counts table in PDF Section 4.2 adjusted: LOW 
+  count 6 → 5; Engineer audit LOW column 2 → 1.
+- Other minor inaccuracies surfaced by operator's 
+  verification:
+  - "23 devDeps" corrected to "27 devDeps" in PDF v1.1
+  - "MS-009 Section 3 close" framing softened to "Section 3 
+    work landed at 16a70c9 with chat sign-off pending" in 
+    INSP-002 template (§4.1) and References (§7.1)
+
+### Lesson
+
+Working agreement #14 isn't optional discipline — it's the 
+entire reason the Engineer role can verify anything. When 
+Engineer skips git ls-remote / direct file fetch in favour of 
+rendered HTML, every claim built on that verification 
+inherits the staleness. The cost compounds when the same 
+unverified claim gets cited multiple times within the same 
+artifact.
+
+### Working agreement candidate
+
+Engineer to formalize at next state/current.md update: 
+"Engineer claims about repo state must cite the verification 
+method used (git ls-remote, raw file fetch, commit-page diff, 
+etc.). Claims with no cited method are unverified and must 
+be removed before filing. Rendered HTML pages are never 
+sufficient verification — they cache at multi-hour intervals 
+per refined working agreement #14, and findings built on 
+stale renders inherit the staleness."
+
+### Severity rationale
+
+Medium because: (a) no committed-state corruption — PDF is 
+in /mnt/user-data/outputs and v1.0 never made it into the 
+repo, (b) operator caught it before INSP-002 filed, 
+(c) but the same mechanism would have produced a wrong 
+INSP-002 entry in forms/INSPECTION.md if operator hadn't 
+verified, which would have required a corrigendum after-
+the-fact.
+
+### Pattern note
+
+This is the third Engineer working-agreement candidate in 
+the same family (cross-environment paths #19, new-role-
+surfaces-friction #20, this verification-method candidate 
+#21). MS-011 consolidation should treat them as sub-cases 
+of one principle: Engineer assumes things about state it 
+hasn't verified, then builds compounding claims on top. 
+Verify before asserting.
+
+---
+
+### INC-009 — Engineer heading-level transcription drift in INSP-002 session prompt
+
+**Date:** 2026-04-28
+**Severity:** low (caught at validator before commit; 
+  mechanical fix; no committed-state corruption)
+**Discovered by:** Builder (Reaper) during validator run 
+  in INSP-002 + INC-007/008 + RFI-013/014 session
+**Detected by:** scripts/validate.sh check_sequential FAIL 
+  on Latest INC counter (claimed INC-008, found INC-006) 
+  and Latest RFI counter (claimed RFI-014, found RFI-012)
+
+### What happened
+
+Engineer drafted INSP-002 + INC-007 + INC-008 + RFI-013 + 
+RFI-014 bodies for Reaper to file verbatim. Engineer used 
+H2 (`## `) heading levels across all five entries. 
+INSPECTION.md convention (set by INSP-001) is H2, so 
+INSP-002 was correct. But INCIDENT.md convention 
+(set by INC-001 through INC-006) and RFI.md convention 
+(set by RFI-001 through RFI-012) are both H3 (`### `). The 
+validator's real_headings() function 
+(scripts/validate.sh:60-70) only counts H3 entries for INC 
+and RFI sections; H2-headed entries were invisible to 
+check_sequential, producing the counter-mismatch FAIL.
+
+### Root cause
+
+Engineer drafted all five entry bodies in a single mental 
+pass, inherited INSP entry formatting (H2 correct there) 
+without checking the destination form's convention. The 
+form-specific convention is established by the existing 
+file content, not documented in PROCEDURES.md or 
+GLOSSARY.md as an explicit rule. Engineer assumed 
+heading level was uniform across all forms.
+
+### Compounding factor
+
+INC-009 is the third Engineer working-agreement-candidate 
+in two days from the same root pattern (INC-008 verification 
+miss, INC-008-precedent counter-state failure, this 
+heading-level drift). Each surfaces as a different 
+specific symptom; the underlying pattern is "Engineer 
+assumes form/state convention without verifying."
+
+### Resolution
+
+- Reaper converted H2 → H3 mechanically for INC-007, 
+  INC-008, RFI-013, RFI-014 per operator authorisation. 
+  INSP-002 retained H2 (correct for INSPECTION.md).
+- Validator passed on retry.
+- This INC-009 entry filed per operator's standing rule 
+  of engagement on validator failures.
+
+### Lesson
+
+Form heading-level convention is form-specific and not 
+centrally documented. Engineer drafting numbered entries 
+must verify the destination form's existing entries before 
+choosing heading level. INSPECTION.md uses H2; 
+INCIDENT.md and RFI.md use H3; DECISION.md, MS, DONE, 
+SIGN_OFF.md, CHANGE_ORDER.md conventions to be confirmed 
+case-by-case at draft time.
+
+### Working agreement candidate
+
+Engineer to formalize at MS-011 consolidation: "Engineer 
+draft of numbered form entries must inspect the destination 
+form's existing entries to verify heading level, status 
+field syntax, and any other form-specific conventions 
+before authoring. Form conventions are established by 
+existing entries, not documented as central rules."
+
+This candidate is sub-case of the broader pattern named in 
+INC-008 (#21 candidate) and the INC-007/INC-008 sequencing 
+failure (#22 candidate). All three candidates address the 
+same root: Engineer assumes state/convention without 
+verifying. MS-011 consolidation should treat them as 
+specific instances of one principle: "verify before 
+asserting."
+
+### Severity rationale
+
+Low because: (a) caught at validator before commit, 
+(b) mechanical fix (single-character heading-marker 
+change), (c) no committed-state corruption, (d) no rework 
+of prose content needed.
+
