@@ -286,9 +286,10 @@ state/current.md's `(mirror of PROJECT.md, restated for session-start visibility
 **Engineer's lean (if any):**
 None — Section 3 surfaces the question; Engineer decides direction.
 
-**Operator decision:** pending
+**Operator decision:** ANSWERED 2026-04-28 via MS-009 Section 4 + INSP-002 MEDIUM-7. Resolution: **Option A variant** — `PROJECT.md` becomes canonical and `state/current.md` mirrors verbatim; `Co-Authored-By Claude` footers on commits added to `PROJECT.md` as the 10th banned move (rule was operator-attributed-commits-only per MS-003 commit-attribution decisions; making it project-level rather than state-only formalises that scope). State/current.md `Banned moves` section now contains all 10 items copied verbatim from PROJECT.md; the `(mirror of PROJECT.md, restated for session-start visibility)` header is now accurate.
+
 **Answer:**
-[Engineer scopes into MS-010 / MS-011 or addresses inline at section close-out.]
+Section 4 work applied the resolution. PROJECT.md banned-moves bullet list extended from 9 items to 10 (added: `` `Co-Authored-By Claude` footers on commits — operator-attributed commits only; AI-assistance attribution is a project policy decision filed as DEC if/when revisited.``). state/current.md banned-moves bullet list replaced — was 5 abbreviated items + 1 unique (`Co-Authored-By` rule); now 10 items verbatim from PROJECT.md. Engineer-additional MEDIUM-7 finding closes via this resolution.
 
 ---
 

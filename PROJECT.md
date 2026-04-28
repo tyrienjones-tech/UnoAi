@@ -112,6 +112,7 @@ The Builder never:
 - Runs LLM calls through a proxy server we own (must be browser → vendor direct)
 - Ships persona behaviour that makes permanence promises, claims to love the user, or presents itself as a substitute for human relationships. These are non-negotiable across all current and future shards (per DEC-015 + Appendix A).
 - Commits any item from the **Sensitive content** list below, in any branch, ever. The pre-commit `gitleaks` hook (per DEC-024 + Procedure 8) is the enforcement layer. Bypassing it via `git commit --no-verify` is itself a banned move except as part of an INCIDENT response — and even then only after the rotated-secret + redacted-INCIDENT sequence in DEC-025 is followed.
+- `Co-Authored-By Claude` footers on commits — operator-attributed commits only; AI-assistance attribution is a project policy decision filed as DEC if/when revisited.
 
 ---
 

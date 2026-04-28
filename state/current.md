@@ -25,7 +25,7 @@ sign-out where state changes, per Procedure 9 (session lifecycle).
 
 # UnoAi — Current State
 
-Updated: 2026-04-28 23:30 (auto-updated at session sign-out — INSP-002 filing session: external review consolidation + INC-007 + INC-008 + INC-009 + RFI-013 + RFI-014; MS-009 Section 3 chat sign-off applied at sign-in; Sections 4-8 deferred to subsequent sessions).
+Updated: 2026-04-28 23:56 (auto-updated at session sign-out — MS-009 Section 4 state-integrity audit + RFI-012 closure: banned-moves PROJECT.md-as-canonical resolution applied per INSP-002 MEDIUM-7; pending operator actions list pruned; Section 4 SIGN_OFF entry filed `Status: in progress`; Sections 5-8 pending in subsequent sessions).
 
 ## Phase
 
@@ -35,7 +35,7 @@ Next: MS-009 remaining sections (2 through 8, multi-session) → Phase 1 (landin
 
 ## Active MS
 
-MS-009 in progress (pre-Phase-1 deep check, 8 sections, section-by-section sign-off via `forms/SIGN_OFF.md`). Sections 0-3 signed off (Section 3 magic-string applied at this session's sign-in per DEC-032 sixth exercise / fourth on SIGN_OFF.md surface); Sections 4-8 pending in subsequent sessions.
+MS-009 in progress (pre-Phase-1 deep check, 8 sections, section-by-section sign-off via `forms/SIGN_OFF.md`). Sections 0-3 signed off; Section 4 work complete and `Status: in progress` awaiting operator chat sign-off; Sections 5-8 pending in subsequent sessions.
 
 ## Counters (latest of each)
 
@@ -65,22 +65,22 @@ Latest INSP: INSP-002
 
 - RFI-009: TLD selection (`unoai.com` / `.app` / other) — pending operator decision, not blocking until pre-Phase-8.
 - RFI-011: validator check 10 design tightness (working as designed but narrow scope; tighten, accept, or replace?) — pending Engineer scoping into MS-010 / MS-011, not blocking. Filed at MS-009 Section 3.
-- RFI-012: banned moves divergence between `PROJECT.md` and `state/current.md` (state/current.md not actually a mirror; direction of reconciliation TBD) — pending Engineer direction, not blocking. Filed at MS-009 Section 3.
 - RFI-013: Cloudflare Pages → Workers migration timing (stay on Pages for v1 vs migrate before v1 deploy; Engineer's lean: migrate before v1 deploy) — pending operator decision, blocks Phase 1 first deploy. Filed at INSP-002.
 - RFI-014: email delivery mechanism for license tokens (LS confirmation email vs separate service like Resend/Postmark; Engineer has no lean) — pending operator decision, blocks Phase 1 webhook handler implementation. Filed at INSP-002.
 
-(RFI-010 closed 2026-04-28 via DEC-032 — magic-string-in-chat sign-off recording.)
+(RFI-010 closed 2026-04-28 via DEC-032 — magic-string-in-chat sign-off recording. RFI-012 closed 2026-04-28 via MS-009 Section 4 + INSP-002 MEDIUM-7 — banned moves PROJECT.md-as-canonical resolution.)
 
 ## Pending operator actions
 
-- Cloudflare Pages account creation (blocks Phase 1 deployment).
+- Cloudflare Pages account creation (blocks Phase 1 deployment). **Note:** RFI-013 (Pages → Workers migration timing; Engineer's lean: migrate before v1 deploy) may convert this to Cloudflare Workers account creation; await operator decision.
 - Lemon Squeezy account + store + $9 placeholder product (blocks Phase 1 payment flow).
 - Worker secret store ready for Ed25519 private key (blocks Phase 1 webhook handler).
 - Domain registrar account + domain selection (deferred per RFI-009, pre-Phase-8 deadline).
-- GitHub repo description update (currently still "Name is place holder").
-- Optional: README self-hosting wording amendment (deferred to MS-003.5 or roll into Phase 1 prep).
+- GitHub repo description update (currently still "Name is place holder" — verified via GitHub API at MS-009 Section 4, 2026-04-28).
 
 ## Last verified working state
+
+2026-04-28 (MS-009 Section 4 — Builder, single-section session) — Push state verified clean at sign-in (`git ls-remote origin refs/heads/main` returned `bb88533` matching local main). Pre-session validator PASS at HEAD `bb88533` (289 lines unchanged). **State integrity audit (Section 4 step 4) clean** across the eight sub-areas: Phase line accurate; Active MS line accurate (with one informational note about the "this session's sign-in" phrase re-binding across sessions, see SIGN_OFF Section 4 Finding 4); all five counters match form tail entries (verified via grep on `forms/METHOD_STATEMENT.md`, `forms/DECISION.md`, `forms/RFI.md`, `forms/INCIDENT.md`, `forms/INSPECTION.md`); MS chain status accurate (MS-001..MS-008 done with DONE entries DONE-002 through DONE-008, MS-001 carve-out documented in PROCEDURES.md:67 footnote); Open RFIs list matches reality (4 entries post step-5c: RFI-009, RFI-011, RFI-013, RFI-014); pending operator actions audited (5 entries post-cleanup, 1 obsolete entry removed); working agreements list complete 1-20 sequentially numbered; banned moves now match PROJECT.md verbatim. **RFI-012 closed** (`forms/RFI.md` `Operator decision:` field updated to `ANSWERED 2026-04-28 via MS-009 Section 4 + INSP-002 MEDIUM-7`; `state/current.md` `Open RFIs` list dropped RFI-012 and added closure-line note). **PROJECT.md banned-moves bullet list extended from 9 to 10 items** (added: `` `Co-Authored-By Claude` footers on commits — operator-attributed commits only; AI-assistance attribution is a project policy decision filed as DEC if/when revisited.``). **state/current.md banned-moves section replaced with 10 items verbatim from PROJECT.md** (mirror header `(mirror of PROJECT.md, restated for session-start visibility)` is now accurate). **Pending operator actions list pruned**: README self-hosting wording amendment removed as obsolete (operator commit `bf2d661` shipped the wording per DONE-005 close-out evidence; MS-005 closed the heading-marker artefact); Cloudflare Pages line annotated with RFI-013 dependency conditional; GitHub repo description line annotated with API-verification context (`"description": "Name is place holder"` confirmed at section). Section 4 SIGN_OFF.md entry filed `Status: in progress` with four findings + five notes; awaiting operator chat sign-off (Section 5 unlocks next). Validator PASS at sign-out (counters: Latest MS = MS-009, Latest DEC = DEC-033, Latest RFI = RFI-014, Latest INC = INC-009, Latest INSP = INSP-002; check_sequential clean across DEC/RFI/INC/MS; check 10 PASS — README's `## Status` line still extracts `Phase 0b complete` matching state's `Current: Phase 0b complete.`). No new numbered entries (DEC / RFI / INC / MS) filed this session beyond the SIGN_OFF Section 4 entry.
 
 2026-04-28 (INSP-002 filing session — Builder) — Section 3 sign-off magic-string applied at sign-in (DEC-032 sixth exercise, fourth on SIGN_OFF.md surface). Push state verified clean (`git ls-remote origin refs/heads/main` returned `16a70c9` matching local main). Pre-session and mid-session validators PASS at HEAD `16a70c9` (289 lines unchanged). **INC-007** filed (operator personal email caught in INSP-001 by gitleaks — long-deferred from Inspector handover note 3 / MS-009 Section 5; resolved in same commit per operator's Option-A direction after Builder pause-at-blocker on the INC-008-without-INC-007 sequence gap). **INC-008** filed (Engineer verification miss in INSP-002 action plan PDF v1.0 — same family as working agreements #19 + #20; named MS-011 working-agreement candidate #21 by Engineer for verify-before-asserting principle). **INC-009** filed (Engineer heading-level transcription drift across the INSP-002 session prompt — H2 used for all five new entries when INCIDENT.md and RFI.md convention is H3; Builder caught at validator FAIL pre-commit, operator authorised mechanical H2→H3 conversion for the four INC/RFI entries while INSP-002 retained H2 per INSPECTION.md convention; named MS-011 working-agreement candidate for "verify form-specific conventions before drafting numbered entries"; sub-case of the broader "verify before asserting" principle). **INSP-002** filed (external review consolidation — security + supply chain + architecture + procedural drift; 0 CRITICAL, 0 new HIGH, 8 MEDIUM, 5 LOW, 4 INFO; supplements but does not supersede INSP-001; recommends INSP-003 after MS-010). **RFI-013** filed (Cloudflare Pages → Workers migration timing; Engineer's lean: migrate before v1 deploy; blocks Phase 1 first deploy). **RFI-014** filed (email delivery mechanism for license tokens; Engineer has no lean; blocks Phase 1 webhook handler). MS-009 Sections 4-8 still pending in subsequent sessions; this session deliberately ended at the INSP-002 + INC-007 + INC-008 + INC-009 + RFI-013 + RFI-014 boundary per the prompt's rules of engagement. Validator PASS at sign-out (counters reflect Latest INC = INC-009, Latest RFI = RFI-014, Latest INSP = INSP-002; check_sequential clean across DEC/RFI/INC/MS).
 
@@ -127,8 +127,15 @@ Latest INSP: INSP-002
 
 ## Banned moves (mirror of PROJECT.md, restated for session-start visibility)
 
-- No code changes without an MS.
-- No silent fixes outside scope.
-- No commits with secrets (gitleaks-enforced).
-- No Co-Authored-By Claude footers on commits.
-- Persona: no permanence promises, no love claims, no substitute-for-humans framing.
+The Builder never:
+
+- Mutates a file without an approved METHOD_STATEMENT (granularity rule per DEC-012)
+- Claims a task is done without proof attached to a DONE entry (proof-division per DEC-011)
+- Adds a **direct top-level dependency after scaffolding** without a DECISION entry. (Framework template defaults from `npm create svelte` and similar are exempt — they're recorded once at scaffold time and not enumerated.)
+- Expands scope without a CHANGE_ORDER
+- Stores user conversation contents on any server
+- Markets, designs, or copy-writes anything that targets minors
+- Runs LLM calls through a proxy server we own (must be browser → vendor direct)
+- Ships persona behaviour that makes permanence promises, claims to love the user, or presents itself as a substitute for human relationships. These are non-negotiable across all current and future shards (per DEC-015 + Appendix A).
+- Commits any item from the **Sensitive content** list below, in any branch, ever. The pre-commit `gitleaks` hook (per DEC-024 + Procedure 8) is the enforcement layer. Bypassing it via `git commit --no-verify` is itself a banned move except as part of an INCIDENT response — and even then only after the rotated-secret + redacted-INCIDENT sequence in DEC-025 is followed.
+- `Co-Authored-By Claude` footers on commits — operator-attributed commits only; AI-assistance attribution is a project policy decision filed as DEC if/when revisited.

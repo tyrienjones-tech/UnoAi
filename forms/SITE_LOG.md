@@ -831,3 +831,74 @@ INF  no leaks found
 8. **Push posture per operator's standing preference.** Reaper's last MS-009 Section 3 session held push for operator manual completion. This session may follow the same pattern OR push immediately — Builder's call. Reaper will push immediately after commit unless operator signals otherwise; INSP-002 contents are the operator-facing deliverable and faster availability on remote serves the workflow.
 
 9. **Pause-at-blocker discipline operated twice this session, both resolved cleanly via operator chat.** Working agreement #18 territory throughout. The second pause (validator FAIL on heading levels) is itself the subject of INC-009 — the discipline's success is what produced the INC entry rather than a silent broken commit.
+
+---
+
+### 2026-04-28 23:48 session start
+
+- Role: Builder
+- Session goal: Continue MS-009 from Section 4 (state integrity).
+- Resuming from: INSP-002 + INC-007/008/009 + RFI-013/014 filing session closed cleanly at HEAD `bb88533` (committed and pushed). MS-009 Sections 0-3 signed off; Sections 4-8 pending. RFI-012 (banned moves divergence) carries operator-direction-confirmed resolution to apply this session per INSP-002 MEDIUM-7.
+- Context loaded: PROJECT.md, PROCEDURES.md, state/current.md, forms/SIGN_OFF.md (Section 4 scaffold + carry-forward Sections 0-3), forms/INSPECTION.md (INSP-002 MEDIUM-7 reading), prior SITE_LOG entries (INSP-002 filing session sign-in/out + MS-009 Section 3 second-session sign-out).
+- Open MSes: MS-009 (in progress; Section 4 unlocked this session).
+- Open RFIs awaiting me: none. RFI-009 (TLD), RFI-011 (validator check 10), RFI-012 (banned moves — to be ANSWERED in Section 4 step 5c per Engineer's direction), RFI-013 (Pages → Workers timing), RFI-014 (email delivery mechanism) all open and pending operator / Engineer.
+- Pre-session validator run: **PASS** (verified at 2026-04-28 23:48 before this entry was filed; HEAD `bb88533`; validator at 289 lines).
+
+**Mechanical sign-in actions completed (per Section 4 prompt steps 1-3):**
+
+1. **Push state verified:** `git ls-remote origin refs/heads/main` returns `bb8853316e2ad1b0a3b05940de9f2bd9a8017245`, matching local main HEAD. No mismatch; no RFI needed.
+
+2. **No new SIGN_OFF magic-string to apply this sign-in.** Section 3 sign-off magic-string was applied at the prior (INSP-002) session's sign-in; no operator chat sign-off has occurred between then and now (INSP-002 + INC-007/008/009 + RFI-013/014 are filed-and-acted-on, not approval-gated). SIGN_OFF.md Sections 0-3 already reflect signed-off status. Section 4 entry is `Status: pending` and will be filled at this session's close.
+
+3. **Counters carried over:** Latest MS = MS-009; Latest DEC = DEC-033; Latest RFI = RFI-014; Latest INC = INC-009; Latest INSP = INSP-002. Section 4 work will mark RFI-012 ANSWERED (Open RFIs list will drop RFI-012; Latest RFI counter unchanged at RFI-014). No new numbered entries expected this session beyond the SIGN_OFF Section 4 entry, unless the audit surfaces something outside scope warranting an RFI.
+
+**Session goal sequence:**
+
+1. Sign-in mechanical actions (push verify, validator PASS).
+2. Section 4 step 4 — line-by-line `state/current.md` verification (Phase, Active MS, Counters, MS chain, Open RFIs, Pending operator actions, Working agreements 1-20, Banned moves divergence inspection).
+3. Section 4 step 5 — RFI-012 resolution per Engineer's direction (PROJECT.md becomes canonical with `Co-Authored-By Claude footers on commits` added as the 10th item; state/current.md mirrors verbatim; RFI-012 marked ANSWERED in `forms/RFI.md`; state/current.md `Open RFIs` list drops RFI-012).
+4. Section 4 step 6 — Pending operator actions audit; mark done / obsolete / still-blocking per current understanding; surface unknowns as Section 4 findings.
+5. Section 4 step 8 — File SIGN_OFF.md Section 4 entry with checklist results, findings, and Notes; `Status: in progress`.
+6. Run validator at end of session — confirm PASS before commit.
+7. Sign-out entry; refresh `state/current.md` `Updated:` timestamp + new dated paragraph in `Last verified working state`.
+8. Single commit: `MS-009 Section 4: state integrity audit + RFI-012 resolution`.
+9. Push immediately per recent precedent (Section 3 was held; INSP-002 was pushed; Section 4 follows the INSP-002 push posture per prompt step 12 — "recent precedent has been push immediately for sections that don't need review-before-push").
+
+---
+
+### 2026-04-28 23:56 session end
+
+- Role: Builder
+- Outcome: **MS-009 Section 4 (state integrity)** work complete; SIGN_OFF.md Section 4 entry filed `Status: in progress` awaiting operator chat sign-off. **RFI-012 closed** via PROJECT.md-as-canonical resolution per INSP-002 MEDIUM-7 + Engineer's direction in the Section 4 prompt. **PROJECT.md banned-moves bullet list extended from 9 to 10 items** (added: `` `Co-Authored-By Claude` footers on commits — operator-attributed commits only; AI-assistance attribution is a project policy decision filed as DEC if/when revisited.``). **state/current.md banned-moves section replaced with the 10 PROJECT.md items verbatim** (mirror header is now accurate). **Pending operator actions list pruned**: README self-hosting wording amendment removed as obsolete (operator commit `bf2d661` shipped the wording per DONE-005 evidence); Cloudflare Pages line annotated with RFI-013 dependency conditional; GitHub repo description line annotated with API-verification context. Section 4 audit clean across all eight sub-areas (Phase line, Active MS line, counters, MS chain, Open RFIs, pending operator actions, working agreements 1-20, banned moves match). No DONE filed (DONE-009 only fires after Section 8 per MS-009 prompt). No new numbered entries (DEC / RFI / INC / MS) filed this section.
+- Files touched:
+  - `Desktop/UnoAi/PROJECT.md` (banned-moves list extended from 9 to 10 items — added `Co-Authored-By Claude` footers rule as the 10th bullet at the end of the existing list, immediately before the `---` separator that precedes the `## Sensitive content` section)
+  - `Desktop/UnoAi/forms/RFI.md` (RFI-012 entry: `Operator decision:` field updated from `pending` to `ANSWERED 2026-04-28 via MS-009 Section 4 + INSP-002 MEDIUM-7`; `Answer:` field replaced with the resolution summary citing the 9→10 item PROJECT.md bullet extension and the 5+1→10 item state/current.md replacement)
+  - `Desktop/UnoAi/forms/SIGN_OFF.md` (Section 4 entry filled with `Status: in progress` / `Date filed: 2026-04-28` / 8 checklist items / 4 findings / 5 notes; Date signed and Operator sign-off remain `pending` until operator chat sign-off)
+  - `Desktop/UnoAi/forms/SITE_LOG.md` (sign-in already filed at session start; this sign-out)
+  - `Desktop/UnoAi/state/current.md` (sign-in: no changes; mid-session: `Open RFIs` list drops RFI-012 + closure-line note appended; pending operator actions list reduced from 6 to 5 entries with two annotations; banned moves section replaced with 10 PROJECT.md items verbatim; sign-out: `Updated:` timestamp refreshed, `Active MS` line revised to reflect Section 4 status, new dated paragraph at top of `Last verified working state` summarising the session arc)
+- Validator run at end: **PASS** (verified before commit; HEAD will be the close-out commit; validator at 289 lines unchanged — no validator code change in this section).
+- gitleaks scan at end: pending — pre-commit hook will run gitleaks as step 1 of 5.
+- cspell run at end: pending — pre-commit hook will run cspell as step 5 of 5. New banned-moves bullet content is en-GB compliant prose plus already-known project terms; no anticipated dictionary additions.
+- Format / Lint at end: pending — pre-commit hook will run Prettier as step 3 and ESLint as step 4. No staged code files in this section, so steps 3 and 4 short-circuit cleanly per the hook's `[ -n "$STAGED_FILES" ]` guard.
+- state/current.md updated: **YES**.
+- Next action: commit + push (5-step hook fires gitleaks → validator → Prettier → ESLint → cspell). Then hold for operator chat sign-off of Section 4 + the MS-009 Section 5 unlock signal. **Section 5 (form integrity + 11th validator check) is future-session work**; this session deliberately ends at the Section 4 boundary per MS-009 prompt rules of engagement.
+
+**Handover notes:**
+
+1. **RFI-012 closed in this session is the first RFI closure since RFI-010 (closed via DEC-032 at MS-007).** Both closures used per-session resolution paths: RFI-010 resolved by introducing a new mechanism (DEC-032 magic-string), RFI-012 resolved by applying an external-review-recommended structural choice (PROJECT.md canonical + state mirror per INSP-002 MEDIUM-7). Closure-line notes for RFI-010 and RFI-012 are now both visible at the bottom of `state/current.md`'s `Open RFIs` section as a permanent breadcrumb trail.
+
+2. **Pending operator actions list now reads 5 entries, down from 6.** The removal of "Optional: README self-hosting wording amendment" was driven by audit evidence (operator commit `bf2d661` already shipped the wording; MS-005 close-out captured the heading-marker fix; the list entry was a phantom) rather than operator confirmation. If operator wants the entry restored — for example because the wording itself is up for re-evaluation — it can be added back via a one-line edit; the audit reason is documented in SIGN_OFF Section 4 Finding 2 for traceability.
+
+3. **PROJECT.md banned-moves bullet 10 introduces a new project-level rule for the first time since MS-001 / MS-002 era authoring of the original 9 bullets.** Per Engineer's direction in the Section 4 prompt, the addition does not require a DEC because it formalises an existing operational rule (commit-attribution-operator-only as established during MS-003) into the PROJECT.md governance surface. Future modifications to the banned-moves list — additions, removals, or wording changes — should default to filing a DEC per Procedure 4 unless similarly Engineer-directed in a structured prompt.
+
+4. **Verbatim mirror has one residual cross-reference observation logged as Finding 3 (informational, not blocking).** PROJECT.md banned-moves bullet 9 (`Sensitive content list below`) is a forward-reference that resolves only inside PROJECT.md; the verbatim mirror in state/current.md inherits the `below` phrasing without a target. Reader-impact is anchored by the `(mirror of PROJECT.md, restated for session-start visibility)` header. Per the verbatim-mirror direction the bullet stays; future Engineer revisit (e.g. MS-011) could rephrase or add a `(see PROJECT.md)` parenthetical if mirror-quality concerns surface.
+
+5. **Active MS line carries a known turnover artefact (Finding 4 informational).** The "this session's sign-in" phrasing in `state/current.md:38` was authored in the INSP-002 session; a future-session reader naturally re-binds "this session" to the current session, which is mildly misleading on the historical referent. The line is rewritten at this Section 4 sign-out per standard sign-out state-update procedure, so the new phrasing is current-session-anchored. Logging here so future state-integrity audits know this line's `this session` phrasing rotates with each sign-out and is not a structural defect.
+
+6. **Counter state at sign-out:** Latest MS = MS-009; Latest DEC = DEC-033; Latest RFI = RFI-014 (unchanged — RFI-012 closure does not advance the counter); Latest INC = INC-009; Latest INSP = INSP-002. No new numbered entries were filed this section.
+
+7. **Section 4 was a single-section session per MS-009 prompt rules of engagement.** Sections 4+5 in one session was not authorised. Next session: operator chat sign-off of Section 4 → Section 5 (form integrity + retroactive DONE sign-off + 11th validator check) unlocks → next Builder session begins Section 5. The prompt explicitly notes Section 5 is the largest remaining section and warrants fresh-session focus.
+
+8. **Pause-at-blocker discipline operated zero times this section.** All Section 4 work fit within the explicit step instructions (steps 4-7) or the documented Engineer's-direction-confirmed resolution (step 5b/c on RFI-012). Working agreement #18 (explicit-approval-per-step) had no triggering moments this session — the Section 4 prompt itself encoded the approval for the RFI-012 resolution direction. Quiet single-session.
+
+9. **Push posture per operator's standing preference.** Reaper will push immediately after commit per the Section 4 prompt's step 12 — "recent precedent has been push immediately for sections that don't need review-before-push." Section 4 is audit + a contained structural change (banned-moves mirror sync) with the resolution direction pre-confirmed by the prompt; no review-before-push gate applies.
