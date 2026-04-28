@@ -392,3 +392,37 @@ These are locked at project start. Override only via a new DECISION entry that e
 - **Reason:** stateless agents need code that documents itself. Comments are not decoration; they're load-bearing infrastructure for cold-start context recovery. Convention drift in early files surfaces as hours of refactoring in Phase 5+.
 - **Reversibility:** relaxing conventions is cheap; tightening later means retroactive header additions across all files. Lock now, before Phase 1 introduces the first code file.
 - **Affects:** every code file in Phase 1 onward. Validator does not currently enforce these conventions — review at MS sign-off is the enforcement layer through Phase 1; lint rules considered for MS-006.
+
+### DEC-028 — Code directory structure locked
+- **Date:** 2026-04-28
+- **Decided by:** operator
+- **Decision:** Source code lives under `src/` per the SvelteKit-plus-project layout in PROJECT.md "Code directory structure" subsection. Subdirectories under `src/lib/`: `auth/`, `chat/`, `crisis/`, `persona/`, `storage/`, `shared/`, `server/`. Server-only code lives in `src/lib/server/` (SvelteKit prevents client import) or `src/routes/api/`. Tests live in `__tests__/` subdirectories next to code; e2e tests at `test/e2e/`; fixtures at `test/fixtures/`.
+- **Boundaries** enforced by SvelteKit conventions (`lib/server/`) and DEC-required for crossings. Adding a new top-level directory under `src/lib/` requires a DEC. Subdirectories under existing categories do not.
+- **Reason:** structural decisions get expensive to change once code lands. Fixing the structure now while no product code exists is cheap. Stateless agents reading the code need predictable paths; ad-hoc structure forces every onboarding agent to re-derive the layout.
+- **Reversibility:** clean now (skeleton dirs only contain `.gitkeep`). Expensive once Phase 1+ code depends on the structure.
+- **Affects:** all Phase 1+ code organization, all import paths, all test file locations.
+
+### DEC-029 — Test layout convention
+- **Date:** 2026-04-28
+- **Decided by:** operator
+- **Decision:** Unit tests live in `__tests__/` subdirectories next to the code under test (e.g. `src/lib/auth/__tests__/sign-token.test.ts`). Vitest glob `src/**/*.{test,spec}.{js,ts}` is a permissive superset (sv scaffold default) — convention enforced at review level. Playwright e2e tests live at `test/e2e/`; sv scaffold default `testMatch: **/*.e2e.{ts,js}` is also permissive. Test fixtures live at `test/fixtures/`; private fixtures at `test/fixtures/private/` (gitignored).
+- **Reason:** discoverability for stateless agents — tests live where the code is, not in a separate parallel tree. Co-location reduces cold-start search cost when an agent is reading a file and wants to know what tests cover it.
+- **Reversibility:** cheap pre-Phase-1 (no real tests yet).
+- **Affects:** all test files going forward. Test config tightening (e.g. switch Vitest glob to require `__tests__/`) deferred until sv scaffold demo files are removed in a future MS.
+
+### DEC-030 — Errors and logging conventions
+- **Date:** 2026-04-28
+- **Decided by:** operator
+- **Decision:** Typed error class hierarchy in `src/lib/shared/errors.ts` (created when first needed). Server (Cloudflare Worker) logs JSON-line via `console.*` with no PII (timestamp, level, event, hashed-context fields only). Client logs `console.*` in dev, never sent to remote endpoint in production — privacy claim ("conversations stay on your device") forbids telemetry. No external observability tooling (Sentry, Datadog, etc.) without a DEC.
+- **Reason:** privacy posture is the product. Locking the "no remote logging" rule into convention prevents drift toward standard SaaS observability defaults. Errors-with-typed-classes makes catch-and-handle robust; generic Error is reserved for truly unexpected.
+- **Reversibility:** hard to walk back once telemetry ships. Reversing would mean a privacy-page rewrite + customer notice. Lock now is cheap.
+- **Affects:** all error handling and logging in Phase 1+. Future Sentry/Datadog/etc. requires a DEC that supersedes DEC-030.
+
+### DEC-031 — Dependency policy
+- **Date:** 2026-04-28
+- **Decided by:** operator
+- **Decision:** Every new npm dependency requires a DEC. Standing scaffold deps from MS-003 (SvelteKit, Svelte 5, TypeScript, Vite, Vitest, Playwright, ESLint, Prettier, Tailwind v4, `@sveltejs/adapter-cloudflare`) do not need DECs to update — only to remove or replace. Removing an unused dep does not require a DEC.
+- **DEC entries for new deps capture:** what the dep does, why we need it, alternatives considered, license, maintenance status, client-vs-server, bundle-size impact (if client).
+- **Reason:** dependency creep is how privacy stories die and how indie projects accumulate maintenance burden. DEC-level review is cheap; reversing a misjudged dependency post-launch is not. The "<50 lines of our own code" alternative test is the gate — if we can write it, we should.
+- **Reversibility:** trivial to relax; costly to enforce retroactively.
+- **Affects:** all future dependency additions. Anticipated near-term: Ed25519 signing library (Phase 1), IndexedDB wrapper (Phase 3), `@anthropic-ai/sdk` (Phase 6) — each requires its own DEC at use.

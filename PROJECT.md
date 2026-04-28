@@ -143,6 +143,42 @@ Enforcement is the `gitleaks` pre-commit hook in `.githooks/pre-commit` (activat
 
 This project is built by stateless AI agents. Code lives inside an infrastructure designed to make context recoverable from cold start. The following conventions are mandatory for all code committed to this repo (per DEC-027).
 
+### Code directory structure
+
+All source code lives under `src/`. The structure follows SvelteKit conventions plus project-specific conventions (per DEC-028):
+
+```
+src/
+├── routes/                ← SvelteKit routes (file-based)
+│   ├── +layout.svelte     ← root layout
+│   ├── +page.svelte       ← landing page
+│   └── api/               ← API endpoints (server-only)
+│       └── webhook/
+│           └── +server.ts ← Lemon Squeezy webhook
+├── lib/                   ← shared modules, importable as $lib
+│   ├── auth/              ← license token sign/verify
+│   ├── chat/              ← chat UI components, message handling
+│   ├── crisis/            ← crisis classifier (Phase 6)
+│   ├── persona/           ← system prompt assembly (Phase 4)
+│   ├── storage/           ← IndexedDB wrappers (Phase 3)
+│   └── shared/            ← cross-cutting types, constants, utils
+├── app.html               ← HTML shell
+├── app.css                ← global styles (minimal)
+└── app.d.ts               ← ambient types
+```
+
+Tests live next to code in `__tests__/` subdirectories (see Test layout). Fixture files for tests live in `test/fixtures/` at repo root.
+
+Server-only code (anything that must NOT ship to the browser, including signing keys, webhook secrets, server-side validation) lives under `src/routes/api/` or in `src/lib/server/`. The latter is a SvelteKit convention that prevents accidental client-side import.
+
+Boundaries:
+- `src/lib/server/` is never imported by client code.
+- `src/routes/api/` never imports client-only modules.
+- `src/lib/` modules can be imported by both, must be isomorphic.
+- Crossing these boundaries requires a DEC.
+
+Adding a new top-level directory under `src/lib/` requires a DEC. Subdirectories under existing categories do not.
+
 ### File header convention
 
 Every code file (`.ts`, `.js`, `.svelte`, `.sh`) begins with a header comment block. Format:
@@ -187,6 +223,30 @@ Test files describe behavior in plain language at the top, before any test code:
 
 A future agent reading the test file should understand what the code does without reading the code itself.
 
+### Test layout
+
+Unit tests live next to the code they test, in a `__tests__/` subdirectory (per DEC-029):
+
+```
+src/lib/auth/
+├── sign-token.ts
+└── __tests__/
+    └── sign-token.test.ts
+```
+
+This keeps tests discoverable from the file under test without polluting the parent directory's import surface. Vitest picks them up via configured glob (`src/**/__tests__/**/*.test.ts`).
+
+Playwright e2e tests live at `test/e2e/` at repo root.
+
+Test fixtures (sample data, prompt files, mock responses) live at `test/fixtures/` at repo root. Specific fixture files are referenced by absolute path in the test file:
+
+- `test/fixtures/destructive_prompts.json` (Phase 4)
+- `test/fixtures/crisis_prompts.json` (Phase 6)
+
+Fixtures with operator-private content (real conversation transcripts, real test users) live under `test/fixtures/private/` and are gitignored.
+
+The "Tests as documentation" rule above applies: every test file begins with a header describing the behavior under test in plain language. A future agent should understand what the code does by reading the test, not the code.
+
 ### Naming conventions
 
 - Files: kebab-case for `.ts`/`.js`/`.svelte` (e.g. `sign-token.ts`)
@@ -195,7 +255,58 @@ A future agent reading the test file should understand what the code does withou
 - Constants: SCREAMING_SNAKE_CASE (e.g. `MAX_PAYLOAD_BYTES`)
 - Environment variables: SCREAMING_SNAKE_CASE matching Cloudflare convention (e.g. `LICENSE_PRIVATE_KEY`)
 
-Deviations from these conventions require a DEC.
+Framework-dictated filenames (`+page.svelte`, `+layout.svelte`, `+server.ts`, etc.) are exempt from kebab-case enforcement. The naming rule applies to project-authored files only.
+
+Deviations from these conventions require a DEC. ESLint enforces identifier naming mechanically (per DEC-027 + Scope F of MS-006); filename naming stays at review-level discipline because framework conventions take precedence over project conventions for filenames.
+
+### Errors and logging
+
+This is a browser-first product. Server-side surface is minimal (Cloudflare Workers for webhook + license token issuance). Logging conventions match the surface (per DEC-030).
+
+**Errors:**
+
+- All thrown errors extend a project-defined error class hierarchy (`src/lib/shared/errors.ts`, created when first needed). At minimum: `AuthError`, `ValidationError`, `NetworkError`, `CrisisRoutingError`.
+- Generic `Error` is acceptable only for truly unexpected conditions. Anything that can be caught and handled meaningfully gets a typed error class.
+- Errors include a `code` string field (machine-readable) and a `message` field (human-readable). The code is stable across versions; the message can change.
+- Errors never include user-input verbatim in the message field. PII discipline.
+
+**Logging — server (Cloudflare Worker):**
+
+- `console.log` / `console.error` is acceptable. Workers logs surface in Cloudflare dashboard.
+- Log lines are JSON, one per line, with fields: `timestamp`, `level`, `event`, `...context`.
+- No PII in logs. No email, no full license keys, no conversation content. Hashed identifiers only.
+
+**Logging — client (browser):**
+
+- `console.*` is acceptable in development.
+- In production, console output is fine but never sent to a remote endpoint. The product's privacy claim ("conversations stay on your device") forbids telemetry.
+- Errors that would be useful to surface to the user bubble up through the chat UI as visible messages, not as console-only logs.
+
+No external observability tooling (Sentry, Datadog, etc.) without a DEC. Adding any such tool changes the privacy posture and requires a deliberate decision.
+
+### Dependency policy
+
+Adding a new npm dependency requires a DEC (per DEC-031). The DEC captures: what the dependency does, why we need it, what alternatives were considered, license, maintenance status, and whether it ships to the client or stays server-only.
+
+Before adding any dependency, check:
+
+- License compatibility with PolyForm Noncommercial 1.0.0 (most permissive licenses are fine; copyleft requires DEC-level review).
+- Maintenance status (last commit, open-issue trends, sole-maintainer risk).
+- Bundle size impact for client deps (matters for conversion-rate on the landing page).
+- Alternative: can we write the equivalent in <50 lines of our own code? If yes, prefer that.
+
+**Standing approved dependencies** (from MS-003 scaffold + MS-006 setup):
+
+- SvelteKit, Svelte 5, TypeScript, Vite, Vitest, Playwright, ESLint, Prettier, Tailwind v4, `@sveltejs/adapter-cloudflare`.
+- These do not need DECs to update; they need DECs to remove or replace.
+
+**Anticipated future dependencies** (will need DECs at use):
+
+- Ed25519 signing library (Phase 1) — candidates: `@noble/curves`, `tweetnacl`.
+- IndexedDB wrapper (Phase 3) — candidates: `idb`, raw.
+- Anthropic SDK (Phase 6) — likely `@anthropic-ai/sdk`.
+
+Removing a dependency does not require a DEC if it's unused.
 
 ### When in doubt
 

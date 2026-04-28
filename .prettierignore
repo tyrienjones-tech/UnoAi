@@ -7,3 +7,13 @@ bun.lockb
 
 # Miscellaneous
 /static/
+
+# Hand-formatted documentation — Prettier reformat would mangle
+# tables, blockquotes, numbered lists, and intentional whitespace
+# in PROJECT.md / PROCEDURES.md / PLAN.md / README.md / forms/.
+# Per MS-006: docs are author-formatted; code is Prettier-formatted.
+*.md
+state/
+
+# Generated / config (Prettier doesn't gracefully handle these)
+*.jsonc

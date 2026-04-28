@@ -432,3 +432,52 @@ INF  no leaks found
   - **INC-006 body has factual claims about "H2a-H2c shipped" in MS-004 that don't match MS-004's actual file content.** Builder transcribed verbatim per operator instruction with inline Builder-note. The substantive claim (chain enforcement didn't ship) is correct; the H2a-e labeling appears to reference an internal operator/engineer mental model not visible in MS-004's literal scope. Flagging here in case operator wants to revise.
   - **Synthetic-test co-fires:** the chain-check synthetic tests (MS-100/Depends-on-MS-099 and MS-100/Depends-on-MS-001) also triggered the numbering-gap check and state-counter checks, because adding a synthetic MS-100 breaks both. The chain-check FAIL message fires with the correct MS-NNN naming on both branches. Captured in DONE-005 proof.
   - **Builder interpretation note carried from sign-in:** R9 documentation went into README's "For agents..." section because that section lives in README, not PROJECT.md. PROJECT.md's "For agents reading the code" section is *new content* added in this MS for code conventions, distinct from README's session-onboarding section. Both sections coexist as intended.
+
+---
+
+### 2026-04-28 02:00 session start
+
+- Role: Builder
+- Session goal: implement MS-006 — code structure conventions (directory layout, test layout, errors/logging, dependency policy in PROJECT.md), code-style enforcement (ESLint + Prettier wired into pre-commit), validator 10th check (README ↔ state sync, deferred from MS-005), .env.example + .gitleaks.toml extensions, four DECs (DEC-028 through DEC-031).
+- Resuming from: DONE-005 (signed 2026-04-28). Operator added engineer working agreement #11 in DONE-005 sign-off — to be folded into state/current.md at this sign-out.
+- Context loaded: PROJECT.md, PROCEDURES.md, state/current.md.
+- Open MSes: none (MS-005 closed).
+- Open RFIs awaiting me: none. RFI-009 (TLD) and RFI-010 (DONE sign-off mechanism) are open but not Builder-blocking; RFI-010 is MS-007 scope per operator's MS-006 prompt.
+- Pre-session validator run: **PASS** (verified at 2026-04-28 02:00 before this entry was filed).
+
+---
+
+### 2026-04-28 03:00 session end
+
+- Role: Builder
+- Outcome: DONE-006 to follow this commit. MS-006 scope complete: 4 PROJECT.md subsections (Code directory structure / Test layout / Errors and logging / Dependency policy), skeleton `src/lib/{auth,chat,crisis,persona,storage,shared,server}/.gitkeep` + `src/routes/api/.gitkeep` + `test/{fixtures,e2e}/.gitkeep`, `.env.example`, `.gitleaks.toml` extended with env-var-name rules + capture-group fix on existing rule, ESLint naming-convention rule (0 false positives, error severity), pre-commit hook 4-step chain (gitleaks → validator → Prettier-staged → ESLint-staged), validator 10th check (README ↔ state sync, hard-fail on parse error), Procedure 9 README-sync trust-based note removed (now mechanical), DEC-028..031 filed, agreement #11 added to running list.
+- Files touched (~16 files):
+  - `Desktop/UnoAi/PROJECT.md` (4 new subsections + framework-filename exception + cross-references to DEC-028..031)
+  - `Desktop/UnoAi/PROCEDURES.md` (Procedure 9 README-sync mechanical-now note)
+  - `Desktop/UnoAi/.gitignore` (test/fixtures/private/)
+  - `Desktop/UnoAi/.env.example` (created)
+  - `Desktop/UnoAi/.gitleaks.toml` (env-var rules + capture-group fix on lemon-squeezy-webhook-secret + placeholder allowlist extended)
+  - `Desktop/UnoAi/.githooks/pre-commit` (Prettier + ESLint steps after validator; staged-files filter)
+  - `Desktop/UnoAi/.prettierignore` (markdown + state/ excluded — author-formatted)
+  - `Desktop/UnoAi/eslint.config.js` (naming-convention rule, error severity, $-prefix carve-out)
+  - `Desktop/UnoAi/package.json` (lint = eslint only; format:check separated; format unchanged)
+  - `Desktop/UnoAi/scripts/validate.sh` (10th check; 277 lines)
+  - `Desktop/UnoAi/forms/DECISION.md` (DEC-028..031)
+  - `Desktop/UnoAi/forms/METHOD_STATEMENT.md` (MS-006 entry + approval status)
+  - `Desktop/UnoAi/forms/SITE_LOG.md` (sign-in + sign-out)
+  - `Desktop/UnoAi/state/current.md` (counters, MS chain bumped, agreement #11 added, format-spec comment extended for check 10)
+  - `Desktop/UnoAi/forms/DONE.md` (DONE-006 to follow)
+  - 10 `.gitkeep` skeleton files in src/lib/, src/routes/api/, test/
+  - 4 sv-scaffold files reformatted by Prettier (eslint.config.js, svelte.config.js, tsconfig.json, src/lib/vitest-examples/Welcome.svelte.spec.ts)
+- Validator run at end: **PASS** (verified at 2026-04-28 03:00 before commit).
+- state/current.md updated: **YES** (counters, MS chain section, working agreements #11 added, phase line current, last-verified-state section).
+- Next action: commit + push (hook fires 4-step chain). Then DONE-006 + close-out commit. Then hold for MS-007 prompt.
+- Handover note:
+  - **Validator at 277 lines** (8 over Scope G4's 270 cap). Same overrun pattern as MS-005's 237/220 — block-aware parsing requires more lines than per-check estimate. Working agreement #10 covers this; surfaced for design-review at DONE-006 sign-off.
+  - **Two real bugs caught and fixed mid-session:**
+    1. ESLint rule severity `'warn'` initially didn't block hook (ESLint exits 0 on warnings). First synthetic test commit landed at SHA `7d4b513`. Reset via `git reset HEAD~1` (mixed). Severity changed to `'error'`; second test correctly blocked.
+    2. gitleaks rule `lemon-squeezy-webhook-secret` had capture-group around the LABEL not the VALUE — value-based placeholder allowlist didn't trigger. Restructured rule to capture the value. Now `.env.example` and METHOD_STATEMENT.md prose mentions allowlist-clean.
+  - **State counter bumped mid-session** ahead of normal sign-out timing: when MS-006 entry was filed in METHOD_STATEMENT.md, the actual highest MS became MS-006 but state still said MS-005. Validator check 7 would have failed during synthetic test 4-step chain run. Builder bumped state forward in Scope I-early so synthetic tests could exercise the full hook. State is correct at sign-out.
+  - **Working agreement #11** (operator-supplied wording from DONE-005 sign-off) appended to the running list. No paraphrase. Matches the pattern of the prior agreements.
+  - **Vitest + Playwright config defaults** are a permissive superset of the convention. No edits — convention enforced at review level. Tightening deferred until sv scaffold demo files are removed in a future MS.
+  - **Markdown + state/ added to .prettierignore.** PROJECT.md, PROCEDURES.md, PLAN.md, README.md, all forms, state/current.md are author-formatted; Prettier reformat would mangle tables, blockquotes, numbered lists.

@@ -36,3 +36,6 @@ vite.config.ts.timestamp-*
 
 # Playwright
 test-results
+
+# Test fixtures with operator-private content
+test/fixtures/private/

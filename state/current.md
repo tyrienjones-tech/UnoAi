@@ -1,12 +1,23 @@
 <!--
-Format-spec for the validator (per DEC-026 + R8):
+Format-spec for the validator (per DEC-026 + R8 + MS-006 Scope G):
 
-The validator script (scripts/validate.sh) parses the four "Latest" counter
-lines below using strict regex. **Do not reformat these lines.** The expected
-format for each is a literal "Latest XXX:" prefix followed by an XXX-NNN
-identifier. The validator will hard-fail if a counter line cannot be parsed,
-because line-format drift is exactly the failure mode mechanical enforcement
-should catch. If you need to add commentary, put it on a separate line.
+Two parsers in scripts/validate.sh read this file:
+
+(a) Counter parser (check 7). Reads lines starting with "Latest XXX:" where
+    XXX ∈ {MS, DEC, RFI, INC} and the rest of the line contains an "XXX-NNN"
+    identifier. **Do not reformat the four "Latest" counter lines.**
+
+(b) Phase parser (check 10, README ↔ state sync). Reads the line starting
+    with "Current:" inside the "## Phase" section, extracts the first
+    "Phase X status" identifier, and compares against README's "## Status"
+    first non-empty line. **Do not reformat the "Current:" line** — keep it
+    starting with "Current: Phase X status..." so the parser can extract
+    the identifier. Reformatting either side causes the pre-commit hook to
+    hard-fail with a "README Status section out of sync" message.
+
+The validator hard-fails if a parser cannot read these lines, because
+line-format drift is exactly the failure mode mechanical enforcement should
+catch. If you need to add commentary, put it on a separate line.
 
 Auto-update timestamp: the "Updated:" line below should be refreshed on every
 sign-out where state changes, per Procedure 9 (session lifecycle).
@@ -14,22 +25,22 @@ sign-out where state changes, per Procedure 9 (session lifecycle).
 
 # UnoAi — Current State
 
-Updated: 2026-04-28 01:45 (auto-updated at session sign-out)
+Updated: 2026-04-28 02:30 (auto-updated at session sign-out — bumped mid-session in MS-006 Scope I-early so validator clears check 7 before Scope F4 synthetic tests)
 
 ## Phase
 
-Current: Phase 0b complete. Infrastructure phase in progress (MS-005). Phase 1 blocked on MS-006.
-Last completed: MS-004 (DONE-004 signed 2026-04-28).
-Next: MS-006 (code structure + dev tooling) → Phase 1 (landing + payment + license).
+Current: Phase 0b complete. Infrastructure phase in progress (MS-006). Phase 1 blocked on MS-007.
+Last completed: MS-005 (DONE-005 signed 2026-04-28).
+Next: MS-007 (agent onboarding + RFI-010 resolution) → Phase 1 (landing + payment + license).
 
 ## Active MS
 
-MS-005 in progress (chain validator check + code conventions for AI agents + README markdown fixes).
+MS-006 in progress (code structure + dev tooling).
 
 ## Counters (latest of each)
 
-Latest MS:  MS-005
-Latest DEC: DEC-027
+Latest MS:  MS-006
+Latest DEC: DEC-031
 Latest RFI: RFI-010
 Latest INC: INC-006
 
@@ -39,8 +50,10 @@ Latest INC: INC-006
 - MS-002: DONE (DONE-002, signed 2026-04-27).
 - MS-003: DONE (DONE-003, signed 2026-04-27).
 - MS-004: DONE (DONE-004, signed 2026-04-28).
-- MS-005: in progress.
-- MS-006: pending; depends on MS-005 (code structure + dev tooling, scope TBD).
+- MS-005: DONE (DONE-005, signed 2026-04-28).
+- MS-006: in progress.
+- MS-007: pending; depends on MS-006 (agent onboarding + RFI-010 resolution, scope TBD).
+- [first Phase 1 MS]: pending; depends on MS-007.
 
 ## Open RFIs
 
@@ -58,7 +71,9 @@ Latest INC: INC-006
 
 ## Last verified working state
 
-2026-04-28 (MS-005) — Validator gained 9th check (MS chain dependency). Both branches verified via synthetic tests: target-missing ("MS-099 does not exist") and target-undone ("MS-001 exists but is not yet DONE"). PROJECT.md "For agents reading the code" section added (DEC-027). README markdown fixes landed (`## Self-hosting` heading restored, Status line current). Validator is 237 lines, 9 checks; the 150-line guidance from MS-004 is retired per working agreement #10. INC-006 captured the MS-004 enforcement-gap pattern; RFI-010 filed for the DONE sign-off recording mechanism (deferred to MS-006).
+2026-04-28 (MS-006) — Validator gained 10th check (README ↔ state sync). Synthetic test verified: state's "Current: Phase 99 in progress" is correctly caught against README's "Phase 0b complete". Final clean run PASS. Validator is 277 lines, 10 checks. Pre-commit hook chain extended to 4 steps: gitleaks → validator → Prettier (staged) → ESLint (staged); all four enforce on every commit. ESLint naming-convention rule landed with 0 false positives on existing scaffold. PROJECT.md "For agents reading the code" gained 4 new subsections (Code directory structure, Test layout, Errors and logging, Dependency policy). `.env.example` placeholder file landed with gitleaks rule capture-group fix so placeholder values pass cleanly. Skeleton dirs created under `src/lib/` for Phase 1+ work. DEC-028..031 filed (directory structure, test layout, errors+logging, dependency policy).
+
+2026-04-28 (MS-005) — Validator gained 9th check (MS chain dependency). Both branches verified via synthetic tests: target-missing ("MS-099 does not exist") and target-undone ("MS-001 exists but is not yet DONE"). PROJECT.md "For agents reading the code" section added (DEC-027). README markdown fixes landed (`## Self-hosting` heading restored, Status line current). Validator was 237 lines at MS-005 close, 9 checks; the 150-line guidance from MS-004 is retired per working agreement #10. INC-006 captured the MS-004 enforcement-gap pattern; RFI-010 filed for the DONE sign-off recording mechanism (deferred to MS-007).
 
 2026-04-28 (MS-004) — Session lifecycle live. Validator (`scripts/validate.sh`) verified PASS on clean state. All 5 synthetic violations correctly detected. Pre-commit hook runs gitleaks + validator in sequence; both must PASS. Two real validator bugs caught during E1 testing (octal leading-zero parsing, subshell variable isolation) and fixed.
 
@@ -76,6 +91,7 @@ Latest INC: INC-006
 8. Tooling that enforces discipline must be tested against synthetic violations before shipping. Untested validators are worse than no validator — they create false confidence (DONE-004).
 9. DONE sign-offs require mechanical verification of new tooling, not visual inspection. If a check was specced, the sign-off must include "ran the check against a synthetic violation, confirmed FAIL." Visual inspection of the script's presence is not sufficient (INC-006).
 10. Bash budget caps for the validator are calibrated against the existing per-check complexity, not the new check's complexity. New checks that require new parsing primitives (block tracking, multi-file walks, structured parsing) will exceed the per-check budget by 2–3× and that's expected. Future budgets should be set at "current size + estimated new check size" rather than fixed caps (MS-005 RFI on validator size). **Numbering note:** operator wrote "#11" when introducing this; Builder renumbered to next-sequential **#10** per discipline #5. Operator can correct at DONE-005 sign-off if the skip was intentional.
+11. Engineer prompts to Builder reflect committed file state, not chat-discussion state. References to prior "H1, H2, H2a" or similar inline-discussion labels are valid in chat but should not be replicated in prompts to Builder unless those labels also exist in committed files. When referencing prior decisions, cite the DEC/MS/INC number, not the chat-message annotation (DONE-005 sign-off).
 
 ## Banned moves (mirror of PROJECT.md, restated for session-start visibility)
 

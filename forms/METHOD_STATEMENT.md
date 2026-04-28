@@ -643,3 +643,191 @@ These are the five items in the Builder's reply preceding this MS — restated h
 - **New working agreement #10 (operator wrote "#11"; Builder renumbered to next-sequential per discipline #5):** "Bash budget caps for the validator are calibrated against the existing per-check complexity, not the new check's complexity. New checks that require new parsing primitives (block tracking, multi-file walks, structured parsing) will exceed the per-check budget by 2–3× and that's expected. Future budgets should be set at 'current size + estimated new check size' rather than fixed caps." Operator can correct the renumber at DONE-005 sign-off if the skip was intentional.
 - **DEC-026 update:** the 150-line validator guidance from MS-004 is retired. Caps revisited per-MS based on what's being added.
 - **Scope C4:** README↔state synchronization is trust-based through MS-005, may gain mechanical enforcement in MS-006 with refactored validator.
+
+---
+
+### MS-006 — Code structure + dev tooling
+- **Date:** 2026-04-28
+- **Agent:** Reaper-1
+- **Phase:** 0b infrastructure layer (post-MS-005, pre-MS-007)
+- **Session start:** 2026-04-28 02:00 (see SITE_LOG)
+- **Task:** Eight scopes covering structural conventions and mechanical enforcement that Phase 1 product code will follow. **Scope A** directory structure under `src/` + skeleton with `.gitkeep`. **Scope B** verify naming conventions from MS-005 (no duplication). **Scope C** test layout convention + Vitest/Playwright config check. **Scope D** errors-and-logging convention. **Scope E** `.env.example` + gitignore + .gitleaks.toml additions. **Scope F** ESLint naming-convention rules + Prettier/ESLint into pre-commit hook (4-step chain). **Scope G** validator 10th check (README ↔ state sync, deferred from MS-005). **Scope H** dependency policy. Plus **DEC-028..031** (directory structure, test layout, errors/logging, dependency policy) and state update for MS-006-in-progress.
+- **Depends on:** MS-005 (DONE-005 signed 2026-04-28).
+- **Linked RFIs / decisions:**
+  - **New:** DEC-028 (directory structure), DEC-029 (test layout), DEC-030 (errors+logging), DEC-031 (dependency policy).
+  - **Builds on:** DEC-026 (validator + 9 checks) — adds 10th check. DEC-024 (gitleaks) — adds env-var-name explicit rules. DEC-027 (code conventions) — Scopes A/C/D/H extend the "For agents reading the code" section.
+  - **Doesn't touch:** RFI-010 (DONE sign-off — explicitly MS-007 scope). CONTEXT.md or prompts/ (MS-007 scope). RFI-009 (TLD).
+- **Operator approval:** pending.
+
+**Open items / Builder decisions to surface at MS-006 approval:**
+
+1. **DEC numbering.** Last DEC: DEC-027. Builder will use DEC-028..031 sequentially for the four new entries (Scope A → DEC-028, Scope C → DEC-029, Scope D → DEC-030, Scope H → DEC-031). Per discipline #5, no skips.
+
+2. **ESLint naming-convention rule risk (Scope F2 highest-risk item).** The `@typescript-eslint/naming-convention` rule produces false positives on:
+   - Svelte 5 runes (`$state`, `$derived`, `$props`, `$bindable`, `$effect`) — these are special compiler-recognized variable names that look like camelCase with a `$` prefix.
+   - SvelteKit conventions (`load`, `actions`, `+page.svelte` filename special characters).
+   - File-suffix-based filenames like `+page.svelte`, `+layout.svelte`, `+server.ts` (the `+` prefix is non-standard).
+   Builder approach: configure conservatively. Allow `$`-prefixed names. Allow `+` prefix on filenames via filename-pattern carve-out (or just don't enforce filename-name-convention via lint, leave that to manual review). Run on existing scaffold output; count false positives. If >5 (per Scope F2 explicit cap), RFI before shipping.
+
+3. **Pre-commit hook chain (Scope F3).** Order: gitleaks → validator → Prettier → ESLint. Both Prettier and ESLint should run on STAGED files only (not whole repo) for performance. Builder approach: extract staged files via `git diff --cached --name-only --diff-filter=ACMR` and pass to `prettier --check` and `eslint`. Builder's only design choice here is whether to fail-fast across tools (one tool's fail aborts the rest) or run all four and report all failures. Standard `set -e` pattern fails-fast. Builder default: fail-fast (matches existing hook behavior with gitleaks → validator).
+
+4. **Hook synthetic violation tests (F4).** Mandatory per working agreement #8. Two tests: (a) ESLint violation, (b) Prettier violation. Builder will pick canonical violations:
+   - **ESLint:** introduce a `let foo_bar = 1;` (snake_case variable, violates naming convention) in a temp scratch file under `src/`.
+   - **Prettier:** introduce a deliberately mis-formatted file (long line, bad indent).
+   For each: stage, attempt commit, observe BLOCKED with the correct tool's output, revert. Same revert-after-test pattern as MS-004 E1 / MS-005 chain-check tests.
+
+5. **Validator G1 (README ↔ state) implementation approach.** Operator's spec: "Wording variation is allowed; the phase identifier ('Phase 0b complete', 'Phase 1') must match." Builder approach:
+   - Parse `state/current.md` `## Phase` section, extract the `Current:` line content.
+   - Extract a "phase identifier" from the Current line via regex: capture `Phase \w+` plus the next status word (e.g. "Phase 0b complete", "Phase 1 in progress", "Phase 1 blocked").
+   - Parse `README.md` `## Status` section, extract the first non-empty line.
+   - Apply the same phase-identifier extraction.
+   - Compare. If both extract a `Phase X status` substring and they match (case-insensitive, whitespace-normalized), PASS. Otherwise FAIL with the operator's specified message format.
+   - Falls back to PASS-with-warning if either parse fails (no `Phase` substring found) — better to surface a parse warning than a hard fail for a soft check, OR hard-fail per DEC-026 hard-fail-on-parse-error precedent. **Builder default: hard-fail on parse error**, matching DEC-026's existing pattern (the validator design is "fail closed on ambiguity"). Override at approval if operator wants soft.
+
+6. **.gitleaks.toml E3 — env-var-name explicit rules.** Builder approach: add rules for `LEMON_SQUEEZY_WEBHOOK_SECRET`, `LICENSE_PRIVATE_KEY`, and similar that match the pattern `<NAME>=<non-placeholder-value>`. Need to allow placeholders (`replace_with_real_secret`, `replace_with_base64_ed25519_private_key`). Implementation: regex like `LEMON_SQUEEZY_WEBHOOK_SECRET=(?!replace_)[a-zA-Z0-9_+/=-]{20,}`, and explicit allowlist entries for the placeholder strings.
+
+7. **Validator size budget (Scope G4).** Currently 237. G1 budget: +30. Target: ≤270. Builder will track during implementation; if G1 implementation pushes past 270, RFI per Scope G4 + working agreement #10.
+
+8. **Vitest + Playwright config check (Scope C2/C3).** SvelteKit scaffold may already have correct globs. Builder will inspect first; if defaults match the convention, no edit needed (note in SITE_LOG). If defaults need adjustment, edit + note in SITE_LOG.
+
+9. **Working agreement #11 to fold in at this sign-out.** Operator introduced #11 in DONE-005 sign-off: "Engineer prompts to Builder reflect committed file state, not chat-discussion state. References to prior 'H1, H2, H2a' or similar inline-discussion labels are valid in chat but should not be replicated in prompts to Builder unless those labels also exist in committed files. When referencing prior decisions, cite the DEC/MS/INC number, not the chat-message annotation."
+
+**Plan (numbered, terse, scope-letter order):**
+
+*Scope A — directory structure (PROJECT.md subsection + skeleton dirs):*
+1. Append "Code directory structure" subsection to PROJECT.md "For agents reading the code" section per A1 verbatim.
+2. Create skeleton: `src/lib/{auth,chat,crisis,persona,storage,shared,server}/.gitkeep`, `src/routes/api/.gitkeep`, `test/fixtures/.gitkeep`, `test/e2e/.gitkeep`.
+3. Update `.gitignore` to add `test/fixtures/private/`.
+
+*Scope B — naming conventions verify-only:*
+4. Confirm naming conventions from MS-005 still present in PROJECT.md "For agents reading the code" → "Naming conventions" subsection. No duplication. Note "verified, no edit" in SITE_LOG.
+
+*Scope C — test layout:*
+5. Append "Test layout" subsection to PROJECT.md "For agents reading the code" per C1 verbatim.
+6. Verify Vitest config (`vite.config.ts` since sv 0.15.1 puts vitest config there or in `vitest.config.ts`). Adjust glob to `src/**/__tests__/**/*.test.ts` if needed.
+7. Verify Playwright config. Adjust `testDir` to `test/e2e/` if needed.
+
+*Scope D — errors and logging:*
+8. Append "Errors and logging" subsection to PROJECT.md "For agents reading the code" per D1 verbatim.
+
+*Scope E — environment configuration:*
+9. Create `.env.example` at repo root per E1 verbatim with placeholder values.
+10. Confirm `.gitignore` already has `.env`, `.env.*` patterns from MS-003 scaffold + MS-003 union. Add any missing.
+11. Update `.gitleaks.toml`: add explicit rules for `LEMON_SQUEEZY_WEBHOOK_SECRET` and `LICENSE_PRIVATE_KEY` that match non-placeholder values; extend allowlist with `replace_with_real_secret`, `replace_with_base64_ed25519_private_key`.
+
+*Scope F — code-style enforcement:*
+12. Verify `eslint.config.js` and `.prettierrc` from MS-003 scaffold are present.
+13. Add `@typescript-eslint/naming-convention` rule to `eslint.config.js` configured per Scope B + carve-outs for Svelte 5 runes (`$`-prefix), SvelteKit special filenames (`+`-prefix). Run `npm run lint` against existing scaffold; count false positives. If >5, RFI before continuing. If ≤5, ship.
+14. Update `.githooks/pre-commit`: add Prettier --check and ESLint steps after validator. Both run on staged files only via `git diff --cached --name-only --diff-filter=ACMR`. Fail-fast pattern.
+15. Test the hook: synthetic ESLint violation → confirm BLOCKED → revert. Synthetic Prettier violation → confirm BLOCKED → revert. Document both tests in SITE_LOG.
+16. Verify npm scripts (`lint`, `format`, `format:check`) exist in `package.json`. Add if missing.
+
+*Scope G — validator 10th check:*
+17. Add G1 check to `scripts/validate.sh`: parse state/current.md `## Phase` Current line, extract `Phase X status`; parse README.md `## Status` first non-empty line, extract `Phase X status`; compare. Hard-fail on parse error per Builder default in Open Item 5.
+18. Update validator header comments to enumerate 10 checks (was 9).
+19. Synthetic violation test (Scope G2): edit state/current.md Current line to "Phase 99 in progress", run validator, confirm FAIL with operator's message format, revert, run validator, confirm PASS.
+20. Update PROCEDURES.md Procedure 9: remove the "trust-based discipline pending future enforcement" note about README ↔ state sync — now mechanical.
+
+*Scope H — dependency policy:*
+21. Append "Dependency policy" subsection to PROJECT.md "For agents reading the code" per H1 verbatim.
+
+*Scope I — state update + sign-out:*
+22. Update `state/current.md`:
+    - Bump Updated timestamp.
+    - Phase line: "Phase 0b complete. Infrastructure phase in progress (MS-006). Phase 1 blocked on MS-007."
+    - Active MS: MS-006. MS-005 marked DONE.
+    - Counters: Latest MS=MS-006, Latest DEC=DEC-031, Latest INC=INC-006 (unchanged), Latest RFI=RFI-010 (unchanged).
+    - MS chain status: MS-005 DONE, MS-006 in progress, MS-007 pending depends on MS-006, [first Phase 1 MS] pending depends on MS-007.
+    - Add engineer working agreement #11 to running list.
+    - Update last-verified-state with MS-006 results.
+
+*Scope J — DEC entries:*
+23. File DEC-028 (directory structure), DEC-029 (test layout), DEC-030 (errors and logging), DEC-031 (dependency policy) per J1–J4 verbatim.
+
+*Sign-out + commit:*
+24. Final validator run: PASS.
+25. Sign-out entry in SITE_LOG using new template. Validator PASS, state/current.md updated YES.
+26. `git add . && git commit -m "MS-006: code structure + dev tooling"`. Pre-commit hook fires gitleaks + validator + Prettier + ESLint; all four must pass. Push.
+27. File DONE-006 with proof. Commit + push close-out.
+
+**Files to be touched:**
+- `Desktop/UnoAi/PROJECT.md` — modified (4 new subsections under "For agents reading the code": Code directory structure, Test layout, Errors and logging, Dependency policy).
+- `Desktop/UnoAi/PROCEDURES.md` — modified (Procedure 9 trust-based-disclaimer removed; README ↔ state now mechanical).
+- `Desktop/UnoAi/.gitignore` — modified (add `test/fixtures/private/`).
+- `Desktop/UnoAi/.env.example` — created.
+- `Desktop/UnoAi/.gitleaks.toml` — modified (env var rules + placeholder allowlist).
+- `Desktop/UnoAi/.githooks/pre-commit` — modified (Prettier + ESLint steps after validator).
+- `Desktop/UnoAi/eslint.config.js` — modified (naming-convention rules + Svelte 5 / SvelteKit carve-outs).
+- `Desktop/UnoAi/scripts/validate.sh` — modified (G1 README ↔ state check, 10th check; target ≤270 lines).
+- `Desktop/UnoAi/forms/DECISION.md` — modified (DEC-028..031 appended).
+- `Desktop/UnoAi/forms/METHOD_STATEMENT.md` — modified (this MS-006 entry; approval status update post-approval).
+- `Desktop/UnoAi/forms/SITE_LOG.md` — modified (sign-in already filed; sign-out at session close).
+- `Desktop/UnoAi/forms/DONE.md` — modified (DONE-006 appended).
+- `Desktop/UnoAi/state/current.md` — modified (counters, MS chain section, agreement #11, phase line).
+- `Desktop/UnoAi/src/lib/{auth,chat,crisis,persona,storage,shared,server}/.gitkeep` — created (7 files).
+- `Desktop/UnoAi/src/routes/api/.gitkeep` — created.
+- `Desktop/UnoAi/test/fixtures/.gitkeep` — created.
+- `Desktop/UnoAi/test/e2e/.gitkeep` — created.
+- `Desktop/UnoAi/vite.config.ts` OR `Desktop/UnoAi/vitest.config.ts` — possibly modified (Vitest glob if scaffold default doesn't match convention).
+- `Desktop/UnoAi/playwright.config.ts` — possibly modified (testDir if scaffold default doesn't match).
+- `Desktop/UnoAi/package.json` — possibly modified (npm scripts if missing).
+
+**Files NOT touched (per scope):**
+- `forms/CHANGE_ORDER.md`, `forms/RFI.md` (no new RFIs except possibly mid-MS for Open Items 2/5/7), `forms/INCIDENT.md` (unless violation testing finds one), `LICENSE`, `CONTRIBUTING.md`, `PLAN.md`, `README.md`. SvelteKit scaffold src files (`src/app.html`, `src/app.d.ts`, etc.). All existing demo/route files from sv scaffold.
+
+**Expected diff size:** ~500 lines net added across ~15 files. Most lines are PROJECT.md doc additions (Scopes A/C/D/H subsections) + .env.example + validator G1 check + DEC-028..031 entries. No product code.
+
+**Risks identified:**
+
+- **R1. Open Item 2 — ESLint false positives.** Highest-risk item. Builder runs lint after rule addition; counts false positives; RFIs if >5. Mitigation: conservative initial config + explicit Svelte 5 carve-outs.
+
+- **R2. Hook chain ordering / staged-files extraction.** Prettier and ESLint must run on staged files only. Builder uses `git diff --cached --name-only --diff-filter=ACMR` filtered to relevant extensions (`.ts`, `.js`, `.svelte`). If no relevant files staged, both tools skip.
+
+- **R3. Validator G1 phase-extraction regex robustness.** Edge cases: state line has multiple "Phase" mentions (e.g. "Phase 0b complete. Phase 1 blocked..." → which one is the "current" phase?). Builder picks the FIRST `Phase X status` substring. README's first non-empty Status line should match the first phase mention. If state has multi-phase descriptors, the convention is "current phase first," and the validator enforces that ordering implicitly.
+
+- **R4. SvelteKit scaffold default configs may differ from operator's convention.** Vitest glob and Playwright testDir may need explicit setting. Builder verifies before editing.
+
+- **R5. Hook chain failure modes — fail-fast vs report-all.** Builder default fail-fast (matches existing hook). Operator can override to report-all if preferred. Practical impact small for solo developer; aesthetic preference.
+
+- **R6. Validator size at 237 + ~30 G1 budget = ~267.** Within 270 cap. Comfortable. If actual G1 implementation runs longer, RFI per Scope G4.
+
+- **R7. Working agreement #11 numbering.** Operator's DONE-005 sign-off introduced #11. State currently has #1–#10. Adding #11 sequential. No drift this time.
+
+- **R8. .gitleaks.toml additions may produce false positives on `.env.example`** because `.env.example` contains `LEMON_SQUEEZY_WEBHOOK_SECRET=replace_with_real_secret` which matches the rule pattern unless explicitly allowlisted. Builder ensures placeholder values are in the allowlist before testing.
+
+- **R9. The `+`-prefixed SvelteKit filenames** (`+page.svelte`, `+layout.svelte`, `+server.ts`) violate kebab-case. Builder's ESLint config must allow these via filename-pattern carve-out OR Builder doesn't enforce filename naming via lint (leave to manual review). Cleanest option: don't ESLint filenames (the framework dictates these), only ESLint identifiers within files. Builder default: identifier-only naming-convention rule, no filename rule.
+
+- **R10. .gitkeep files** are conventional placeholders for empty directories. They're zero-byte files (or contain a comment). gitleaks will scan them; should not flag. Builder confirms by running gitleaks pre-commit.
+
+**Acceptance criteria (will be copied verbatim into DONE-006):**
+- `PROJECT.md` "For agents reading the code" section has 4 new subsections (Code directory structure, Test layout, Errors and logging, Dependency policy) per Scopes A1/C1/D1/H1 verbatim.
+- Directory skeleton created: `src/lib/{auth,chat,crisis,persona,storage,shared,server}/.gitkeep`, `src/routes/api/.gitkeep`, `test/fixtures/.gitkeep`, `test/e2e/.gitkeep`.
+- `.gitignore` includes `test/fixtures/private/`.
+- `.env.example` created at repo root per Scope E1 verbatim with placeholder values.
+- `.gitleaks.toml` updated with explicit rules for `LEMON_SQUEEZY_WEBHOOK_SECRET` and `LICENSE_PRIVATE_KEY`; placeholder-value allowlist extended.
+- `eslint.config.js` updated with naming-convention rules; lint run produces ≤5 false positives on existing scaffold (or RFI was filed).
+- `.githooks/pre-commit` runs gitleaks → validator → Prettier --check (staged files) → ESLint (staged files). All four must PASS.
+- Hook test: ESLint violation BLOCKED, Prettier violation BLOCKED, both revert + commit succeeds.
+- `scripts/validate.sh` has 10 checks; G1 README ↔ state check works; synthetic violation FAIL captured. Validator size ≤270.
+- `PROCEDURES.md` Procedure 9 — README ↔ state sync no longer trust-based; validator enforces.
+- `forms/DECISION.md` has DEC-028 (directory structure), DEC-029 (test layout), DEC-030 (errors+logging), DEC-031 (dependency policy).
+- `state/current.md` updated: Latest MS=MS-006, Latest DEC=DEC-031, MS-005 DONE, MS-006 in progress, agreement #11 added, phase line current.
+- Sign-in (filed at session start) and sign-out (at session end) entries in SITE_LOG using Procedure 9 templates.
+- Validator pre-commit run: PASS. Hook fires all four steps on actual MS-006 commit.
+- Push to GitHub succeeds. Final commit visible at the repo URL.
+- DONE-006 contains: validator PASS output, G1 synthetic FAIL output verbatim, hook output from MS-006 commit (showing all four steps), ESLint/Prettier hook test outputs, file-by-file change summary.
+
+**Operator approval:** APPROVED 2026-04-28.
+**Approval notes:**
+- **Open Item 1 (DEC numbering DEC-028..031):** Approved sequential per discipline #5.
+- **Open Item 2 (ESLint naming-convention rule risk):** Approved Builder approach (identifier-only rule, $-prefix carve-out for Svelte 5 runes, no filename naming via lint, <5 false-positive threshold). Pre-approved additional carve-out for SvelteKit `load`/`prerender`/`ssr`/`csr` exports if they trip the rule (didn't trip — already camelCase). Result: **0 false positives** on existing scaffold. Comfortably under threshold.
+- **Open Item 3 (G1 phase-extraction hard-fail vs soft-fail):** Approved hard-fail. Format-spec comment added at top of `state/current.md` documenting expected line format.
+- **Open Item 4 (hook chain failure mode):** Approved fail-fast. Matches existing hook pattern.
+- **Open Item 5 (`+`-prefix filenames):** Approved framework-filename exception. One-sentence note added to PROJECT.md naming-conventions section.
+- **Working agreement #11 verbatim into state/current.md:** Approved. No paraphrase. Folded in alongside the rest of the working-agreements list.
+- **Validator size:** ended at **277 lines** (8 over Scope G4's 270 cap). Same overrun pattern as MS-005 — block-aware parsing requires more lines than per-check estimate. Consistent with working agreement #10 (caps calibrated against existing complexity, not new check). Surfaced in DONE-006 for design-review at sign-off.
+- **Two real bugs caught and fixed during F4 testing**, neither shipped:
+  1. ESLint rule severity was `'warn'` initially — pre-commit hook didn't block on warnings (ESLint exits 0). First synthetic test commit landed accidentally at SHA `7d4b513`. Reset via `git reset HEAD~1` (mixed). Fix: rule severity → `'error'`. Second synthetic test correctly blocked.
+  2. gitleaks rule `lemon-squeezy-webhook-secret` had its capture group around the LABEL not the VALUE — value-based placeholder allowlist didn't trigger. Restructured to capture the value; `.env.example` and METHOD_STATEMENT.md prose mentions now allowlist-clean.
+- **Vitest + Playwright config:** Builder verified scaffold defaults are a permissive superset of the convention (Vitest glob `src/**/*.{test,spec}.{js,ts}` catches `__tests__/` paths plus more; Playwright `testMatch: **/*.e2e.{ts,js}` permissive). No edits needed; convention enforced at review level. Tightening deferred until sv scaffold demo files are removed in a future MS.
+- **Markdown + state/ added to .prettierignore:** PROJECT.md, PROCEDURES.md, PLAN.md, README.md, all forms, state/current.md are author-formatted. Prettier reformatting them would mangle tables, blockquotes, numbered lists, and intentional whitespace. Builder-runtime decision; documented inline in `.prettierignore`.

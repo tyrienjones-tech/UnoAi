@@ -4,7 +4,7 @@
 # Pure bash, no external deps. Runs from repo root: `bash scripts/validate.sh`.
 # Wired into `.githooks/pre-commit` after gitleaks.
 #
-# Checks (nine — see DEC-026 + INC-006 + MS-005 Scope A):
+# Checks (ten — see DEC-026 + INC-006 + MS-005 Scope A + MS-006 Scope G):
 #   1. DEC numbering: sequential, no gaps, no duplicates (DEC-001..DEC-NNN)
 #   2. RFI numbering: sequential, no gaps, no duplicates
 #   3. INC numbering: sequential, no gaps, no duplicates
@@ -18,7 +18,11 @@
 #      resolves to an MS that (a) exists in METHOD_STATEMENT.md AND (b) has
 #      a corresponding DONE entry (matched via "Method statement: MS-NNN"
 #      line in DONE.md). "DONE exists" is the v1 semantics per RFI-010
-#      default (a); a stricter "DONE signed" check is deferred to MS-006.
+#      default (a); a stricter "DONE signed" check is deferred to MS-007.
+#  10. README ↔ state sync: README.md "## Status" first non-empty line and
+#      state/current.md "## Phase" "Current:" line must contain the same
+#      "Phase X status" identifier (case-insensitive substring match).
+#      Hard-fail on parse error per DEC-026's fail-closed precedent.
 #
 # Sign-in / sign-out heading-line regex (strict):
 #   ^### [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2} session (start|end)$
@@ -222,6 +226,42 @@ if [ "$diff" -lt 0 ]; then
   fail "SITE_LOG session lifecycle: more session-end entries ($ends) than session-start entries ($starts)"
 elif [ "$diff" -gt 1 ]; then
   fail "SITE_LOG session lifecycle: $diff session-start entries without matching session-end (expected at most 1 open session — the current one)"
+fi
+
+# Check 10: README ↔ state sync (per MS-006 Scope G + DEC-026 hard-fail).
+# Extract "Phase X status" identifier from state/current.md (## Phase, "Current:"
+# line) and from README.md (## Status, first non-empty line). Compare via
+# case-insensitive substring containment — wording variation allowed; phase
+# identifier must match.
+state_phase=$(awk '
+  /^## Phase[[:space:]]*$/ { in_phase = 1; next }
+  in_phase && /^## / { in_phase = 0 }
+  in_phase && /^Current:/ {
+    sub(/^Current:[[:space:]]*/, "")
+    if (match($0, /[Pp]hase[[:space:]]+[A-Za-z0-9]+([[:space:]]+[A-Za-z]+)?/)) {
+      print tolower(substr($0, RSTART, RLENGTH))
+      exit
+    }
+  }
+' state/current.md)
+readme_phase=$(awk '
+  /^## Status[[:space:]]*$/ { in_status = 1; next }
+  in_status && /^## / { in_status = 0 }
+  in_status && /[A-Za-z]/ {
+    if (match($0, /[Pp]hase[[:space:]]+[A-Za-z0-9]+([[:space:]]+[A-Za-z]+)?/)) {
+      print tolower(substr($0, RSTART, RLENGTH))
+      exit
+    }
+  }
+' README.md)
+if [ -z "$state_phase" ]; then
+  fail "README ↔ state: could not extract phase from state/current.md — expected 'Current:' line in '## Phase' section. File format may be corrupted."
+fi
+if [ -z "$readme_phase" ]; then
+  fail "README ↔ state: could not extract phase from README.md — expected a 'Phase X status' line in '## Status' section."
+fi
+if [ -n "$state_phase" ] && [ -n "$readme_phase" ] && [ "$state_phase" != "$readme_phase" ]; then
+  fail "README Status section out of sync with state/current.md. README says '$readme_phase'; state says '$state_phase'."
 fi
 
 # Output.

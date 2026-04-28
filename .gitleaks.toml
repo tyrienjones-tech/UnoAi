@@ -30,8 +30,8 @@ keywords = ["ls_api_", "ls_store_"]
 
 [[rules]]
 id = "lemon-squeezy-webhook-secret"
-description = "Lemon Squeezy webhook signing secret (custom assignment patterns)"
-regex = '''(?i)(lemon[_-]?squeezy[_-]?webhook[_-]?(secret|signing[_-]?secret))\s*[:=]\s*['"]?[A-Za-z0-9_\-]{20,}['"]?'''
+description = "Lemon Squeezy webhook signing secret (custom assignment patterns). Capture group is the value, so allowlist regexes match against the value not the label."
+regex = '''(?i)lemon[_-]?squeezy[_-]?webhook[_-]?(?:secret|signing[_-]?secret)\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?'''
 keywords = ["lemon_squeezy", "lemonSqueezy"]
 
 [[rules]]
@@ -59,6 +59,28 @@ regex = '''tyrienjones@gmail\.com'''
 keywords = ["tyrienjones@gmail"]
 
 # ---------------------------------------------------------------------------
+# Env-var-name explicit rules (per MS-006 Scope E3)
+# These give clearer FAIL messages than generic high-entropy detection. The
+# default ruleset already catches realistic Ed25519 keys + base64-encoded
+# secrets via entropy heuristics, but pinning the project's named env vars
+# means the FAIL message names which secret is exposed.
+#
+# Placeholder values from .env.example (replace_with_*) are allowlisted below.
+# ---------------------------------------------------------------------------
+
+[[rules]]
+id = "lemon-squeezy-webhook-secret-env"
+description = "Lemon Squeezy webhook signing secret in env-var assignment form (LEMON_SQUEEZY_WEBHOOK_SECRET=...). Capture group is the value."
+regex = '''LEMON_SQUEEZY_WEBHOOK_SECRET\s*=\s*['"]?([A-Za-z0-9_+/=-]{20,})['"]?'''
+keywords = ["LEMON_SQUEEZY_WEBHOOK_SECRET"]
+
+[[rules]]
+id = "license-private-key-env"
+description = "License Ed25519 private key in env-var assignment form (LICENSE_PRIVATE_KEY=...). Capture group is the value."
+regex = '''LICENSE_PRIVATE_KEY\s*=\s*['"]?([A-Za-z0-9_+/=-]{20,})['"]?'''
+keywords = ["LICENSE_PRIVATE_KEY"]
+
+# ---------------------------------------------------------------------------
 # Allowlist
 # ---------------------------------------------------------------------------
 
@@ -81,8 +103,17 @@ paths = [
 ]
 
 # Literal placeholder strings that intentionally look like keys but are documented examples.
+# These match the SECRET portion of a finding; gitleaks suppresses findings whose
+# matched secret value matches any allowlist regex.
 regexes = [
   '''sk-ant-PLACEHOLDER''',
   '''sk-PLACEHOLDER''',
   '''ls_api_PLACEHOLDER''',
+  # MS-006 .env.example placeholder values (per Scope E1):
+  '''replace_with_real_secret''',
+  '''replace_with_base64_ed25519_private_key''',
+  # Full KEY=placeholder patterns (allowlist matches the entire matched secret span,
+  # so for rules whose regex captures the KEY=value form, we need the full pattern).
+  '''LEMON_SQUEEZY_WEBHOOK_SECRET\s*=\s*['"]?replace_with_real_secret['"]?''',
+  '''LICENSE_PRIVATE_KEY\s*=\s*['"]?replace_with_base64_ed25519_private_key['"]?''',
 ]
