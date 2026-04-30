@@ -259,10 +259,10 @@ Resolution applied per Engineer's direction (resolved via INSP-002 MEDIUM-7 and 
 
 ## MS-009 Section 5 — Form integrity + retroactive DONE sign-off + 11th validator check
 
-Status: in progress
+Status: signed off
 Date filed: 2026-04-29
-Date signed: pending
-Operator sign-off: pending
+Date signed: 2026-04-28
+Operator sign-off: Section 5 signed off by operator on 2026-04-28.
 
 ### Checklist results
 

@@ -69,7 +69,6 @@
 		"lockfiles",
 		"prepping",
 		"bindable",
-		"asdfqwerty",
 		"writable",
 		"mses"
 	],
@@ -83,5 +82,11 @@
 		".gitleaks.toml",
 		".env*"
 	],
-	"ignoreRegExpList": ["/[A-Fa-f0-9]{7,40}/", "/0x[A-Fa-f0-9]+/", "/https?:\\/\\/[^\\s]+/"]
+	"ignoreRegExpList": ["/[A-Fa-f0-9]{7,40}/", "/0x[A-Fa-f0-9]+/", "/https?:\\/\\/[^\\s]+/"],
+	"overrides": [
+		{
+			"filename": ["forms/**/*.md", "state/current.md"],
+			"words": ["asdfqwerty"]
+		}
+	]
 }

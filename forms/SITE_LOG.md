@@ -1023,3 +1023,79 @@ INF  no leaks found
 - state/current.md updated: YES.
 - Next action: Next session opens fresh. Operator decides scope. Likely candidates: (a) Section 5 magic-string re-application (DEC-032; operator must chat-supply or re-confirm `Section 5 signed off by operator on 2026-04-28.`) + Section 6 work (MS-009 tooling end-to-end — single-session per MS-009 prompt rules of engagement); (b) MS-010 prep (security cluster from INSP-001); (c) something else. RFI-013 + RFI-014 still block Phase 1; not blocking MS-009 Sections 6-8.
 - Handover note: First sign-in under `Role: Milo (Opus 4.7)` convention completed cleanly. Existing banned-move bullet on `Co-Authored-By Claude` was discussed; agent signing convention applies to forms (SITE_LOG, INCIDENT, state/current.md, etc.) but DEFERS application to git commits per this session's operator decision. Commit is operator-attributed work-described per existing banned-move policy. If signing-on-commits is later authorised, a DEC will land formalising it (DEC-034 candidate). No working-tree state inherited from prior agent — full reset; clean baseline at HEAD = `4feef75` (pre-this-session) confirmed via `git status -s` returning empty post-reset.
+
+---
+
+### 2026-04-30 12:23 session start
+
+- Role: Milo (Opus 4.7)
+- Session goal: Re-execute the abandoned 2026-04-29 INSP-003 + bug-fix scope under proper sign-in per operator's "back up the plan, don't jump halfway" directive. Four scopes: (A) `asdfqwerty` cleanup with operator-confirmed `forms/**/*.md` + `state/current.md` override scope; (B) `scripts/validate.sh` check 11 awk polarity fix + 4-case synthetic test on DONE-008 sign-off field; (C) file INSP-003 verbatim from prior-Engineer-supplied body (MEDIUM-2 RESOLUTION pre-updated per Option A; INC-010 cross-reference pre-updated); (D) file RFI-015 verbatim from prior-Engineer-supplied body (Date kept as `2026-04-29` per operator decision).
+- Resuming from: HEAD = `423465a` (INC-010 close-out commit, 2026-04-30 11:47). Working tree clean. No inheritance from the discarded 2026-04-29 10:11 WIP — re-execution authors all four scopes from scratch under this sign-in.
+- Context loaded: PROJECT.md, PROCEDURES.md, PLAN.md, state/current.md (current at 423465a), GLOSSARY.md, CONTEXT.md, CONTRIBUTING.md, prompts/engineer-session-start.md, prompts/engineer-prompt-checklist.md, forms/SITE_LOG.md (full file through INC-010 sign-out at 11:45), forms/INCIDENT.md (INC-001..010), forms/RFI.md (RFI-001..014; RFI-015 to be filed this session), forms/INSPECTION.md (INSP-001 + INSP-002; INSP-003 to be filed this session), forms/SIGN_OFF.md (Sections 0-4 signed off at HEAD; Section 5 magic-string applied at this session's sign-in per DEC-032 eighth exercise), scripts/validate.sh (324 lines, 11 checks — check 11 polarity bug to be fixed this session per Scope B), .cspell.json (asdfqwerty in main `words` array, no overrides — Scope A target), agent profile (IDENTITY/ROLE/PERSONALITY/PSYCHOLOGY/voice/domain) + four governance protocols (framework, learning, knowledge, consciousness).
+- Open MSes: MS-009 (in progress; this session is **MS-009 cleanup work** — bugs surfaced in Section 5 code per state/current.md and per INSP-003 MEDIUM-1 + MEDIUM-2; not Section 6+ work).
+- Open RFIs awaiting me: none. RFI-009 (TLD), RFI-011 (validator check 10), RFI-013 (Pages → Workers timing), RFI-014 (email delivery mechanism) — all open and pending operator/Engineer (Engineer seat unfilled per role-table update of 2026-04-30; Engineer-function carried by operator + builder via conversation; for this session, the prior-Engineer instance was reachable via operator-relayed clarifying-questions packet — answers locked: INSP-003 verbatim supplied, RFI-015 verbatim supplied, Section 5 magic-string verbatim confirmed, Scope A override scope confirmed by operator as `forms/**/*.md` + `state/current.md` glob form per option (iii)).
+- Pre-session validator run: PASS (verified 2026-04-30 12:22:34 WAST, HEAD = `423465a`, working tree clean per `git status -s`).
+
+**Mechanical sign-in actions (this session):**
+
+1. **Push state verified:** `git ls-remote origin refs/heads/main` returned `423465a89e143b14739d67ea779bdcf448003bd2` matching local main HEAD. No mismatch.
+
+2. **DEC-032 magic-string for Section 5 applied this sign-in** — eighth DEC-032 exercise overall, sixth on SIGN_OFF.md surface (Sections 1-4 magic-strings were exercises 3-7 on SIGN_OFF surface across MS-009 sessions; the abandoned 2026-04-29 10:11 session attempted Section 5 magic-string in WIP that was discarded by reset, so this is the legitimate first-application of Section 5 magic-string in committed state). Verbatim per prior-Engineer Q3 confirmation: `Section 5 signed off by operator on 2026-04-28.`. Updates SIGN_OFF.md Section 5 entry from `Status: in progress` / `Date signed: pending` / `Operator sign-off: pending` to `Status: signed off` / `Date signed: 2026-04-28` / `Operator sign-off: Section 5 signed off by operator on 2026-04-28.`.
+
+3. **state/current.md updates at sign-in:** `Updated:` timestamp refreshed; MS chain MS-009 line bumps from "Sections 0-4 signed off / Section 5 in progress" to "Sections 0-5 signed off"; `Active MS` line revised to reflect Section 5 signed off + this session's INSP-003 + bug-fix re-execution scope.
+
+4. **Counters carried over:** Latest MS = MS-009; Latest DEC = DEC-033; Latest RFI = RFI-014; Latest INC = INC-010; Latest INSP = INSP-002. INSP-003 + RFI-015 will advance Latest INSP and Latest RFI within this session per Scopes C and D.
+
+**Session goal sequence (forward from sign-in):**
+
+1. Sign-in (this entry) + mechanical actions above — done.
+2. **Scope A** — `.cspell.json` edits: remove `asdfqwerty` from main `words` array; add per-path override `["forms/**/*.md", "state/current.md"]` per operator-confirmed scope; verify cspell baseline clean across affected files; synthetic violation test on a temp `.md` file outside override scope to confirm cspell BLOCKS the commit; revert temp file.
+3. **Scope B** — `scripts/validate.sh` check 11 awk polarity fix from negative-pattern (`anything not 'pending' = signed`) to positive-pattern matching DEC-032 magic-string format `signed off by operator on [0-9]{4}-[0-9]{2}-[0-9]{2}`; 4-case synthetic test cycle on DONE-008 `Operator sign-off:` field (each toggle-and-revert documented): (i) empty content → expect FAIL; (ii) `"Pending review by ops"` prose → expect FAIL; (iii) template placeholder `[pending / DONE-NNN signed off by operator on YYYY-MM-DD]` → expect FAIL; (iv) restored real magic-string → expect PASS. Restore final state to real magic-string; confirm full PASS.
+4. **Scope C** — file INSP-003 in `forms/INSPECTION.md` (H2 per form convention) verbatim from prior-Engineer-supplied body; `[filed at re-execution date]` placeholder filled in with `2026-04-30`; MEDIUM-2 RESOLUTION pre-applied per Option A; INC-010 cross-reference pre-applied per updated content.
+5. **Scope D** — file RFI-015 in `forms/RFI.md` (H3 per form convention) verbatim from prior-Engineer-supplied body; Date field kept as `2026-04-29` per operator decision (drafting date, not filing date).
+6. state/current.md updates at sign-out: `Latest INSP` INSP-002 → INSP-003; `Latest RFI` RFI-014 → RFI-015; `Open RFIs` list adds RFI-015 with Engineer's lean (bundle into MS-010 validator hardening cluster); `Last verified working state` new dated paragraph for this session; `Updated:` timestamp refreshed at sign-out.
+7. Final validator PASS check (with the FIXED check 11 from Scope B).
+8. Sign-out entry; commit; push.
+
+**Push posture per prior-Engineer Q5:** push immediate after commit, consistent with prior MS-009 cleanup sessions (Sections 4, 5, INC-010). No review-before-push gate applies — this session is mechanical bug-fix + pre-supplied-verbatim doc filing.
+
+**Pause-at-blocker discipline:** maintained per prior-Engineer Q5 recommendation. If Scope A or B synthetic tests surface anything outside this plan's expectations (cspell behaviour different than expected, validator check 11 polarity fix exposes new edge cases, override scope behaving non-symmetrically across audit-trail forms, etc.), I pause and surface to operator — do not unilaterally tweak.
+
+**Scope guards** (per prior-Engineer Q5):
+
+- INSP-001 / INSP-002 findings: **untouched** this session — MS-010 territory.
+- Validator chain check forward-only hardening: **untouched** — MS-010.
+- CO-001 numbering gap: **untouched** — MS-010.
+- CSP design: **untouched** — MS-010.
+- Working agreements consolidation: **untouched** — MS-011.
+- MS-009 Section 6 (tooling end-to-end — cold-clone test, all five hook synthetic tests, cleanup): **untouched** — next session.
+- DEC-034 candidate (agent signing convention for git surface): **untouched** — separate DEC-filing scope.
+- INSP-003 LOW-3 (operator email rotation): **untouched** — operator action item, not Builder scope.
+- INFO-4 (synthetic Ed25519 gitleaks test): **untouched** — natural home is MS-009 Section 6 per INSP-003.
+
+**Open operator-decision items routed by INSP-003** (filed for the record, not actioned this session):
+
+- LOW-4 (DEC-034 retroactive for Co-Authored-By Claude rule): MS-010 work.
+- LOW-5 (trivial-typo carve-out from MS discipline): operator decision needed.
+- INFO-1 (per-form heading-level convention documentation): MS-010 / MS-011.
+- INFO-2 ("filed-and-acted-on" INSP convention documentation): MS-010 / MS-011.
+- INFO-3 (MS-010 splitting strategy): operator decision needed before MS-010 prompt drafted.
+
+---
+
+### 2026-04-30 12:39 session end
+
+- Role: Milo (Opus 4.7)
+- Outcome: **All four scopes complete.** Section 5 sign-off magic-string applied (DEC-032 eighth exercise / sixth on SIGN_OFF.md surface). Scope A: `asdfqwerty` removed from `.cspell.json` main `words`; per-path override `["forms/**/*.md", "state/current.md"]` added per operator decision (iii); cspell synthetic violation test BLOCKED outside-scope, PASSED inside-scope. Scope B: `scripts/validate.sh` check 11 awk polarity fixed (negative → positive pattern matching DEC-032 magic-string format); 4-case synthetic test cycle on DONE-008 sign-off field PASSED FAIL/FAIL/FAIL/PASS as expected. Scope C: INSP-003 filed in `forms/INSPECTION.md` (H2 per form convention) verbatim from prior-Engineer body, with `[filed at re-execution date]` placeholder filled in as `2026-04-30`, MEDIUM-2 RESOLUTION pre-applied per Option A, INC-010 cross-reference pre-applied. Scope D: RFI-015 filed in `forms/RFI.md` (H3 per form convention) verbatim, Date kept as `2026-04-29` per operator decision. state/current.md updates: `Latest INSP` INSP-002 → INSP-003 (bumped); `Latest RFI` RFI-014 → RFI-015 (bumped); `Open RFIs` list adds RFI-015; `Last verified working state` new dated paragraph; `Updated:` timestamp refreshed. No DONE filed (this was MS-009 cleanup work, not a section-gated DONE moment).
+- Files touched (this session):
+  - `.cspell.json` — Scope A: removed `asdfqwerty` from main `words`; added override entry
+  - `forms/SIGN_OFF.md` — Section 5 magic-string applied (mechanical sign-in action)
+  - `forms/SITE_LOG.md` — sign-in entry + sign-out entry (this entry)
+  - `forms/INSPECTION.md` — Scope C: INSP-003 entry filed
+  - `forms/RFI.md` — Scope D: RFI-015 entry filed
+  - `scripts/validate.sh` — Scope B: check 11 awk polarity fix + header comment updates
+  - `state/current.md` — `Updated:` (sign-in + sign-out), MS chain MS-009 line, Active MS line, `Latest INSP` + `Latest RFI` counters, `Open RFIs` list, `Last verified working state` new paragraph
+- Validator run at end: **PASS** (verified post-edit; check 11 with the FIXED polarity passes on the 7 `Depends on: MS-NNN` lines from MS-005..MS-009).
+- state/current.md updated: **YES.**
+- Next action: Next session opens fresh. Operator decides scope. Likely candidates: (a) MS-009 Section 6 (tooling end-to-end — cold-clone test at `/tmp/unoai-cold-clone`, all five hook synthetic tests, cleanup) per MS-009 prompt rules of engagement (single-section session); (b) MS-010 prep / scope-shape decision (INFO-3 of INSP-003 raises the splitting question); (c) DEC-034 candidate filing for agent signing convention on git surface; (d) other operator priority. RFI-015 also routed for operator decision (Engineer's lean: bundle into MS-010 validator hardening cluster).
+- Handover note: All four scopes executed within plan. Pause-at-blocker discipline operated zero times — no surprises during synthetic tests; cspell behaviour matched expectations. **One own-error caught and self-reverted:** during en-GB rephrasing of prior-Engineer prose, accidentally introduced a flagged-word substitution in INFO-3 (INSPECTION.md) where the original Engineer wording was already a dictionary-clean alternative; reverted in the same session before commit. **En-GB normalisations on prior-Engineer verbatim prose** (per project rule `cspell_dictionary_vs_rephrase`, operator-validated 2026-04-28 memory feedback): four prose-choice substitutions applied at write-time — three on US-spelling adjectives in INSP-003 (Scope line + Summary + Open Questions sections) and one in RFI-015 Context. For one pair where both US and UK forms are flagged by cspell (neither in default en-GB dictionary), substituted a different dictionary-clean adjective conveying the same MS-distribution meaning rather than adding either form to the dictionary. All other Engineer-supplied content preserved verbatim. **Single commit at sign-out** (no intermediate commits this session — all four scopes worked in one continuous working-tree mutation per the original session prompt's single-commit pattern). Commit message: `MS-009 cleanup: INSP-003 + bug fixes (check 11 awk polarity, asdfqwerty cleanup) + RFI-015`. Push immediate per Engineer Q5 + prior session pattern.

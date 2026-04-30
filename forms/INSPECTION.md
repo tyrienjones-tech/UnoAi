@@ -461,3 +461,281 @@ post-launch).
 - Action plan PDF: 
   /mnt/user-data/outputs/UnoAi_External_Review_Action_Plan_v1_1.pdf 
   (v1.1, corrected per INC-008)
+
+---
+
+## INSP-003 — External review of MS-009 Section 5 + INSP-002 deltas
+
+**Date:** 2026-04-29 (review date) / 2026-04-30 (filed at re-execution date)
+**Inspector:** External (Claude, web chat session, 
+  independent of Engineer/Builder roles)
+**Filed by:** Builder (Milo, successor to Reaper-1) on 
+  Engineer's instruction. Original filing attempt by 
+  Reaper-1 abandoned mid-execution per INC-010; 
+  re-execution under Milo's sign-in.
+**Scope:** Review of changes since commit 16a70c9 
+  (INSP-002 baseline) through commit 4feef75 — four 
+  commits totalling +1006 / -56 lines, all process / 
+  forms / validator. Zero product code in this delta.
+**Repo state at review:** HEAD 4feef75 on main
+**Files reviewed:** All commits in the delta walked 
+  diff-by-diff; validator awk logic tested against 
+  edge-case inputs; file content verified against 
+  state/current.md claims.
+**Methodology:** Independent external audit; reviewer 
+  cloned repo and examined diffs; ran validator 
+  directly; tested check 11 awk against edge cases. 
+  External review document on operator's machine at 
+  /mnt/user-data/uploads/external_review_2026-04-29.md.
+
+### Summary
+
+Two concrete bugs surfaced in code that landed during 
+MS-009 Section 5: validator check 11's awk has wrong 
+polarity (false-positive on empty/non-magic-string 
+content), and asdfqwerty remains in .cspell.json 
+despite Section 5 doing dictionary work. Both are being 
+fixed in the same session that files this entry per 
+operator's "fix MS-009 bugs in MS-009 cleanup, not 
+deferred to MS-010" direction.
+
+Beyond those bugs, INSP-003 surfaces six observations 
+about the project's procedural surface that aren't 
+critical but matter for MS-010 / MS-011 scope:
+- CO-001 numbering gap still unresolved (was LOW-1 in 
+  INSP-002)
+- Two operator email identities still in commit history 
+  (was LOW-2 in INSP-001)
+- Co-Authored-By Claude rule added to PROJECT.md without 
+  a DEC documenting the decision
+- engineer-session-start.md typo fix (commit 4feef75) 
+  bypassed MS discipline (single-file, sub-1-line — 
+  procedurally below DEC-012 granularity threshold but 
+  the carve-out isn't documented)
+- INC-009's heading-level drift root cause is deeper 
+  than INC-009 names — the validator's regex literally 
+  defines the rule but the rule isn't documented in 
+  human-readable form
+- "Filed-and-acted-on, not approval-gated" INSP convention 
+  isn't documented in PROCEDURES.md or GLOSSARY.md
+
+INSP-003 also flags procedural-debt-vs-product-code 
+concern: the chain to Phase 1 is now MS-009 (3 sections 
+left) → MS-010 → INSP-004 → MS-011 → Phase 1 first MS. 
+External reviewer asks whether MS-010 can be split into 
+smaller parallel MSes (SECURITY.md independent of 
+CSP design independent of webhook idempotency). Operator 
+decision pending on MS-010 scope shape.
+
+External review acknowledges deltas as net-positive: 
+INSP-002 absorbed feedback honestly (attribution of 
+Engineer-additional findings, INC-008 surfaced 
+embarrassment in the open), retroactive DONE sign-off 
+cleanup completed correctly with proper sequencing, 
+RFI-012 resolved cleanly, pause-at-blocker discipline 
+produced two real catches (INC-008 and INC-009).
+
+### Findings
+
+#### CRITICAL findings
+None.
+
+#### HIGH findings
+None new beyond INSP-001's HIGH-1 (CONTRIBUTING.md 
+security contact [TBD], unresolved).
+
+#### MEDIUM findings
+
+**MEDIUM-1**: Check 11 awk polarity bug. The check uses 
+negative pattern matching ("not pending = signed") 
+instead of positive pattern matching against the DEC-032 
+magic-string format. False positives on: empty 
+sign-off field, "Pending review by ops" prose, template 
+placeholder "[pending / DONE-NNN signed off by operator 
+on YYYY-MM-DD]" copied verbatim. Severity is MEDIUM 
+because: (a) current sign-off fields are correctly 
+populated so the bug doesn't manifest in current state, 
+(b) the bug becomes critical the moment any DONE entry 
+gets a malformed sign-off field, (c) the third false-
+positive case (template placeholder) is the highest-risk 
+scenario because it's the literal default state. 
+RESOLUTION: fixed in this re-execution session per Scope B.
+
+**MEDIUM-2**: asdfqwerty still in cspell dictionary 
+despite Section 5 dictionary work. False-confidence 
+regression — the synthetic violation test value used in 
+MS-008 now silently passes cspell if it appears in real 
+prose. Working agreement #9 territory. ORIGINAL FIX 
+ATTEMPT: Reaper-1 session 2026-04-29 attempted removal 
+plus per-path overrides; session abandoned mid-execution 
+per INC-010 (filed at 423465a). RESOLUTION: re-executed 
+in this session per re-planned Scope A; override scope 
+re-confirmed with operator at re-execution time; MS-008 
+synthetic violation test re-run on NEW file outside 
+override scope — confirmed cspell still catches it.
+
+**MEDIUM-3**: Check 11 doesn't enforce DEC-032 format 
+strictness even after polarity fix. Anyone writing 
+"Signed off 2026-04-29." or "Approved 2026-04-29" would 
+pass check 11 (matches positive pattern of "signed") but 
+that's not the magic-string the GLOSSARY defines. 
+RESOLUTION: Scope B's positive-pattern fix DOES enforce 
+the rigid DEC-032 format (matches "signed off by 
+operator on [0-9]{4}-[0-9]{2}-[0-9]{2}"). MEDIUM-3 is 
+addressed by Scope B as a side effect.
+
+#### LOW findings
+
+**LOW-1**: Check 11's "skip if check 9 already failed" 
+guard at scripts/validate.sh:299 silently disables the 
+check when done_mses is empty (e.g., all DONE entries 
+deleted, or check 9's awk hits a parse error producing 
+no output). Should fail with explicit "no signed DONEs 
+found, cannot run check 11" message rather than 
+silently skipping every dep target. RESOLUTION: 
+deferred to MS-010 validator hardening (filed as 
+RFI-015 in this session for tracking).
+
+**LOW-2**: CO-001 numbering gap still unresolved 
+(carry-over from INSP-002 LOW-1). Validator's 
+check_sequential still doesn't cover 
+CO/DONE/INSP/SIGN_OFF. RESOLUTION: deferred to 
+MS-010.
+
+**LOW-3**: Two operator email identities still in 
+commit history (carry-over from INSP-001 LOW-2). The 
+four new commits since INSP-001 are still authored 
+under one of them. No rotation happened. RESOLUTION: 
+operator action item — set local git config to a single 
+canonical identity going forward; historical commits 
+stay as-is.
+
+**LOW-4**: Co-Authored-By Claude rule added to 
+PROJECT.md banned moves during MS-009 Section 4 without 
+a DEC. Per Procedure 4, non-obvious choices get DECs. 
+The rule's text includes "AI-assistance attribution is 
+a project policy decision filed as DEC if/when 
+revisited" — honest, but adding a banned move that 
+didn't exist before IS a non-obvious choice. RESOLUTION: 
+file DEC-034 in MS-010 retroactively documenting the 
+decision per Procedure 4.
+
+**LOW-5**: engineer-session-start.md typo fix (commit 
+4feef75) bypassed MS discipline. Single-file, sub-1-line 
+change is procedurally below DEC-012 granularity 
+threshold, but the carve-out isn't explicitly documented. 
+RESOLUTION: MS-010 documents the trivial-typo carve-out 
+in PROCEDURES.md, OR project commits to "no file 
+mutation without an MS" with no carve-out. Operator 
+decision needed.
+
+#### INFO observations
+
+**INFO-1**: INC-009's root cause is deeper than INC-009 
+names. The validator's regex literally defines heading-
+level conventions per form (H3 for INC/RFI, H2 for 
+INSP) but the rule is nowhere in human-readable form. 
+A new agent has no way to know the convention except 
+by reading the validator's awk patterns. Recommendation: 
+either document per-form heading-level conventions in 
+PROCEDURES.md/GLOSSARY.md, or extend the validator's 
+real_headings() to recognise H2 entries for 
+INSPECTION.md so all forms parse symmetrically. 
+Operator decision at MS-010 or MS-011.
+
+**INFO-2**: "Filed-and-acted-on, not approval-gated" 
+INSP convention isn't documented in PROCEDURES.md or 
+GLOSSARY.md. Future Inspector reading procedures would 
+assume Procedure 3 sign-off discipline applies. 
+Recommendation: one-line addition to GLOSSARY.md or 
+PROCEDURES.md noting that INSP entries are filed-and-
+acted-on. MS-010 or MS-011 work.
+
+**INFO-3**: Procedural-debt-vs-product-code ratio 
+worsened in MS-009 Section 5 delta. Four commits, 
++1006 lines, zero product code. Phase 1 is now gated 
+on MS-009 (3 sections left) → MS-010 → INSP-004 → 
+MS-011 → first Phase 1 MS. Operator should examine 
+whether MS-010 can be split into smaller standalone 
+MSes that don't block each other (SECURITY.md, CI 
+workflow, CSP design, webhook design DECs are 
+genuinely independent). Recommendation: operator 
+decides MS-010 splitting strategy before drafting 
+MS-010 prompt.
+
+**INFO-4**: Synthetic Ed25519 gitleaks test still 
+pending (carry-over from INSP-001 Phase 1 
+recommendation). MS-009 Section 6 (tooling end-to-end) 
+is the natural home; worth confirming it lands there 
+when Section 6 prompt is drafted.
+
+#### Engineer-additional findings beyond external review
+
+None Engineer-additional in INSP-003 — the external 
+review surfaced more than Engineer would have caught 
+on the deltas. Engineer's role here is verification + 
+routing rather than additional discovery.
+
+### What got done well (per external review)
+
+- INSP-002 was a real consolidation, not a thank-you 
+  note — Inspector folded the prior external review 
+  into the procedural surface, attributed Engineer-
+  additional findings honestly, surfaced the v1.0 PDF 
+  embarrassment as INC-008 in the open
+- Retroactive DONE sign-off cleanup happened with 
+  correct sequencing (precondition for shipping check 
+  11)
+- 11th validator check shipped with synthetic-test 
+  evidence (working agreement #8 operating as designed; 
+  the bug being surfaced now is on edge cases the 
+  synthetic test didn't cover, not a discipline failure)
+- RFI-012 resolved cleanly — banned moves divergence 
+  byte-equivalent between PROJECT.md and 
+  state/current.md
+- Pause-at-blocker discipline produced two real catches 
+  (INC-008 stale-HTML claim, INC-009 heading-level drift)
+- RFI-013 and RFI-014 frame Phase 1 design questions 
+  correctly
+
+### Open questions for operator
+
+1. RFI-015 candidate: check 11 empty done_mses guard 
+   silently disabling the check (per LOW-1). Operator 
+   confirms MS-010 routing.
+2. PROJECT.md banned move added without DEC: operator 
+   confirms DEC-034 retroactive filing in MS-010.
+3. Trivial-typo carve-out from MS discipline: operator 
+   decides documented carve-out vs strict no-mutation-
+   without-MS.
+4. MS-010 splitting strategy: operator decides one 
+   cohesive cluster vs smaller parallel MSes.
+5. Heading-level convention documentation: operator 
+   decides per-form documentation vs validator-symmetric 
+   parsing.
+
+### Recommended next inspection
+
+INSP-004 after MS-010 closes, to verify MS-010 actioned 
+both INSP-002 and INSP-003 findings. Then INSP-005 post-
+Phase-1 first product code per established cadence.
+
+### Cross-references
+
+- INSP-001 (independent audit, c655dab) — supplemented, 
+  not superseded
+- INSP-002 (external review consolidation, bb88533) — 
+  supplemented, not superseded
+- INC-008 (Engineer verification miss in v1.0 of action 
+  plan PDF) — closed
+- INC-009 (heading-level transcription drift) — closed
+- INC-010 (procedural break: Reaper-1 session abandoned 
+  mid-execution requiring git reset and re-planning) — 
+  filed at 423465a; this session re-executes the original 
+  scope under successor Builder Milo
+- This session's bug fixes (Scope A asdfqwerty removal, 
+  Scope B check 11 polarity fix) close MEDIUM-1 and 
+  MEDIUM-2 of this entry concurrently
+- External review document: 
+  /mnt/user-data/uploads/external_review_2026-04-29.md 
+  (operator-controlled, not committed to repo)

@@ -381,3 +381,60 @@ pending
 
 [Operator scopes into Phase 1 design or chooses ahead of 
 MS-010]
+
+---
+
+### RFI-015 — Check 11 empty done_mses guard silently disables the check
+
+**Date:** 2026-04-29
+**From:** Engineer (consolidating INSP-003 external review)
+**To:** Operator
+**Phase:** 0b — pre-Phase-1 deep check (INSP-003 follow-up)
+**Blocking task:** Validator hardening at MS-010
+
+### Question
+
+Check 11's guard at scripts/validate.sh:299 (`grep -qx 
+"$target" <<< "$done_mses" || continue`) silently skips 
+every dep target if done_mses is empty (e.g., all DONE 
+entries temporarily deleted, or check 9's awk hits a 
+parse error producing no output). Intended noise-
+reduction behaviour silently disables the check entirely 
+in failure cases. Fix: add explicit assertion at top of 
+check 11 — if done_mses is empty AND METHOD_STATEMENT.md 
+has any "Depends on:" lines, fail with explicit message. 
+Should this be addressed in MS-010 alongside other 
+validator hardening (chain check forward-only fix, 
+CO/DONE/INSP/SIGN_OFF sequential coverage), or split 
+into a smaller standalone MS?
+
+### Context
+
+External review INSP-003 surfaced this as LOW-1. The 
+fragility doesn't manifest in current state (DONE 
+entries are populated correctly). It would manifest if 
+DONE.md were truncated or check 9 broke for any reason. 
+The fix is small (assertion at function start) but 
+belongs alongside the chain check forward-only hardening 
+(INSP-002 MEDIUM-8) which is already in MS-010 scope.
+
+
+
+### Engineer's lean
+
+Bundle into MS-010 validator hardening cluster. Single 
+MS-010 sub-scope handles all three validator robustness 
+issues: check 9 forward-only, check 11 empty-guard, 
+CO/DONE/INSP/SIGN_OFF coverage extension. Bundling 
+matches the cohesion principle that grouped INSP-001's 
+MEDIUM-1, MEDIUM-2, MEDIUM-3 into one CI introduction 
+MS.
+
+### Operator decision
+
+pending
+
+### Answer
+
+[Operator scopes into MS-010 validator hardening cluster 
+or splits into standalone MS]

@@ -4,7 +4,7 @@
 # Pure bash, no external deps. Runs from repo root: `bash scripts/validate.sh`.
 # Wired into `.githooks/pre-commit` after gitleaks.
 #
-# Checks (eleven — see DEC-026 + INC-006 + MS-005 Scope A + MS-006 Scope G + MS-009 Section 5):
+# Checks (eleven — see DEC-026 + INC-006 + MS-005 Scope A + MS-006 Scope G + MS-009 Section 5 + INSP-003 MEDIUM-1):
 #   1. DEC numbering: sequential, no gaps, no duplicates (DEC-001..DEC-NNN)
 #   2. RFI numbering: sequential, no gaps, no duplicates
 #   3. INC numbering: sequential, no gaps, no duplicates
@@ -24,13 +24,16 @@
 #      "Phase X status" identifier (case-insensitive substring match).
 #      Hard-fail on parse error per DEC-026's fail-closed precedent.
 #  11. DONE sign-off: every "Depends on: MS-NNN" reference resolves to an MS
-#      whose DONE-NNN has a populated "Operator sign-off:" field (not the
-#      literal "pending"). Sign-off field expected to carry the DEC-032
-#      magic-string "DONE-NNN signed off by operator on YYYY-MM-DD" applied
-#      by Builder at next session sign-in after operator chat sign-off.
-#      Tightens check 9's DONE-exists semantics to DONE-signed. Shipped at
-#      MS-009 Section 5 once retroactive cleanup of DONE-002..006 sign-off
-#      fields landed (deferred from MS-007 Scope D3 / DEC-032 closing note).
+#      whose DONE-NNN's "Operator sign-off:" field positively matches the
+#      DEC-032 magic-string format "DONE-NNN signed off by operator on
+#      YYYY-MM-DD." (rigid: numeric date, trailing period). Empty content,
+#      "Pending review" prose, template placeholder copies, and alternate
+#      date formats are all treated as unsigned. Tightens check 9's
+#      DONE-exists semantics to DONE-signed. Shipped at MS-009 Section 5
+#      once retroactive cleanup of DONE-002..006 sign-off fields landed
+#      (deferred from MS-007 Scope D3 / DEC-032 closing note); awk polarity
+#      (negative-pattern → positive-pattern) corrected in this session per
+#      INSP-003 MEDIUM-1.
 #
 # Sign-in / sign-out heading-line regex (strict):
 #   ^### [0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2} session (start|end)$
@@ -272,11 +275,19 @@ if [ -n "$state_phase" ] && [ -n "$readme_phase" ] && [ "$state_phase" != "$read
   fail "README Status section out of sync with state/current.md. README says '$readme_phase'; state says '$state_phase'."
 fi
 
-# Check 11: DONE sign-off enforcement (per MS-007 Scope D3 + DEC-032 + MS-009 Section 5).
-# Build the set of MSes whose DONE entry carries a non-pending Operator sign-off
-# field (i.e. a DEC-032 magic-string was applied), parallel to check 9's done_mses.
+# Check 11: DONE sign-off enforcement (per MS-007 Scope D3 + DEC-032 + MS-009 Section 5
+# + INSP-003 MEDIUM-1 polarity fix).
+# Build the set of MSes whose DONE entry carries a populated Operator sign-off field
+# matching the DEC-032 magic-string format positively (parallel to check 9's done_mses).
 # Then walk the same Depends on: MS-NNN lines and verify each target's DONE is signed.
 # Skip targets that check 9 already failed on (DONE missing) to avoid double-fail noise.
+#
+# Polarity: positive regex match against the rigid DEC-032 format
+#   "DONE-NNN signed off by operator on YYYY-MM-DD."
+# Empty content, "Pending review" prose, template placeholder copies, and date-format
+# variants (e.g. "April 27, 2026") all fail the match and are treated as unsigned.
+# Original negative-pattern logic ("anything not 'pending' = signed") was an
+# INSP-003 MEDIUM-1 bug because it incorrectly accepted those three cases.
 signed_mses=$(awk '
   /^```/ { in_block = !in_block; next }
   !in_block && /^### / {
@@ -289,7 +300,7 @@ signed_mses=$(awk '
   in_done && /^\*\*Operator sign-off:\*\*/ {
     rest = $0
     sub(/^\*\*Operator sign-off:\*\*[[:space:]]*/, "", rest)
-    if (rest !~ /^[Pp]ending\.?[[:space:]]*$/) status = "signed"
+    if (rest ~ /^DONE-[0-9]+ signed off by operator on [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]\.[[:space:]]*$/) status = "signed"
   }
   END { if (in_done && ms != "" && status == "signed") print ms }
 ' forms/DONE.md | sort -u)
