@@ -516,3 +516,68 @@ Low because: (a) caught at validator before commit,
 change), (c) no committed-state corruption, (d) no rework 
 of prose content needed.
 
+---
+
+### INC-010 — Prior agent left dangling SITE_LOG sign-in + uncommitted WIP across overnight gap
+
+**Date:** 2026-04-30 11:20 (filed retroactively; events span 2026-04-29 10:11 → 2026-04-30 11:20)
+**Severity:** medium (procedural break sustained ~24 hours; work-product discarded under operator authorisation; silent counter drift created in working tree before discovery)
+**Discovered by:** Milo (Opus 4.7) on first-session induction reads, 2026-04-30
+**Detected by:** `forms/SITE_LOG.md` trailing-open `### 2026-04-29 10:11 session start` entry without matching session-end heading; six modified files in working tree (`git status -s`); `state/current.md` `Updated:` line at 2026-04-29 10:11 referencing "Scopes A/B/C/D pending below per session prompt"
+
+### What happened
+
+Reaper-1 signed in 2026-04-29 at 10:11 for an INSP-003 + bug-fix session per its own session prompt rules of engagement. Sign-in mechanical actions were applied to the working tree (Section 5 sign-off magic-string in `forms/SIGN_OFF.md`, MS chain bump and `Updated:` refresh in `state/current.md`, sign-in entry appended to `forms/SITE_LOG.md`). Subsequent scope work was attempted as follows:
+
+- **Scope A (`asdfqwerty` removal from `.cspell.json`):** removed from main `words` array; retained in the `forms/**/*.md` + `state/current.md` override at `.cspell.json:89`. Status from working-tree inspection: ambiguous (could be partial work or intentional final state).
+- **Scope B (`scripts/validate.sh` check 11 awk polarity fix):** applied. Working tree had positive-pattern match against DEC-032 magic-string format; header comments referenced INSP-003 MEDIUM-1.
+- **Scope C (INSP-003 filing):** applied. `forms/INSPECTION.md` contained INSP-003 entry at H2 per form convention.
+- **Scope D (RFI-015 filing):** not started. `forms/RFI.md` unmodified; RFI-015 absent from file. The RFI-015 body was specified by the session prompt as "Engineer-supplied verbatim" — that source was not captured in the repo.
+
+The session never wrote a sign-out entry, never committed, never pushed. Six files sat dirty for ~24 hours (2026-04-29 10:11 → 2026-04-30 11:20) before discovery.
+
+### Blast radius
+
+- Working-tree dirty state for ~24 hours: `forms/SITE_LOG.md`, `forms/SIGN_OFF.md`, `forms/INSPECTION.md`, `scripts/validate.sh`, `state/current.md`, `.cspell.json`.
+- One open SITE_LOG sign-in with no matching sign-out — silent procedural debt visible only to a careful reader of the file tail.
+- Counter drift in working tree: `forms/INSPECTION.md` contained INSP-003 entry while `state/current.md` still claimed `Latest INSP: INSP-002`. Validator's check 7 covers MS / DEC / RFI / INC counters but not INSP, so the drift was silent.
+- HEAD remained at `4feef75` throughout; no committed-state corruption.
+- No production impact — project is pre-Phase-1; nothing deployed; no users.
+
+### How detected
+
+Milo (Opus 4.7) first-session induction on 2026-04-30 included Procedure 1 reads of `forms/SITE_LOG.md` and a `git status` check. The trailing-open sign-in surfaced immediately at the file tail. Read-only audit (per operator direction "1 read only audit, figure out what left before finish") confirmed the four-scope status above and the missing sign-out / commit / push.
+
+### Action taken
+
+Per operator authorisation 2026-04-30 ("I agree and approve" on the proposed sequence: reset + sign-in + INC, with forward work scope to be set next):
+
+1. **`git reset --hard 4feef75`** — six WIP files discarded. Working tree clean. Validator PASS confirmed on reset state (`VALIDATOR: PASS`, exit 0).
+2. **No retroactive sign-out filed** for the 2026-04-29 10:11 session. The reset removed the sign-in entry itself (it was uncommitted), so there is no orphan start to pair with. The session's existence is documented here in INC-010 instead.
+3. **Milo (Opus 4.7) signed in 2026-04-30 11:20** as Builder/Reaper successor per role-table update of 2026-04-30.
+4. **INC-010 (this entry)** filed as first work action per Procedure 9 missing-sign-out clause.
+5. Discarded work-products are recoverable: validator polarity fix can be re-done under proper MS coverage; INSP-003 can be re-filed verbatim from the operator-supplied source if needed; Section 5 chat sign-off (operator 2026-04-28) is documented in chat history and the magic-string can be re-applied at the next legitimate Section 5 sign-off cycle per DEC-032 mechanism. None of the discarded WIP was load-bearing on the committed state at `4feef75`.
+
+### Linked to
+
+- **MS-009 Section 5** — Section 5 magic-string was being applied in the discarded WIP; not yet re-applied.
+- **DEC-032** — magic-string mechanism; the Section 5 magic-string is pending re-application at next sign-in cycle.
+- **INSP-003** — was being filed in the discarded WIP; not yet re-filed.
+- **(potential) MS-010 / MS-011** — recommendations below may belong to MS-010 scope (validator hardening) or MS-011 scope (working-agreements consolidation).
+
+### Lessons
+
+Procedure 9's missing-sign-out enforcement is *retroactive only* — the validator catches it via check 8 (which allows ≤1 open sign-in). The check fires when a *next* session attempts to sign in and would create two open sessions; for the dangling session itself, no automatic mechanism flags the gap. The cost is procedural debt that accumulates silently between sessions — in this case ~24 hours; longer is possible if no next session triggers the catch.
+
+Compounding factor: the dangling state included not only the sign-in but the entire substantive WIP. With no commit, the work was never preserved in git history; if the operator had moved to a different machine or the working directory had been deleted, all work would have been lost. Sign-out + commit + push is the close-out pattern; failing to do any one of them creates risk.
+
+### Working agreement candidates (route to MS-011 consolidation)
+
+1. **Sign-out + commit + push are joint, not separable.** A session that does work but never commits creates work-loss risk. Consider whether the agent profile or session-prompt template should include a sign-out checklist that explicitly fails if commit + push haven't happened.
+2. **Validator check candidate:** flag any sign-in entry whose timestamp is older than N hours and has no matching sign-out. Surfaces dangling state on every commit, not only on next sign-in. Would have caught this gap proactively rather than waiting for the next agent's audit.
+3. **Counter drift on INSP not covered by validator check 7.** Entries can be added to `forms/INSPECTION.md` without `Latest INSP` in `state/current.md` updating, and the discrepancy is invisible. Consider extending check 7 to cover INSP, OR adding explicit doctrine that INSPECTION.md → state/current.md counter sync is operator-direction-only.
+
+### Severity rationale
+
+Medium because: (a) procedural break sustained ~24 hours, (b) work-product discarded under operator authorisation (recoverable but not free), (c) silent counter drift created in working tree (INSP-003 in file but `Latest INSP: INSP-002` in state) before discovery, (d) sign-out is a Procedure 9 *required* step that was simply absent — pure rule break, not a near-miss. Not high because (e) no production impact, (f) no committed-state corruption (HEAD remained at `4feef75` throughout), (g) full reconstruction possible from the working-tree audit before reset, (h) operator authorised the cleanup path; recovery is clean and documented.
+
