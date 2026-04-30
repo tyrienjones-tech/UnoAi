@@ -581,3 +581,71 @@ Compounding factor: the dangling state included not only the sign-in but the ent
 
 Medium because: (a) procedural break sustained ~24 hours, (b) work-product discarded under operator authorisation (recoverable but not free), (c) silent counter drift created in working tree (INSP-003 in file but `Latest INSP: INSP-002` in state) before discovery, (d) sign-out is a Procedure 9 *required* step that was simply absent — pure rule break, not a near-miss. Not high because (e) no production impact, (f) no committed-state corruption (HEAD remained at `4feef75` throughout), (g) full reconstruction possible from the working-tree audit before reset, (h) operator authorised the cleanup path; recovery is clean and documented.
 
+---
+
+### INC-011 — `npm install` fails on corrupted `@sigstore/sign` internal file (system-level, not UnoAi-side)
+
+**Date:** 2026-04-30 23:18 (filed during MS-009 Section 6 in-flight)
+**Severity:** medium (environmental issue; blocks fresh `npm install` on this machine; live UnoAi commits unaffected because they use pre-existing `node_modules`)
+**Discovered by:** Milo (Opus 4.7) during MS-009 Section 6 cold-clone hook test (Sub-scope 6B.3 Prettier synthetic test)
+**Detected by:** Section 6B.3 commit attempt produced `npm error Unexpected token 'return'` rather than expected Prettier `--check` output. Diagnosis via the npm-cache debug log named in the error message (`C:\Users\Tyrien\AppData\Local\npm-cache\_logs\2026-04-30T15_17_50_271Z-debug-0.log`)
+
+### What happened
+
+MS-009 Section 6 is the cold-clone end-to-end test. Sub-scope 6A passed: clone, hook activation, validator from clone all clean. Sub-scope 6B.1 (gitleaks) and 6B.2 (validator) both passed in the cold clone with expected BLOCK behaviour. Sub-scope 6B.3 (Prettier synthetic test) committed a deliberately mis-formatted JSON file expecting Prettier to BLOCK with `--check` output. The commit was BLOCKED (exit 1), but the diagnostic was `npm error Unexpected token 'return'` rather than Prettier's expected formatting-issue output.
+
+Investigation traced the error to `npm install` itself failing in **both** the cold clone AND the live working tree with the same error. The live UnoAi repo's pre-commit hook chain has been working today (commits `423465a` and `61c7cba` both cleared the full five-stage hook chain) because those invocations use `node_modules/` already on disk from a prior successful install — they don't trigger the broken code path.
+
+The npm-cache debug log identifies the failing file: `C:\Program Files\nodejs\node_modules\npm\node_modules\@sigstore\sign\dist\witness\tsa\client.js:40`. The line content per the verbose stack:
+
+```
+$      return await this.tsa.createTimestamp(request);
+^^^^^^
+SyntaxError: Unexpected token 'return'
+```
+
+The stray `$` at the start of the line is invalid JavaScript. The file is corrupted on disk. `@sigstore/sign` is one of npm's internal package-signing libraries (used during install for Timestamp Authority verification), bundled with npm itself.
+
+### Blast radius
+
+- Cold-clone setup cannot complete `npm install` → cannot populate `node_modules/` in fresh clones → cannot test 6B.3 / 6B.4 / 6B.5 hook stages in cold clone with clean diagnostics.
+- Live working tree cannot reinstall or update npm dependencies if needed — frozen at whatever `node_modules/` was last successfully populated.
+- Pre-commit hook chain still functions for normal commits (uses pre-existing deps via `npx`-style invocations, doesn't load `@sigstore/sign`).
+- No committed-state corruption. HEAD remains `61c7cba`.
+- No production impact (project is pre-Phase-1; nothing deployed; no users).
+- Affects only: this developer environment (operator's machine). Other clones on other machines unaffected unless they share the same corruption.
+
+### How detected
+
+MS-009 Section 6's cold-clone test methodology specifically surfaces fresh-environment friction that's invisible from a live working tree. 6B.3 was the trigger: synthetic Prettier violation produced an npm error instead of a Prettier error, which prompted the diagnostic dive. The cold-clone test paid for itself on its first run.
+
+### Action taken
+
+1. **Pause-at-blocker invoked** per session prompt rules of engagement. Surfaced findings to operator.
+2. **Investigated via the source of truth** — the npm-cache debug log named in the error message. Pulled both the failure-path log (15:17:50) and a success-path log (12:43, from this morning's INC-010 commit's cspell run) for comparison. The success path used `npm exec cspell` (npx) which doesn't load `@sigstore/sign`; the failure path was `npm install` which does.
+3. **Identified root cause:** corrupted `client.js` at `C:\Program Files\nodejs\node_modules\npm\node_modules\@sigstore\sign\dist\witness\tsa\client.js:40`. Stray `$` token, likely from antivirus interference, half-completed npm self-update, or disk write hiccup.
+4. **Operator (Tyrien) authorised Path A:** reinstall Node from nodejs.org. Cleanest fix; repairs npm and its bundled internals without touching UnoAi-side state. Reinstall in progress at filing time.
+5. **Section 6 resume planned** post-Node-reinstall: retry `npm install` in cold clone; if clean, continue 6B.3 through 6B.5 with proper hook diagnostics; complete 6C cleanup; sign out + commit + push.
+6. **This INC filed** during the Node-reinstall window so the audit trail captures the discovery regardless of the resume path.
+
+### Linked to
+
+- **MS-009 Section 6** (in progress this session) — the cold-clone test surfaced this finding; Section 6 resumes from 6B.3 post-reinstall.
+- **CONTRIBUTING.md** — likely needs an amendment documenting `npm install` as a per-clone setup step alongside the existing `git config core.hooksPath` instruction. Currently CONTRIBUTING.md only mentions hook activation; doesn't mention dependency install. Routing: future MS (likely MS-010 if scoped, or a small standalone amendment).
+- **INSP-001 / INSP-002 / INSP-003** — none of these prior inspections caught this, because they all reviewed the live working tree where `node_modules/` already exists. Cold-clone testing was the discovery surface, which validates Section 6's existence.
+
+### Lessons
+
+1. **Cold-clone testing has unique discovery value.** A live working tree masks environment-state issues that only surface on fresh clones. Section 6's design — explicitly cold-cloning rather than testing in place — was the right call. The five-hook synthetic test in cold clone surfaced a real environmental issue that three prior inspections (INSP-001/002/003) all missed because they reviewed the live tree.
+2. **Hook chain diagnostic clarity depends on `node_modules/` populated.** When `node_modules/` is missing, the hook chain still BLOCKS commits (safety property preserved) but via npm-side errors rather than the actual hook tool's output. A fresh agent reading those errors might be confused. Possible CONTRIBUTING.md amendment: document `npm install` as a setup step.
+3. **The npm `@sigstore/sign` corruption is not a UnoAi failure mode.** It's a system-level / environment-level issue. Fix is environmental (Node reinstall), not procedural. The procedural lesson is "keep the diagnostic chain to the source of truth" — in this case, the npm-cache debug log was the right starting point.
+
+### Working agreement candidates (route to MS-011 consolidation)
+
+1. **CONTRIBUTING.md should document the full setup chain.** Current text mentions hook activation only. A fresh contributor needs: `git clone` → `git config core.hooksPath .githooks` → `npm install` → ready. The middle step is currently implicit. (Routing: MS-010 documentation cluster, or standalone amendment.)
+2. **Pre-commit hook diagnostics could distinguish "tool failed" from "tool environment broken."** Currently when npm itself errors, the hook reports it under the relevant tool's BLOCK message (e.g., "Prettier flagged staged files"). A future hook-hardening step might detect `npm error` patterns specifically and surface "tool environment issue, not staged content issue." (Routing: MS-010 hook hardening, if scoped.)
+
+### Severity rationale
+
+Medium because: (a) environmental issue affects developer experience and fresh-clone reproducibility, (b) blocks any future `npm install` on this machine until repaired, (c) introduces fragility — live commits work only because `node_modules/` happens to be populated already; any reinstall trigger would expose the bug. Not high because (d) no production impact, (e) no committed-state corruption, (f) operator can fix in ~5 minutes via Node reinstall, (g) workaround for the immediate session is well-understood (test 6B.3-6B.5 in cold clone post-reinstall, OR document the cold-clone limitation if resume isn't pursued), (h) live UnoAi commits unaffected throughout.
+

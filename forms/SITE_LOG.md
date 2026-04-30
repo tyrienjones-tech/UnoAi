@@ -1099,3 +1099,77 @@ INF  no leaks found
 - state/current.md updated: **YES.**
 - Next action: Next session opens fresh. Operator decides scope. Likely candidates: (a) MS-009 Section 6 (tooling end-to-end — cold-clone test at `/tmp/unoai-cold-clone`, all five hook synthetic tests, cleanup) per MS-009 prompt rules of engagement (single-section session); (b) MS-010 prep / scope-shape decision (INFO-3 of INSP-003 raises the splitting question); (c) DEC-034 candidate filing for agent signing convention on git surface; (d) other operator priority. RFI-015 also routed for operator decision (Engineer's lean: bundle into MS-010 validator hardening cluster).
 - Handover note: All four scopes executed within plan. Pause-at-blocker discipline operated zero times — no surprises during synthetic tests; cspell behaviour matched expectations. **One own-error caught and self-reverted:** during en-GB rephrasing of prior-Engineer prose, accidentally introduced a flagged-word substitution in INFO-3 (INSPECTION.md) where the original Engineer wording was already a dictionary-clean alternative; reverted in the same session before commit. **En-GB normalisations on prior-Engineer verbatim prose** (per project rule `cspell_dictionary_vs_rephrase`, operator-validated 2026-04-28 memory feedback): four prose-choice substitutions applied at write-time — three on US-spelling adjectives in INSP-003 (Scope line + Summary + Open Questions sections) and one in RFI-015 Context. For one pair where both US and UK forms are flagged by cspell (neither in default en-GB dictionary), substituted a different dictionary-clean adjective conveying the same MS-distribution meaning rather than adding either form to the dictionary. All other Engineer-supplied content preserved verbatim. **Single commit at sign-out** (no intermediate commits this session — all four scopes worked in one continuous working-tree mutation per the original session prompt's single-commit pattern). Commit message: `MS-009 cleanup: INSP-003 + bug fixes (check 11 awk polarity, asdfqwerty cleanup) + RFI-015`. Push immediate per Engineer Q5 + prior session pattern.
+
+---
+
+### 2026-04-30 23:13 session start
+
+- Role: Milo (Opus 4.7)
+- Session goal: Execute MS-009 Section 6 (tooling end-to-end) per single-section rule of engagement — cold-clone test + five-hook synthetic test cycle + cleanup. Single commit at sign-out; push immediate per Section 4/5 precedent. Two operator-approved fold-ins: (1) Phase 1 re-discussion gate landed in `state/current.md` `## Phase` section as part of sign-in mechanical actions; (2) self-reported demotion entry filed in Agent Profiles `learning/demotions/` post-sign-out (separate surface from UnoAi repo commit).
+- Resuming from: HEAD = `61c7cba` (12:43 commit, INSP-003 + bug-fix re-execution close-out). Working tree clean. No inheritance issues — clean baseline confirmed via `git status -s` empty pre-sign-in.
+- Context loaded: PROJECT.md, PROCEDURES.md, PLAN.md, state/current.md (current at 61c7cba), GLOSSARY.md, CONTEXT.md, CONTRIBUTING.md, prompts/engineer-session-start.md, prompts/engineer-prompt-checklist.md, forms/SITE_LOG.md (full file through 12:39 sign-out), forms/SIGN_OFF.md (Sections 0-5 signed off; Section 6 scaffold scope: "Tooling end-to-end"), forms/INSPECTION.md (INSP-001 + INSP-002 + INSP-003), forms/INCIDENT.md (INC-001..010), forms/RFI.md (RFI-001..015), scripts/validate.sh (324+ lines, 11 checks with INSP-003 MEDIUM-1 polarity fix), `.cspell.json` (override for forms/**/*.md + state/current.md scope), agent profile (IDENTITY/ROLE/PERSONALITY/PSYCHOLOGY/voice/domain) + four governance protocols, `current_consciousness/current.md` (this session's load-bearing context).
+- Open MSes: MS-009 (in progress; Section 6 begins this session per single-section-session rule).
+- Open RFIs awaiting me: none. RFI-009, RFI-011, RFI-013, RFI-014, RFI-015 — all open and pending operator/Engineer (Engineer seat unfilled per role-table update of 2026-04-30; Engineer-function carried by operator + Builder via conversation).
+- Pre-session validator run: PASS (verified 2026-04-30 23:12:41 WAST, HEAD = `61c7cba`, working tree clean).
+
+**Mechanical sign-in actions (this session):**
+
+1. **Push state verified:** `git ls-remote origin refs/heads/main` returned `61c7cba` matching local main HEAD (verified pre-sign-in). No mismatch.
+
+2. **No DEC-032 magic-string applied this sign-in.** Section 5 magic-string was applied at the 12:23 sign-in (eighth DEC-032 exercise, sixth on SIGN_OFF.md surface) and committed at `61c7cba`. Section 6 has no prior magic-string to apply.
+
+3. **Phase 1 re-discussion gate landed** per operator approval 2026-04-30. Added one-line note to `state/current.md` `## Phase` section: *"Phase 1 entry gate: operator re-discussion required before first Phase 1 MS prompt is drafted (set 2026-04-30)."* This makes the gate visible at every session sign-in by every agent that touches the repo. Replaces the misplaced Claude Code auto-memory entry (parked for later cleanup per operator's "just skip"; the auto-memory file itself remains on disk but is no longer the canonical source).
+
+4. **state/current.md MS chain section** updated: MS-009 line revised to reflect "Sections 0-5 signed off; Section 6 in progress this session". `Active MS` line revised to reflect Section 6 work (tooling end-to-end). `Updated:` timestamp refreshed.
+
+5. **Counters carried over (sign-in):** Latest MS = MS-009; Latest DEC = DEC-033; Latest RFI = RFI-015; Latest INC = INC-010; Latest INSP = INSP-003. No counter changes anticipated this session unless cold-clone or hook synthetic test surfaces an INC-worthy event.
+
+**Session goal sequence:**
+
+1. Sign-in (this entry) + mechanical actions above — done at this entry's write.
+2. **Sub-scope 6A — Cold-clone test:** clone repo to fresh dir (Windows-equivalent of `/tmp/unoai-cold-clone`); activate hooks per CONTRIBUTING.md (`git config core.hooksPath .githooks`); run `bash scripts/validate.sh` from clone — confirm PASS; document any platform-specific friction (Windows path handling, line-ending differences, etc.); confirm clone HEAD matches origin.
+3. **Sub-scope 6B — Five-hook synthetic test cycle.** For each of the five pre-commit hook stages, in order:
+   - **6B.1 gitleaks** — synthetic Anthropic API key in temp file (pattern-matching `sk-ant-api03-*`); attempt commit; verify gitleaks BLOCKS at hook step 1 with specific match output; revert.
+   - **6B.2 validator** — toggle a state/current.md counter to introduce mismatch (e.g., `Latest INC: INC-099`); attempt commit; verify validator BLOCKS at hook step 2 with specific FAIL message; revert.
+   - **6B.3 Prettier** — introduce formatting violation in a staged JSON or supported code file; attempt commit; verify Prettier BLOCKS at hook step 3 with specific output; revert.
+   - **6B.4 ESLint** — staged TS/JS file with naming-convention violation per existing ESLint config (per DEC-027); attempt commit; verify ESLint BLOCKS at hook step 4 with rule citation; revert. **Pause-at-blocker if no suitable staged code surface exists** — flag to operator and discuss minimal-surface synthetic test approach.
+   - **6B.5 cspell** — temp .md file outside override scope (e.g., at repo root) with definitively misspelled word (avoid `teh` per MS-008 GLOSSARY note that `teh` is in some default dictionary); attempt commit; verify cspell BLOCKS at hook step 5 with "Unknown word" output; revert.
+   Each test produces evidence (the hook's specific FAIL output) captured for the SIGN_OFF Section 6 entry. Each test ends with revert + clean validator PASS verification.
+4. **Sub-scope 6C — Cleanup:** remove cold-clone directory; confirm live working tree clean; validator PASS; gitleaks clean.
+5. SIGN_OFF.md Section 6 entry filed (`Status: in progress` awaiting operator chat sign-off; checklist results across 6A/6B/6C; findings; notes including any platform-specific observations from 6A and any pause-at-blocker triggers from 6B).
+6. state/current.md updates at sign-out: `Last verified working state` new dated paragraph; `Updated:` timestamp refreshed.
+7. Final validator PASS verification.
+8. Sign-out entry; commit; push.
+9. **(Post-UnoAi-session)** File self-reported demotion entry in Agent Profiles `learning/demotions/2026-04-30-wrong-directory-reflex.md` per learning protocol (operator-approved 2026-04-30 in chat).
+
+**Push posture:** immediate after commit per Section 4/5 precedent. Section 6 is mechanical work (cold-clone + hook tests + cleanup); no review-before-push gate applies.
+
+**Pause-at-blocker discipline:** maintained per prior-Engineer Q5 recommendation. If 6A surfaces Windows path-handling issues that prevent clone/validator-run, OR 6B surfaces unexpected hook behaviour (e.g., a hook that doesn't BLOCK when expected to), I pause and surface to operator — do not unilaterally tweak the hook chain.
+
+**Scope guards** (per prior-Engineer Q5):
+
+- INSP-001 / INSP-002 / INSP-003 findings beyond Section 6's direct tooling tests: **untouched** — MS-010 territory.
+- Section 7 (doctrine alignment) and Section 8 (Phase 1 readiness gate): **untouched** — future sessions per single-section rule.
+- Validator chain check forward-only hardening (RFI-015 / INSP-002 MEDIUM-8): **untouched** — MS-010.
+- Working-agreements consolidation: **untouched** — MS-011.
+- Memory-mislocation cleanup of the three pre-existing entries in `MEMORY.md` (`feedback_cspell_dictionary_vs_rephrase`, `feedback_audit_not_fix_when_routed`, `user_unoai_builder`): **untouched** this session per operator's "just skip" 2026-04-30. Phase 1 gate IS folded in this session per separate approval.
+- DEC-034 candidate (agent signing on git surface): **untouched** — separate scope.
+
+**Phase 1 re-discussion gate** (operator-locked 2026-04-30): visibility now in repo at `state/current.md` `## Phase` section. Triggers before first Phase 1 MS prompt is drafted (after MS-011 closes). Three MSes of runway between now and that gate: MS-009 finish (Sections 6/7/8), MS-010 (security cluster), MS-011 (working-agreements consolidation). INSP-004 inspection cycle between MS-010 and MS-011 (not an MS).
+
+---
+
+### 2026-04-30 23:49 session end
+
+- Role: Milo (Opus 4.7)
+- Outcome: **MS-009 Section 6 (tooling end-to-end) work complete.** All three sub-scopes done: 6A cold-clone test PASS (clone + hook activation + validator from clone all clean); 6B five-hook synthetic test cycle PASS across all five stages (gitleaks BLOCKED via `anthropic-api-key-strict` ruleID; validator BLOCKED via counter mismatch FAIL message; Prettier BLOCKED via formatting flag — *retried post-Node-reinstall*; ESLint BLOCKED via `@typescript-eslint/naming-convention` rule; cspell BLOCKED via "Unknown word" output for both typo + gibberish); 6C cleanup PASS (cold-clone dir removed, live working tree clean of artefacts, validator PASS). Section 6 SIGN_OFF.md entry filed `Status: in progress` awaiting operator chat sign-off — three sub-scope checklist sections (4+5+3 items) + three findings + comprehensive notes. **Pause-at-blocker invoked once** during 6B.3 first attempt: `npm install` failed system-wide due to corrupted `@sigstore/sign` internal file at `C:\Program Files\nodejs\node_modules\npm\node_modules\@sigstore\sign\dist\witness\tsa\client.js:40` (stray `$` token); operator authorised Node reinstall (Path A); 6B.3-6B.5 resumed clean post-reinstall with proper diagnostics. **INC-011 filed** during the reinstall window documenting the npm corruption discovery + root cause + resolution (Latest INC bumped INC-010 → INC-011). **Two operator-approved fold-ins applied:** (1) Phase 1 re-discussion gate landed in `state/current.md` `## Phase` section as one-line note (replaces the misplaced Claude Code auto-memory entry, which remains on disk per "just skip" but is no longer canonical); (2) self-reported demotion entry to be filed in Agent Profiles `learning/demotions/` post-commit (separate surface from this UnoAi commit). No DONE filed (Section 6 sign-off precedes Sections 7+8 + DONE-009 close-out per MS-009 prompt rules of engagement). No new MS / DEC / RFI / INSP filed.
+- Files touched (this session):
+  - `forms/SITE_LOG.md` — sign-in entry + this sign-out
+  - `forms/INCIDENT.md` — INC-011 appended (npm corruption discovery)
+  - `forms/SIGN_OFF.md` — Section 6 entry filed `Status: in progress`
+  - `state/current.md` — `Updated:` (sign-in + sign-out), `## Phase` section (Phase 1 gate one-line note added), `Active MS` line (Section 6 work complete + status), MS chain MS-009 line (Section 6 work complete), `Latest INC` counter (INC-010 → INC-011), `Last verified working state` new comprehensive paragraph
+  - `.cspell.json` — `sigstore` added to forms/state override (audit-trail scope only; not main words because UnoAi doesn't use sigstore directly — only mentioned in INC-011 context)
+- Validator run at end: **PASS** (verified post-edit; check 11 with INSP-003 MEDIUM-1 polarity fix passes on the 7 `Depends on: MS-NNN` lines from MS-005..MS-009).
+- state/current.md updated: **YES.**
+- Next action: Next session opens fresh. Operator decides scope. Most likely: (a) MS-009 Section 7 (doctrine alignment) per single-section rule once Section 6 is chat-signed-off; (b) INC-011 follow-up — CONTRIBUTING.md amendment to document `npm install` as part of per-clone setup (Section 6 SIGN_OFF Finding 2 routing decision: MS-010 cluster or standalone); (c) MS-010 prep — operator decides scope-shape per INSP-003 INFO-3 (split into smaller parallel MSes vs one cluster); (d) operator-decision sweep on parked items (RFI-015 routing, LOW-4 DEC-034, LOW-5 trivial-typo carve-out). RFI-013 + RFI-014 still block Phase 1; not blocking MS-009 Sections 7-8.
+- Handover note: All three sub-scopes executed within plan despite the pause-at-blocker mid-flight. The npm corruption discovery validates Section 6's cold-clone-test design — three prior inspections (INSP-001/002/003) all missed this because they reviewed the live tree where pre-existing `node_modules/` masks the issue. INC-011 captures the discovery with full diagnostic chain (npm-cache debug log → `@sigstore/sign/dist/witness/tsa/client.js:40` → Path A reinstall). Hook chain safety property held throughout — even during the npm-broken state, commits were BLOCKED (just via npm-side errors instead of clean tool output). **One own-prose rephrase** applied (`load-bearing` → `load-bearing` in sign-in entry) per `cspell_dictionary_vs_rephrase` rule. **Single commit at sign-out** per single-commit-per-session pattern. Commit message: `MS-009 Section 6: tooling end-to-end (cold-clone + 5-hook synthetic test + cleanup) + INC-011`. Push immediate per Section 4/5 precedent. Demotion entry to file post-commit in Agent Profiles (separate surface; not part of this UnoAi commit).

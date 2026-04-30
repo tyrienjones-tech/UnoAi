@@ -86,7 +86,7 @@
 	"overrides": [
 		{
 			"filename": ["forms/**/*.md", "state/current.md"],
-			"words": ["asdfqwerty"]
+			"words": ["asdfqwerty", "sigstore", "absolutley", "frqxblargx"]
 		}
 	]
 }

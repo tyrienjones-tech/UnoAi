@@ -341,22 +341,51 @@ This finding is **audit-not-fix per scope guards**: per the operator-validated r
 
 ## MS-009 Section 6 — Tooling end-to-end
 
-Status: pending
-Date filed: pending
+Status: in progress
+Date filed: 2026-04-30
 Date signed: pending
 Operator sign-off: pending
 
 ### Checklist results
 
-(to be filled at Section 6 work)
+**Sub-scope 6A — Cold-clone test:**
+
+- [x] **6A.1 Cold clone from origin.** `git clone https://github.com/tyrienjones-tech/UnoAi.git /tmp/unoai-cold-clone` resolved cleanly. Bash-on-Windows mapped `/tmp/unoai-cold-clone` to `C:\Users\Tyrien\AppData\Local\Temp\unoai-cold-clone` transparently. Exit 0. No platform-friction at this step.
+- [x] **6A.2 Hook activation.** Pre-activation `git config --get core.hooksPath` returned empty (default `.git/hooks` — confirms CONTRIBUTING.md statement that hook activation is per-clone opt-in). Post-activation: `git config core.hooksPath .githooks` set value; `.githooks/pre-commit` present and executable.
+- [x] **6A.3 Validator from clone.** `bash scripts/validate.sh` from cold-clone HEAD `61c7cba` returned `VALIDATOR: PASS` exit 0. Confirms validator is committed-state-portable (no dependence on local working-tree artefacts beyond what's in HEAD).
+- [x] **6A.4 HEAD verification.** Cold-clone HEAD = `61c7cba` matching origin and live working tree.
+
+**Sub-scope 6B — Five-hook synthetic test cycle (in cold clone):**
+
+- [x] **6B.1 gitleaks.** Synthetic Anthropic API key (pattern `sk-ant-api03-` + 80 chars) in temp file `test-gitleaks-synthetic.txt`. Commit attempt → gitleaks BLOCKED at hook step 1 with `RuleID: anthropic-api-key-strict`, `Finding: REDACTED`, exit 1. DEC-024 required-actions message printed by hook. Reverted clean (file unstaged + deleted).
+- [x] **6B.2 validator.** State counter mismatch (`Latest INC: INC-099` vs actual highest INC-010) introduced via `sed`. Commit attempt → gitleaks PASS, validator BLOCKED at hook step 2 with `state/current.md 'Latest INC' counter (INC-099) does not match actual highest entry (INC-010)`, exit 1. DEC-026 required-actions message printed. Reverted via `git checkout state/current.md`.
+- [x] **6B.3 Prettier** *(retried post-Node-reinstall; see 6A findings + INC-011)*. Synthetic mis-formatted JSON in `test-prettier-synthetic.json` (extra spaces, weird wrapping, comma placement). Commit attempt → gitleaks PASS, validator PASS, **Prettier BLOCKED** at hook step 3 with `Code style issues found in the above file`, exit 1. Hook FAIL message printed with `npm run format` fix guidance. Reverted clean.
+- [x] **6B.4 ESLint.** Synthetic TypeScript file `src/test-eslint-synthetic.ts` with type alias `myBadType` (camelCase — violates DEC-027 PascalCase-for-types convention). Commit attempt → gitleaks PASS, validator PASS, Prettier PASS, **ESLint BLOCKED** at hook step 4 with `Type Alias name 'myBadType' must match one of the following formats: PascalCase  @typescript-eslint/naming-convention`, 1 problem 1 error, exit 1. Hook FAIL message printed with fix guidance. Reverted clean.
+- [x] **6B.5 cspell.** Synthetic mis-spelled content in `test-cspell-synthetic.md` at repo root (outside `forms/**/*.md` + `state/current.md` override scope). Two violations: `absolutley` (typo of "absolutely") and `frqxblargx` (gibberish non-word). Commit attempt → gitleaks PASS, validator PASS, Prettier/ESLint short-circuit (no staged code), **cspell BLOCKED** at hook step 5 with `Unknown word (absolutley) fix: (absolutely)` and `Unknown word (frqxblargx)`, exit 1. Hook FAIL message printed with project-term-vs-typo guidance. Reverted clean.
+
+**Sub-scope 6C — Cleanup:**
+
+- [x] **6C.1 Cold-clone directory removed.** `rm -rf /tmp/unoai-cold-clone` executed; `ls /tmp/unoai-cold-clone` returns "No such file or directory". No leftover state.
+- [x] **6C.2 Live working tree clean of cold-clone artefacts.** `git status -s` shows only the intended four dirty files from the live session itself (`.cspell.json`, `forms/INCIDENT.md`, `forms/SITE_LOG.md`, `state/current.md`). No cold-clone leakage into live tree.
+- [x] **6C.3 Validator PASS at sign-out.** `bash scripts/validate.sh` returns `VALIDATOR: PASS` exit 0 on the live working tree post-edits.
 
 ### Findings
 
-(to be filled at Section 6 work)
+**Finding 1 (resolved this session — see INC-011):** Cold-clone test surfaced a system-level npm corruption that was invisible from the live working tree. `npm install` failed in both cold clone and live with `SyntaxError: Unexpected token 'return'` in `C:\Program Files\nodejs\node_modules\npm\node_modules\@sigstore\sign\dist\witness\tsa\client.js:40` (stray `$` token, file corruption). Live UnoAi commits had been working today because they used pre-existing `node_modules/` from a prior successful install — they don't trigger the broken `@sigstore/sign` code path. Operator (Tyrien) reinstalled Node from nodejs.org per Path A; `npm install` retry post-reinstall succeeded (343 packages, exit 0). 6B.3-6B.5 then completed with clean diagnostics in cold clone. INC-011 filed during the reinstall window documents the discovery, root cause, and resolution. **Validates Section 6's design** — cold-clone testing surfaced an environmental issue that three prior inspections (INSP-001/002/003) all missed because they reviewed the live tree.
+
+**Finding 2 (CONTRIBUTING.md amendment candidate):** CONTRIBUTING.md currently documents `git config core.hooksPath .githooks` as the per-clone setup step but doesn't mention `npm install`. A fresh contributor following CONTRIBUTING.md alone would have a partially-functional hook chain — gitleaks and validator would work, but Prettier/ESLint/cspell would surface npm-side errors instead of clean tool diagnostics (or, if `npm install` itself were broken, fail entirely). Recommendation: amend CONTRIBUTING.md to document the full setup chain `git clone → git config core.hooksPath → npm install → ready`. Routing: MS-010 documentation cluster, OR a small standalone amendment ahead of MS-010 if operator wants the setup gap closed sooner. **Not actioned this session** per scope guards.
+
+**Finding 3 (npm audit observation, informational):** Post-reinstall `npm install` reported `3 low severity vulnerabilities` and suggested `npm audit fix --force`. Not blocking Section 6 testing. Not actioned this session — out of scope. Could route to MS-010 supply-chain monitoring scope (per INSP-001 MEDIUM-4) or be reviewed at the next dependency cycle.
 
 ### Notes
 
-(to be filled at Section 6 work — cold-clone test at `/tmp/unoai-cold-clone`, all five hook synthetic tests, cleanup after)
+- **All five hook stages confirmed BLOCKING correctly with clean diagnostics.** The hook chain is doing what it's supposed to do across the full safety surface (secrets, state integrity, formatting, lint, spelling).
+- **Pause-at-blocker discipline operated once this session** — at the npm-install failure during 6B.3 first attempt. Surfaced to operator, did not unilaterally tweak; investigation followed the source-of-truth chain (npm-cache debug log → `@sigstore/sign/dist/witness/tsa/client.js:40`); operator authorised Path A (Node reinstall); Section 6 resumed cleanly post-fix. Working agreement #18 (explicit-approval-per-step) operated as designed.
+- **Diagnostic-clarity finding from 6B.3 first attempt:** when `node_modules/` is missing, the hook chain still BLOCKS commits (safety property preserved) but via npm-side errors rather than the actual hook tool's output. Captured in INC-011 lessons + Finding 2 here. CONTRIBUTING.md amendment routing handles the procedural follow-up.
+- **Scope guards held throughout:** INSP-001/002/003 findings beyond Section 6's direct tooling tests untouched (MS-010 territory); Sections 7 and 8 untouched (future sessions per single-section rule); validator hardening (RFI-015 / INSP-002 MEDIUM-8) untouched (MS-010); working-agreements consolidation untouched (MS-011); pre-existing `MEMORY.md` misplaced entries untouched (per operator's "just skip" 2026-04-30); DEC-034 candidate untouched (separate scope).
+- **Counter advances this session:** Latest INC INC-010 → INC-011 (INC-011 filed during the npm-investigation window). No DEC / RFI / MS / INSP advances.
+- **Two operator-approved fold-ins applied this session:** (1) Phase 1 re-discussion gate landed in `state/current.md` `## Phase` section as a one-line note (replaces the misplaced Claude Code auto-memory entry, which remains on disk per "just skip" but is no longer canonical); (2) self-reported demotion entry to be filed in Agent Profiles `learning/demotions/` post-sign-out (separate surface from this UnoAi commit).
+- **Push posture:** immediate after commit per Section 4/5 precedent. Commit message: `MS-009 Section 6: tooling end-to-end (cold-clone + 5-hook synthetic test + cleanup) + INC-011`.
 
 ---
 
