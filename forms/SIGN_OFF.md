@@ -392,10 +392,10 @@ Operator sign-off: Section 6 signed off by operator on 2026-05-01.
 
 ## MS-009 Section 7 — Doctrine alignment
 
-Status: in progress
+Status: signed off
 Date filed: 2026-05-01
-Date signed: pending
-Operator sign-off: pending
+Date signed: 2026-05-01
+Operator sign-off: Section 7 signed off by operator on 2026-05-01.
 
 ### Checklist results
 
@@ -518,24 +518,94 @@ Operator sign-off: pending
 - **Scope guards held:** INSP-001 / INSP-002 / INSP-003 findings beyond Section 7's doctrine-alignment scope: untouched (MS-010 territory). Section 8 (Phase 1 readiness gate): untouched (future session per single-section rule). Validator hardening (RFI-015 / INSP-002 MEDIUM-8): untouched (MS-010). Working-agreements consolidation: untouched (MS-011). DEC-034 candidate (agent signing on git surface): untouched (separate scope). Fork mechanics + the private R&D fork's build configuration details: untouched (Phase 1 re-discussion agenda).
 - **Counter advances this session:** dependent on operator-decision-point (1). **If in-section DEC filing approved:** Latest DEC bumps from DEC-033 to whatever the chosen filing batch ends at (DEC-035 minimum, DEC-037 maximum per the three plausible batches in operator-decision-point (2)). **If declined:** no counter advances; all DECs deferred per the routing fallback in Findings 2 + 6.
 - **Push posture:** immediate after commit per Section 4/5/6 precedent. Single commit at sign-out. Commit message draft: `MS-009 Section 7: doctrine alignment (audit-only, fork-clean routing)`.
+- **Operator chat-record authorisation (sign-off, applied at MS-009 Section 8 sign-in 2026-05-01 17:36 WAST):** Operator (Tyrien Jones) signed off Section 7 in chat 2026-05-01 12:25 WAST via *"no schedule but i sign off"* instruction (post-Section-7-commit `9a86dbf`, pre-scrub-commit `6d6f0ff`). Builder composed the magic-string verbatim per format-strict DEC-032 with the chat sign-off date and applied it as the first mechanical action at Section 8 sign-in. Authorisation method: chat-record (Option A handling — same precedent as Section 6 sign-off; deviation from strict DEC-032 *"operator types"* pattern documented in this Builder note rather than embedded in the magic-string itself, which stays format-rigid). Tenth DEC-032 exercise overall; eighth on SIGN_OFF.md surface.
 
 ---
 
 ## MS-009 Section 8 — Phase 1 readiness gate
 
-Status: pending
-Date filed: pending
+Status: in progress
+Date filed: 2026-05-01
 Date signed: pending
 Operator sign-off: pending
 
 ### Checklist results
 
-(to be filled at Section 8 work)
+**Sub-scope 8A — Cross-cutting readiness check:**
+
+- [x] **8A.1 Validator state.** `bash scripts/validate.sh` returns `VALIDATOR: PASS` exit 0 at sign-in (HEAD `6d6f0ff`, working tree clean pre-Section-8-edits) and at draft time. All 11 checks clean.
+- [x] **8A.2 SIGN_OFF Sections 0-7 sign-off integrity.** All 8 magic-strings present in `forms/SIGN_OFF.md` matching format-strict DEC-032 pattern (`Section N signed off by operator on YYYY-MM-DD.`). Sections 0-5 dated 2026-04-28; Sections 6-7 dated 2026-05-01 (Section 6 ninth DEC-032 exercise / seventh on SIGN_OFF.md surface; Section 7 tenth DEC-032 exercise / eighth on SIGN_OFF.md surface; both via Option A chat-record authorisation). Builder notes documenting Option A handling present in Sections 6 + 7 Notes.
+- [x] **8A.3 Forms internal consistency.** Validator checks 1-7 all PASS at sign-in (DEC/RFI/INC/MS sequential numbering; Closes:/Supersedes: cross-references resolve; state/current.md counters match form tail entries). `Latest MS: MS-009` matches forms/METHOD_STATEMENT.md tail; `Latest DEC: DEC-033` matches forms/DECISION.md tail; `Latest RFI: RFI-015` matches forms/RFI.md tail; `Latest INC: INC-011` matches forms/INCIDENT.md tail; `Latest INSP: INSP-003` matches forms/INSPECTION.md tail.
+- [x] **8A.4 state/current.md accuracy.** Phase line current (`Phase 0b complete. Infrastructure phase in progress (MS-009). Phase 1 blocked on MS-009 close.`); Phase 1 re-discussion gate present per operator-locked 2026-04-30; Active MS line current; MS chain status accurate; Open RFIs list (RFI-009, RFI-011, RFI-013, RFI-014, RFI-015) matches forms/RFI.md current state; Pending operator actions list current; Working agreements 1-20 list complete + sequentially numbered; Banned moves mirror matches PROJECT.md verbatim (10 items per MS-009 Section 4).
+- [x] **8A.5 Pre-commit hook chain (5 stages) integrity.** `.githooks/pre-commit` documents and runs: gitleaks → validator → Prettier (staged) → ESLint (staged) → cspell. Last commit (`6d6f0ff`, Stage A scrub) cleared all 5 stages with PASS. Architecture per DEC-024 (gitleaks) + DEC-026 (validator) + DEC-027/028/029/030/031 (code conventions enforced by Prettier/ESLint) + DEC-033 (cspell).
+- [x] **8A.6 CONTRIBUTING.md per-clone setup.** Documents `git config core.hooksPath .githooks` per opt-in design. **Outstanding gap (per Section 6 Finding 2):** does not yet document `npm install` as part of per-clone setup; routed to MS-010 documentation cluster or standalone amendment per operator decision. Not blocking Section 8.
+- [x] **8A.7 prompts/engineer-session-start.md doctrine reference.** Currently references the Anthropic-environment path. **Outstanding gap (per Section 7 Finding 2):** vault-relative fallback for non-Anthropic environments not yet implemented; ratified architecture for re-route locked at DEC-036 (this section). Implementation deferred to MS-010 per the original INSP-001 MEDIUM-5 re-routing.
+- [x] **8A.8 Repo structure for Phase 1.** `src/` SvelteKit scaffold present + skeleton dirs (auth, chat, crisis, persona, server, shared, storage) created at MS-006; no product code in any of them yet. PLAN.md Phase 1 deliverables documented (landing + payment + license). Two RFIs blocking Phase 1 first deploy: RFI-013 (Pages → Workers timing; Engineer's lean: migrate before v1 deploy); RFI-014 (email delivery mechanism for license tokens; Engineer no lean). Neither blocks Section 8 close-out — they block the first Phase 1 deploy after MS-011.
+
+**Sub-scope 8B — Phase 1 first MS shape sketch (shape only, not prompt; Phase 1 re-discussion gate must clear before prompt drafting):**
+
+- [x] **8B.1 Title + numbering.** Phase 1 first MS = MS-012 (post-MS-009 close + MS-010 + INSP-002-recheck + MS-011 working-agreements consolidation, per state/current.md `Next:` ordering). Title shape: `MS-012 — Phase 1 entry: landing + payment + license`. Subject to Phase 1 re-discussion outcome which may re-order or re-scope.
+- [x] **8B.2 Phase + dependencies.** Phase: Phase 1 (entry; first product code). Depends on: MS-011 + Phase 1 re-discussion gate cleared. Pre-conditions: RFI-013 resolved (Pages vs Workers); RFI-014 resolved (email delivery mechanism); operator account setup per Phase 0a (Cloudflare account + Lemon Squeezy account + store + $9 placeholder product + Worker secret store + domain registrar) — all currently in `Pending operator actions` at state/current.md.
+- [x] **8B.3 Scope (per DEC-012 granularity rule, one MS for whole phase per PLAN.md Phase 1).**
+  - **A.** One-page landing (Svelte): headline, value prop, screenshot/mock, buy button, footer.
+  - **B.** Lemon Squeezy checkout integration (test mode).
+  - **C.** Webhook handler (Cloudflare Worker or Pages function — per RFI-013 resolution): on successful purchase, signs Ed25519 license token (per DEC-007), sends via email (per RFI-014 resolution).
+  - **D.** License token verification (client-side, offline): public key shipped in client bundle; private key in Worker secret store; no server roundtrip per banned-move "Runs LLM calls through a proxy server we own" extended.
+  - **E.** "Lost your key?" link in Settings → Lemon Squeezy order lookup URL (per Out-of-scope license recovery decision; in-app license-key recovery flow is v1.x, not v1).
+- [x] **8B.4 Acceptance shape (per DEC-011 proof division).**
+  - **Builder produces:** webhook handler test output (signed token, valid + invalid payload cases); client verification test output (valid + invalid token cases); deployed URL.
+  - **Operator captures:** screen recording of test purchase end-to-end; license token arriving via email; key validating in stub app on separate browser; invalid key rejected.
+- [x] **8B.5 Forms required.** METHOD_STATEMENT (one for the phase per DEC-012); DECISION (Ed25519 cipher library choice per PROJECT.md anticipated future deps — `@noble/curves` vs `tweetnacl`); DONE.
+- [x] **8B.6 Risks identified (sketch level).**
+  - **R1.** Cloudflare Pages vs Workers split (RFI-013 unresolved at sketch time) — affects deployment surface; Engineer's lean is migrate-before-v1-deploy.
+  - **R2.** Email delivery mechanism (RFI-014 unresolved at sketch time) — affects webhook handler scope (LS confirmation email vs separate service Resend/Postmark).
+  - **R3.** License token format / key handling discipline — private key in Worker secret store (Phase 0a operator setup); public key in client bundle; gitleaks rule for `Ed25519 private keys` already in DEC-025 sensitive-content list.
+  - **R4.** Test purchase flow must work end-to-end in test mode before real-money flow validated; LS test mode is the gate.
+  - **R5.** Single-day estimate per PLAN.md realistic for clean run; multi-day if RFI-013/014 surface implementation friction at MS draft time.
+- [x] **8B.7 Builder runtime decisions (defaults to surface at MS approval).**
+  - Ed25519 lib choice: `@noble/curves` default (modern, audited, smaller browser footprint) vs `tweetnacl` (older, battle-tested) — DEC needed at MS approval.
+  - Email delivery: per RFI-014 resolution (no Engineer lean).
+  - Pages vs Workers: per RFI-013 resolution (Engineer's lean: migrate before v1 deploy).
+- [x] **8B.8 Linked RFIs / DECs.** Closes: nothing in this MS directly. Builds on: DEC-007 (Ed25519); DEC-014 ($9 pricing); DEC-018 (auto-rejected PRs); DEC-024 (gitleaks); DEC-025 (sensitive-content list, Ed25519 private keys covered); DEC-031 (dependency policy — `@noble/curves` or `tweetnacl` filing as part of MS). New planned: DEC for cipher library choice (numbering per discipline #5 at MS time).
+- [x] **8B.9 Phase 1 re-discussion gate handover.** Phase 1 re-discussion (operator-locked 2026-04-30) triggers before this MS's prompt is drafted. Agenda items already accumulated for that gate: (a) UnoAi private R&D fork plan locked (timing + mechanics + diverging surfaces); (b) Phase 4 build-time-configurability requirement (locked 2026-05-01 per DEC-037); (c) approval-fatigue review per Section 7 Finding 5; (d) Phase 8 deploy-verification scope (now under DEC-037; re-discussion item is the operational shape, architecture is locked); (e) any items operator wants to add at gate-firing time. **This shape sketch is permitted pre-gate**; full prompt drafting waits for gate clearance.
+- [x] **8B.10 Engineer-prompt-checklist-ready handover.** When Phase 1 re-discussion clears, Engineer drafts prompt using this shape + per `prompts/engineer-prompt-checklist.md` (mechanical fix for working-agreement #5/#10/#11 drift). Prompt body assembled fresh; this shape is the input, not the output.
+
+**Sub-scope 8C — Four DEC filings + working agreement #17 staging:**
+
+- [x] **8C.1 DEC-034 (deep-check methodology locked) — drafted + Talos-refined; pending file at sign-out commit.** Spec-planning DEC per MS-009 prompt's Linked-RFIs/decisions ("New (planned)"). Locks the 8-section section-by-section sign-off pattern + multi-session execution model + DEC-032 magic-string approval flow as the reusable methodology for future deep-check MSes. **Trigger criteria (per Talos peer-review 2026-05-01):** (a) cross-cutting verification across multiple subsystems where bundled approval would lose granularity; (b) pre-phase readiness gates where mid-flight halt has higher cost than per-section sign-off overhead. **Both markers → deep-check. Neither → regular MS. One → Builder/operator judgment.** Builds on DEC-032; supersedes nothing. Affects: any future deep-check MS shape; PROCEDURES.md "Section-gated MSes" subsection (added at MS-009 Section 0).
+- [x] **8C.2 DEC-035 (DONE sign-off enforcement / validator check 11) — drafted + Talos-refined; pending file at sign-out commit.** Spec-planning DEC per MS-009 prompt's Linked-RFIs/decisions ("New (planned), conditional on Section 5.9 11th-check shipping" — condition met 2026-04-29, polarity-fixed at MS-009 Section 5 re-execution per INSP-003 MEDIUM-1). Locks scripts/validate.sh check 11 (DONE sign-off magic-string positive-pattern check) as mechanical enforcement layer for MS-DONE-signed semantics. **Polish (per Talos peer-review 2026-05-01):** the polarity fix means future MS extensions inherit corrected enforcement automatically — no per-MS migration needed. Builds on DEC-032 + DEC-026; resolves the deferred-implementation note from MS-007 closing.
+- [x] **8C.3 DEC-036 (Doctrine references-not-duplicates architecture; Finding 2 re-route) — drafted + Talos-peer-reviewed + operator-confirmed Shiloh-fork-base swap; pending file at sign-out commit.** Per Section 7 Finding 2 + Talos peer-review + operator confirm 2026-05-01. Locks UnoAi's "references doctrine; does not duplicate it" architecture: (a) engineer-session-start.md cross-environment reference hardening with vault-relative fallback; (b) UnoAi-side LESSON-to-surface index in PROJECT.md (no body content, no titles); (c) drift discipline (anchor to vault SHA + validator check 12 candidate for broken `LESSON-NNN` refs + validator-coverage gap closure). **Fork-inheritance sub-clause N/A** per operator decision 2026-05-01 (post-Talos substrate-fit research): Shiloh forks from ECO substrate, not UnoAi; the question of UnoAi-fork inheritance of the LESSON-to-surface index is moot. Affects: prompts/engineer-session-start.md; PROJECT.md "For agents reading the code" section; scripts/validate.sh; MS-010 (re-routes the original INSP-001 MEDIUM-5 "doctrine to docs/" intent).
+- [x] **8C.4 DEC-037 (Build-time fail-closed PRIMARY + deploy-time confirmation BACKUP; Finding 6) — drafted + Talos-refined; pending file at sign-out commit.** Per Section 7 Finding 6 + Talos peer-review + operator confirm 2026-05-01. Locks UnoAi's safety-flag enforcement architecture: build-time fail-closed as PRIMARY gate; deploy-time verification as CONFIRMATION BACKUP. Architectural enforcement before procedural confirmation. **Gate-shape vs check-semantics scoping (per Talos peer-review 2026-05-01):** this DEC establishes gate-shape; Phase 4 defines check semantics. Avoids gestural language; defers semantic specification to implementation MS. Affects: Phase 4 implementation (build script gains safety-flag check); Phase 6 implementation (classifier-enable constant); Phase 8 implementation (deploy-time check downsized to confirmation only). Builds on DEC-015 (honest core) + DEC-008/020/021 (crisis classifier).
+- [x] **8C.5 Working agreement #17 (verify-before-assert) — staged for MS-009 final sign-out (NOT this session per R11).** Operator-supplied wording: *"Engineer claims about tool behaviour, file content, or text in prior messages must be verified before being included in approvals or prompts. Hypotheses get filed as questions, not assertions."* Per MS-009 spec R11: lands at MS-009 final sign-out — the session that signs off Section 8 + files DONE-009. That session is post-this-Section-8-chat-sign-off (likely next session or later, when operator chat-signs Section 8). Working agreement #17 NOT added to state/current.md this session.
 
 ### Findings
 
-(to be filled at Section 8 work)
+**Finding 1 (overall readiness):** UnoAi is **structurally ready** for Phase 1 entry pending two RFI resolutions (RFI-013 Pages vs Workers timing; RFI-014 email delivery mechanism) + Phase 1 re-discussion gate clearance + operator account setup per Phase 0a Pending operator actions list. All 11 validator checks PASS; all 8 SIGN_OFF magic-strings present; counters accurate; forms internally consistent; pre-commit hook chain enforced; doctrine architecture locked at DEC-036; safety architecture locked at DEC-037; methodology + enforcement-mechanism captured at DEC-034 + DEC-035. **No structural blockers in MS-009 close-out.**
+
+**Finding 2 (carry-forward to MS-010):** Three carry-forward items routed at Section 6/7 are now formally captured for MS-010 prep:
+- CONTRIBUTING.md `npm install` documentation gap (Section 6 Finding 2; routed MS-010 documentation cluster or standalone amendment).
+- INSP-001 MEDIUM-5 re-route per DEC-036 (engineer-session-start.md cross-env hardening + LESSON-to-surface index in PROJECT.md + drift discipline).
+- Stage C from Talos's path-leak audit (validator check 12 candidate for absolute-path scan + working agreement; sibling check to DEC-036's broken-LESSON-NNN-ref candidate per Talos sub-note).
+
+**Finding 3 (carry-forward to MS-011):** Two findings from Section 7 carry forward:
+- Finding 3 — Builder reasoning observability partial gap (LESSON-019; "session-end reasoning summary in SITE_LOG handover note" working-agreement candidate).
+- Finding 4 — Builder behavioural instructions distributed across surfaces; revised per Talos peer-review to anchored-index/checklist pattern (not full consolidation); MS-011 candidate for the index surface.
+
+**Finding 4 (carry-forward to Phase 1 re-discussion):** Three items for the gate's agenda:
+- UnoAi private R&D fork plan (timing + mechanics + diverging surfaces).
+- Approval-fatigue review per Section 7 Finding 5 (per-MS approval-budget over batching per Talos's lean).
+- Phase 8 deploy-time confirmation operational shape (architecture locked at DEC-037; operational shape needs gate discussion).
+
+**Finding 5 (carry-forward to MS-009 final sign-out session):** Working agreement #17 (verify-before-assert per R11) lands at the session that signs off Section 8 + files DONE-009. Not this session.
+
+**Finding 6 (DEC numbering collision resolved):** MS-009 spec planning anchored DEC-034 to "deep-check methodology" and DEC-035 to "DONE sign-off enforcement"; INSP-003 LOW-4 also flagged a candidate "DEC-034 (agent signing on git surface)." Per discipline #5, spec-planning wins (named first); the agent-signing candidate slots in at next available number (DEC-038+) when filed. Operator's call on DEC-038 timing.
 
 ### Notes
 
-(to be filled at Section 8 work — DONE-009 filed only after this section signs off)
+- **Counter advances at sign-out commit:** Latest DEC bumps DEC-033 → DEC-037 (four DEC filings: DEC-034 + DEC-035 + DEC-036 + DEC-037 land at sign-out commit per operator decision today). No RFI / INC / INSP / MS counter changes anticipated.
+- **DONE-009 closes MS-009 entirely** after Section 8 chat-signs off — not this session. Likely next session or later. Working agreement #17 lands at that session per R11.
+- **Talos peer-review pre-commit pass executed** on the four DEC drafts (per Section 7 pattern). Substantive contributions: DEC-034 trigger criteria for "deep-check qualifies" (replaces hand-wavy "etc." with two named markers); DEC-035 polarity-fix-inheritance polish; DEC-036 fork-inheritance sub-clause caught — operator decision earlier this session swapped Shiloh's fork base from UnoAi to ECO substrate (post-Talos substrate-fit research); Talos's catch + operator-confirmed Shiloh-fork-base swap landed as the N/A clause; DEC-037 gate-shape vs check-semantics scoping clarification. **8B (Phase 1 first MS shape) Talos peer-review skipped** per operator decision (offered, not requested). **Verify-before-acting moment captured:** Builder paused at Talos's Shiloh-from-ECO assertion (he hadn't seen direct operator confirmation); operator confirmed (A); revision applied. Discipline #1 / working agreement #17 candidate (verify-before-assert) operating as designed.
+- **MS-011 working-agreement candidate strengthened.** Section 7 doctrine-alignment audit + Section 8 DEC drafts are now two data points where peer-review-before-commit caught load-bearing issues Builder-only-drafting would have missed (Section 7: Finding 2 4th surface, Finding 4 push-back, Finding 6 lever-harder; Section 8: DEC-036 fork-base catch). Sibling instances. Working agreement candidate: *"Architecture-affecting DECs and audit-shaped sections benefit from peer-review-before-commit pass."* MS-011 territory; not actioned this session.
+- **Scope guards held:** Stage C (validator check 12 + working agreement) untouched per operator decision MS-010 bundle; INSP-001 / INSP-002 / INSP-003 findings beyond Section 8's readiness scope: untouched (MS-010 territory); Phase 1 re-discussion agenda items: parked (gate triggers post-MS-011); fork mechanics + the planned private R&D fork's build configuration details: untouched (Phase 1 re-discussion agenda); DONE-009 + working agreement #17: deferred to MS-009 final sign-out session.
+- **Push posture:** immediate after commit per Section 4/5/6/7 precedent. Single commit at sign-out. Commit message draft: `MS-009 Section 8: Phase 1 readiness gate + DEC-034..037` (subject to refinement at sign-out).
+- **Architectural-context applied:** DEC-036 (references-not-duplicates) + DEC-037 (build-time fail-closed primary) crystallise architectural decisions surfaced through Section 7 audit + Talos peer-review + fork-clean conversation. Both decisions are reversible only at architectural-level operator decision points (vault architecture changes; fork plan changes; Phase 1 re-discussion).

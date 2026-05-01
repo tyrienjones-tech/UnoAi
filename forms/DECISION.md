@@ -451,3 +451,51 @@ These are locked at project start. Override only via a new DECISION entry that e
 - **First-run cleanup result:** 159 issues across 15 files initially → 0 issues after bulk dictionary additions + bulk US→UK fixes. Synthetic violation test (B6, intentional "teh" misspelling) confirmed hook BLOCKS commits with cspell-flagged content; revert + clean run passes.
 - **Reversibility:** cheap to remove; expensive to retroactively catch typos that have shipped to public.
 - **Affects:** every commit going forward (5-step hook chain). Expanded scope (code files) deferred to a later MS if proven valuable.
+
+### DEC-034 — Deep-check methodology locked
+- **Date:** 2026-05-01
+- **Decided by:** operator (per MS-009 spec planning, ratified at MS-009 Section 8)
+- **Decision:** MS-009's 8-section section-by-section sign-off pattern + multi-session execution model + DEC-032 magic-string approval flow institutionalised as the deep-check methodology for future MSes of similar shape.
+- **Trigger criteria (per Talos peer-review 2026-05-01):**
+  - **(a)** cross-cutting verification across multiple subsystems where bundled approval would lose granularity, OR
+  - **(b)** pre-phase readiness gates where mid-flight halt has higher cost than per-section sign-off overhead.
+  - **Both markers → deep-check.** Neither → regular MS. One → Builder/operator judgment.
+- **Reason:** the 8-section pattern produced finer-grained operator review surface + explicit per-section pause points that caught issues a single-MS approval would have missed (INSP-003 MEDIUM-1 polarity bug at Section 5 re-execution; npm corruption discovery via Section 6 cold-clone test; Section 7 doctrine-handling-rule emergence; absolute-path leak class via post-Section-7 Talos audit). Multi-session execution preserved operator pacing without forcing single-day completion. DEC-032 magic-string formalised the chat-record sign-off without forcing operator file edits. Trigger criteria added per Talos's lens to avoid hand-wavy "etc." scoping that would have made future application a judgment call without clear markers.
+- **Reversibility:** pattern-level decision; reversible by superseding DEC if a future deep-check MS proves a different pattern works better. Not load-bearing for current MS-009 close-out.
+- **Affects:** any future MS that satisfies the trigger criteria; PROCEDURES.md "Section-gated MSes" subsection (added at MS-009 Section 0).
+- **Builds on:** DEC-032 (magic-string mechanism).
+
+### DEC-035 — DONE sign-off enforcement (validator check 11)
+- **Date:** 2026-05-01
+- **Decided by:** operator (per MS-009 spec planning, conditional on Section 5.9 11th-check shipping; condition met 2026-04-29; polarity-fixed at MS-009 Section 5 re-execution per INSP-003 MEDIUM-1; ratified at MS-009 Section 8)
+- **Decision:** `scripts/validate.sh` check 11 (DONE sign-off magic-string positive-pattern check) institutionalised as the mechanical enforcement layer for MS-DONE-signed semantics. Empty content, "Pending review" prose, template placeholder copies, and alternate date formats all FAIL the check. Format-rigid: `DONE-NNN signed off by operator on YYYY-MM-DD.` (trailing period).
+- **Reason:** DEC-032 introduced the magic-string mechanism but left enforcement to operator visual inspection. Mechanical enforcement closes the gap (working agreement #8 precedent — untested validators are worse than no validator; same logic for unenforced format conventions). Polarity fix from negative-pattern → positive-pattern (INSP-003 MEDIUM-1) ensures empty / placeholder / variant-date inputs don't silently pass.
+- **Reversibility:** validator check could be removed by superseding DEC, but doing so weakens DEC-032's enforcement layer. Not anticipated.
+- **Affects:** every MS chain extension (`Depends on: MS-NNN` references); validator runs in pre-commit hook chain; check 11 fires alongside check 9. **Polarity-fix inheritance (per Talos peer-review 2026-05-01):** future MS extensions inherit corrected enforcement automatically — no per-MS migration needed. The check operates on the chain-walked target's `Operator sign-off:` field at every commit; no per-MS opt-in.
+- **Builds on:** DEC-032 (magic-string mechanism), DEC-026 (validator).
+
+### DEC-036 — Doctrine references-not-duplicates architecture
+- **Date:** 2026-05-01
+- **Decided by:** operator (post-Talos peer-review confirm 2026-05-01 + post-fork-clean architecture lock 2026-05-01; ratified at MS-009 Section 8 per Section 7 Finding 2)
+- **Decision:** UnoAi adopts a *"references doctrine; does not duplicate it"* architecture for all doctrine integration, mirroring the vault's own architecture per `Vault/INDUCTION.md`. Three load-bearing implementation surfaces:
+  1. **Engineer-session-start.md doctrine reference hardened** — vault-relative path fallback for non-Anthropic environments. The Anthropic-environment path (`/mnt/skills/user/eco-agentic-doctrine/SKILL.md`) resolves only in Anthropic chat sessions; the vault location is operator-environment-specific. Cross-environment reference shape per working agreement #17.
+  2. **PROJECT.md "For agents reading the code" section gains a UnoAi-side LESSON-to-surface index** — LESSON-NNN identifier + UnoAi-surface mapping; no body content; no titles. Agents and operators see the principle name + UnoAi-side mapping; doctrine body lives in the vault.
+  3. **Drift discipline:** index anchored to vault commit SHA; validator check 12 candidate for broken `LESSON-NNN` refs (closes validator-coverage gap on doctrine-reference path); validator-coverage gap closure routing to MS-010 validator hardening cluster.
+- **Fork-inheritance sub-clause N/A** per operator decision 2026-05-01 (post-Talos substrate-fit research): Shiloh forks from ECO substrate, not UnoAi; the question of UnoAi-fork inheritance of the LESSON-to-surface index is moot.
+- **Reason:** UnoAi already operates 80 doctrine-reference occurrences across 11 files — the references-not-duplicates pattern is operational, just not architecturally locked. The original INSP-001 MEDIUM-5 routing (*"doctrine to docs/"*) would have introduced a duplicate canonical surface, conflicting with the vault architecture rule + operator handling rule (no doctrine content leaves vault) + fork-clean architectural requirement. This DEC ratifies the architecture and the three implementation surfaces.
+- **Reversibility:** architectural decision; reverses only if vault architecture itself changes (`Vault/INDUCTION.md` rule changes). Operator-level decision.
+- **Affects:** prompts/engineer-session-start.md (cross-env path fallback); PROJECT.md (LESSON-to-surface index); scripts/validate.sh (check 12 candidate); MS-010 (re-routes the original INSP-001 MEDIUM-5 "doctrine to docs/" intent).
+- **Supersedes:** implicitly supersedes the original INSP-001 MEDIUM-5 routing intent; MEDIUM-5 itself stays open as a finding, but its action shape changes per this DEC.
+
+### DEC-037 — Build-time fail-closed PRIMARY + deploy-time confirmation BACKUP
+- **Date:** 2026-05-01
+- **Decided by:** operator (post-Talos peer-review confirm 2026-05-01; ratified at MS-009 Section 8 per Section 7 Finding 6)
+- **Decision:** UnoAi's safety-flag enforcement architecture is **build-time fail-closed as the PRIMARY gate**, with **deploy-time verification as the CONFIRMATION BACKUP**. Architectural enforcement before procedural confirmation. Three implementation surfaces:
+  1. **Phase 4 build-time-configurability lock** (locked 2026-05-01 at Phase 1 re-discussion agenda) gains build-time fail-closed: the build refuses to produce a deployable UnoAi artefact unless the safety-flag set is correctly configured.
+  2. **Phase 8 deploy-time verification step** is a confirmation surface (not the load-bearing gate) — confirms safety-flag state of the produced artefact; can be lightweight since architectural enforcement is upstream.
+  3. **Phase 6 crisis-classifier-enable + Phase 4 honest-core constant + assembler-order constant**: all build-time constants per Phase 4 lock; build-time fail-closed reads these and errors if misconfigured.
+- **Gate-shape vs check-semantics scoping (per Talos peer-review 2026-05-01):** this DEC establishes gate-shape; Phase 4 defines check semantics. The build-contract phrasing ("correctly configured") is intentionally non-specific at this DEC level — Phase 4 implementation MS specifies exact check surface (which constants, which validation, which failure modes). Avoids gestural language while preserving the operator-flagged risk-shift framing (build-time architectural enforcement, not deploy-time procedural confirmation).
+- **Reason:** build-time fail-closed is harder to silently bypass than deploy-time procedural; treats safety-flag correctness as part of the build contract, not a release-process checklist item. Per LESSON-005 (containment must be externally legible — *"if you cannot point to where a control is enforced, logged, and tested, it is not a control"*) + LESSON-019 (observability is a trust foundation, not a feature). Talos's *"push the lever harder"* refinement crystallises here: architectural enforcement *before* procedural confirmation, not as redundancy of equal weight.
+- **Reversibility:** architectural decision; reverses only if Phase 4 build-time-configurability lock changes (operator-level decision via Phase 1 re-discussion).
+- **Affects:** Phase 4 implementation (build script gains safety-flag check); Phase 6 implementation (classifier-enable constant); Phase 8 implementation (deploy-time check downsized to confirmation only).
+- **Builds on:** DEC-015 (honest core architecture), DEC-008/020/021 (crisis classifier).
