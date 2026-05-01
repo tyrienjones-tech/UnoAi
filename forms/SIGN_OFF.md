@@ -341,10 +341,10 @@ This finding is **audit-not-fix per scope guards**: per the operator-validated r
 
 ## MS-009 Section 6 — Tooling end-to-end
 
-Status: in progress
+Status: signed off
 Date filed: 2026-04-30
-Date signed: pending
-Operator sign-off: pending
+Date signed: 2026-05-01
+Operator sign-off: Section 6 signed off by operator on 2026-05-01.
 
 ### Checklist results
 
@@ -386,27 +386,138 @@ Operator sign-off: pending
 - **Counter advances this session:** Latest INC INC-010 → INC-011 (INC-011 filed during the npm-investigation window). No DEC / RFI / MS / INSP advances.
 - **Two operator-approved fold-ins applied this session:** (1) Phase 1 re-discussion gate landed in `state/current.md` `## Phase` section as a one-line note (replaces the misplaced Claude Code auto-memory entry, which remains on disk per "just skip" but is no longer canonical); (2) self-reported demotion entry to be filed in Agent Profiles `learning/demotions/` post-sign-out (separate surface from this UnoAi commit).
 - **Push posture:** immediate after commit per Section 4/5 precedent. Commit message: `MS-009 Section 6: tooling end-to-end (cold-clone + 5-hook synthetic test + cleanup) + INC-011`.
+- **Operator chat-record authorisation (sign-off, applied at MS-009 Section 7 sign-in 2026-05-01 10:59 WAST):** Operator (Tyrien Jones) authorised Builder to compose the Section 6 magic-string with today's WAST date via the chat instruction *"apply current time and date... sign my name"* on 2026-05-01 00:13 WAST. Builder composed the magic-string verbatim per format-strict DEC-032 and applied it as the first mechanical action at the Section 7 sign-in. Authorisation method: chat-record (Option A handling — deviation from strict DEC-032 *"operator types"* pattern; deviation documented in this Builder note rather than embedded in the magic-string itself, which stays format-rigid). Ninth DEC-032 exercise overall; seventh on SIGN_OFF.md surface.
 
 ---
 
 ## MS-009 Section 7 — Doctrine alignment
 
-Status: pending
-Date filed: pending
+Status: in progress
+Date filed: 2026-05-01
 Date signed: pending
 Operator sign-off: pending
 
 ### Checklist results
 
-(to be filled at Section 7 work)
+**Sub-scope 7A — LESSON walk (23 principles audited; status by group; no doctrine body content reproduced; UnoAi-side observations in Builder's own words):**
+
+- [x] **ALIGNED (13 LESSONs):**
+  - **LESSON-001** — UnoAi imposes safety constraints outside the model: banned moves (PROJECT.md), typed approval gates (DEC + MS + DONE), 5-stage pre-commit hook chain (gitleaks → validator → Prettier → ESLint → cspell). Phase 4+ honest-core system prompt is constraint-as-content per DEC-015.
+  - **LESSON-002** — Product runtime has minimal capability surface (chat + IndexedDB + fetch-to-Anthropic; no shell, no server, no FS). Build-time agent (Builder/Reaper) capability bounded by banned moves + per-step approval (working agreement #18).
+  - **LESSON-003** — Engineer (chat-Claude, plans/designs) and Builder (terminal-Claude, executes) are structurally separate roles. Engineer never edits repo; Builder never decides scope without approved MS. Distinct informational diet.
+  - **LESSON-004** — Banned moves list explicit (10 items as of MS-009 Section 4); state/current.md mirrors for session-start visibility. Default-deny: Builder defaults to "no" until approved. Pre-commit hooks fail-closed.
+  - **LESSON-005** — Validator's 11 checks are scripted bash (auditable + portable per Section 6 cold-clone test); pre-commit hook chain documented (CONTRIBUTING.md); `.githooks/pre-commit` in repo. Findings/decisions chain (MS → DEC + RFI + DONE) is documented and traversable.
+  - **LESSON-009** — Phase 4 honest-core (DEC-015 + Appendix A) explicitly forbids sycophancy + validation of self-destructive plans. DEC-016 termination: bot states it's not participating, no validation theatre. Phase 4 destructive-prompt fixtures test against four canonical bait shapes.
+  - **LESSON-010** — PLAN.md acceptance criteria are evidence-based (test artefacts, screen recordings, network-tab evidence). No "trust the model" gates. Validator + hook chain enforce mechanically; operator review verifies behaviourally.
+  - **LESSON-012** — DEC-032 magic-string format-rigid (validator check 11 enforces). DEC + MS + DONE chain structurally typed. CHANGE_ORDER named explicitly for scope changes. Approvals are the work, not friction; operator pushes back where appropriate.
+  - **LESSON-014** — Builder has FS capability via tools but cannot expand its own authority — banned moves include "Mutates a file without an approved METHOD_STATEMENT" and "Expands scope without a CHANGE_ORDER." Authority comes only via operator approval per step.
+  - **LESSON-016** — "Passing the validator" is necessary, not sufficient. Operator review at section sign-off is behavioural. DEC-021 explicitly notes Phase 6 FN/FP thresholds are starting points tuned at implementation, not deployment-grade safety guarantees.
+  - **LESSON-020** — Single-operator-controls-both condition acknowledged structurally rather than denied. Mitigations: validator (mechanical, reasoning-blind, externally runnable); operator-attributed commits is documented policy (banned-moves explicit), not hidden authorship; chat thread is the visible reasoning surface; behavioural instructions documented (PROJECT.md, PROCEDURES.md, prompts/engineer-session-start.md).
+  - **LESSON-022** — Defaults secure throughout: banned moves explicit (default = forbidden until approved); pre-commit hooks fail-closed if config missing; sensitive-content list (DEC-025) treats listed classes as never-commit; Phase 4 honest-core loaded by default per build-time configurability lock 2026-05-01.
+  - **LESSON-023** — Strongly aligned. UnoAi product is local-first by design: BYOK, browser-direct to Anthropic, no server-side conversation storage, IndexedDB user-device persistence, localStorage for settings + API key. PLAN.md Phase 2 acceptance verifies "zero traffic to any backend we own."
+
+- [x] **ALIGNED-WITH-NUANCE (4 LESSONs):**
+  - **LESSON-013** — NOT-APPLICABLE for product runtime (browser-shipped; no agent sandbox in product). ALIGNED for build process — Builder operates in operator's terminal; sandbox boundary is the operator-visible action surface (SITE_LOG + commit history + chat); each procedural step requires explicit approval per working agreement #18.
+  - **LESSON-015** — ALIGNED in design (working agreement #18 explicit-approval-per-step; DEC-032 structured approval format). **Partial concern flagged in Findings (#5)**: operator approves many sections per session; volume could approach approval-fatigue territory in Phase 1+ MSes; Phase 1 re-discussion or MS-011 working-agreement candidate.
+  - **LESSON-017** — ALIGNED for product (zero outbound write surface to operator infrastructure; BYOK, no server, no analytics, no off-device logs). PARTIAL for build — Builder writes to git (commits push to public GitHub); pre-push gitleaks chain is the persistence-risk gate; DEC-024 + DEC-025 govern accidental-commit recovery (rotate, force-push pre-push only, INCIDENT).
+  - **LESSON-018** — ALIGNED for Phase 6 design (crisis classifier is rare-event detector with explicit FN/FP thresholds per DEC-021). FORK-AWARE: same architecture present in UnoAi build, absent in the private R&D fork per fork-clean discussion 2026-05-01.
+
+- [x] **PARTIAL (4 LESSONs — gaps surfaced as routing candidates, no in-section fixes per (C) audit-only + R6):**
+  - **LESSON-006** — ALIGNED for product (BYOK, browser-direct, no server-side state). PARTIAL for build — gitleaks blocks credential commits, but full supply-chain monitoring (npm audit + dep pinning per DEC-031) routed to MS-010 cluster (INSP-002 MEDIUM-4). Active in pipeline; documenting status, not a new finding.
+  - **LESSON-008** — DEC-031 dependency policy in place (DECs required for new top-level deps; license + maintenance + bundle-size review). MS-010 cluster includes supply-chain monitoring. CI/CD currently absent (per INSP-001 LOW-4); documented routing to MS-010 / Phase 8.
+  - **LESSON-011** — ALIGNED for governance (every DEC + RFI cites sources; validator checks 5/6 enforce that "Closes:"/"Supersedes:" cross-references resolve). PARTIAL for prose — citations in MD bodies aren't validator-checked at semantic level, but discipline is operational. NOT-APPLICABLE for product runtime (no retrieval/citation feature in v1).
+  - **LESSON-019** — Builder *actions* captured (commits, file edits, SITE_LOG entries, validator outputs, hook FAIL diagnostics) but Builder *reasoning traces* not in persisted form. Real-time chat captures reasoning; SITE_LOG captures decisions/actions. Single-operator-single-Builder context limits impact, but flagged as MS-011 working-agreement candidate (e.g., session-end reasoning summary in handover note). **See Finding #3.**
+
+- [x] **NOT-APPLICABLE (2 LESSONs — documented with reason):**
+  - **LESSON-007** — UnoAi doesn't train models. Persona is system-prompt assembly per DEC-015 (Phase 4 deliverable); no fine-tuning. Lesson applies to ECO (which may train), not to UnoAi.
+  - **LESSON-021** — UnoAi product is single-user app with no employee SSO/OAuth surface. Applies to operator's build environment (Claude Code, Claude.ai, terminal tools); operator manages own surface per DEC-025 sensitive-content list + CONTRIBUTING.md per-clone setup. No employee-tier surface in UnoAi.
+
+**Sub-scope 7B — ECO Design Checklist walk (24 items; status grouped):**
+
+- [x] **ALIGNED (Phase-1+ design or active practice — 14 items):** items 7 (human approval before mutation), 8 (approvals structured/typed/scoped), 10 (generation/verification separate), 11 (gating classifier reasoning-blind), 12 (containment legible), 15 (outbound write as persistence risk), 19 (behavioural instructions documented and auditable — partial for Builder; see Finding #4), 20 (no hidden behavioural modes), 23 (sensitive-by-default), 24 (local execution preferred). Phase 4+ alignment: items 7, 8, 11. Phase 6 alignment: item 18 (rare-event monitoring via crisis classifier).
+- [x] **PARTIAL (active routing — 4 items):** 13 (open-source deps audited/pinned/monitored — DEC-031 in place; supply-chain monitoring routed to MS-010), 14 (CI/CD credential hygiene — no CI yet, INSP-001 LOW-4 routed), 16 (knowledge/citation unverified until checked — governance bodies aren't citation-validator-checked at semantic level), 18 (reasoning traces observable — partial per LESSON-019).
+- [x] **NOT-APPLICABLE (product-runtime scope mismatch — 6 items):** 1 (network egress allowlisted — model has no network capability beyond user-initiated fetch-to-Anthropic in Phase 2+), 2 (compute quotas — no compute), 3-4 (tool invocations logged + externalised write-only — model has no tool surface in product), 5 (sandbox boundaries — browser-shipped; user's own browser is the sandbox), 6 (network through proxy with allowlist — browser-direct in v1; banned moves explicitly forbid proxy).
+- [x] **OPERATOR-SIDE (4 items — operator manages own environment):** 9 (reward signal audited — no RL in UnoAi; applies to ECO if relevant), 17 (kill-switch — browser-shipped; user can clear data/uninstall PWA; LS order-lookup for license recovery per DEC-009), 21 (third-party AI tools security review — operator-side discipline), 22 (OAuth grants treated as credential exposure — no OAuth in product; operator manages build-side).
+
+**Sub-scope 7C — Trigger Conditions walk (15 conditions; UnoAi procedural-surface coverage check):**
+
+- [x] **All 15 trigger conditions have a procedural surface** in UnoAi that fires when the trigger applies:
+  - Triggers 1-2 (broaden tool access / reduce approval gates) — covered by CHANGE_ORDER + DEC requirement.
+  - Trigger 3 (sandbox "probably enough" claim) — would surface in INSPECTION cycle; doctrine reference catches it.
+  - Trigger 4 (generation/verification collapse) — flagged at MS-design time (Engineer drafts, Builder executes; structural).
+  - Trigger 5 (new dependency) — DEC-031 explicit.
+  - Trigger 6 (AI output as ground truth without verification) — PROCEDURES.md Procedure 3 + working agreements address.
+  - Trigger 7 (knowledge retrieval / citation component) — Phase 4+ design surface; not present in v1.
+  - Trigger 8 (training/fine-tuning) — NOT-APPLICABLE for v1 (no training in UnoAi).
+  - Trigger 9 ("passed evals" sufficient claim) — DEC-021 explicitly addresses Phase 6 FN/FP thresholds as starting points.
+  - Trigger 10 (agent can write external/internal) — Phase 4+ design considers; build-side covered by gitleaks + operator-attributed commits.
+  - Trigger 11 (reasoning hidden from operators) — relates to LESSON-019 PARTIAL (Finding #3).
+  - Trigger 12 (agent under undisclosed instructions) — banned moves preclude (operator-attributed; no hidden modes per LESSON-020 alignment).
+  - Trigger 13 (third-party AI tool integration) — operator-side discipline; documented per CONTRIBUTING.md + DEC-025.
+  - Trigger 14 (OAuth grant by AI service) — NOT-APPLICABLE for product (no OAuth).
+  - Trigger 15 (cloud-hosted AI APIs vs local) — Anthropic API is cloud (BYOK); explicit architectural choice per PROJECT.md "Why this exists" + DEC-014.
 
 ### Findings
 
-(to be filled at Section 7 work)
+**Finding 1 (overall posture):** Strong alignment across the doctrine's 23 LESSONs and 24 checklist items. UnoAi's procedural and design architecture maps cleanly to the doctrine's principles: default-deny banned moves, typed approval gates, structurally separate Engineer/Builder roles, externally-legible validator with reasoning-blind enforcement, BYOK + browser-direct + no-server architecture (LESSON-023 strong alignment), Phase 4 honest-core persona with DEC-016 termination (LESSON-009 alignment), Phase 6 crisis classifier with deterministic routing (LESSON-018 alignment). 13 LESSONs ALIGNED, 4 ALIGNED-WITH-NUANCE, 4 PARTIAL with active routing or surfacing recommendations, 2 NOT-APPLICABLE with documented reason. ECO Design Checklist: 14 ALIGNED (now or by phased deliverable), 4 PARTIAL (active routing), 6 NOT-APPLICABLE (product-scope mismatch), 4 OPERATOR-SIDE.
+
+**Finding 2 (INSP-001 MEDIUM-5 routing — re-evaluation candidate):** The original INSP-001 MEDIUM-5 routed *"doctrine to docs/"* — pulling doctrine content into UnoAi's `docs/` for self-contained reference. **This routing conflicts with three things now in scope:**
+- **Vault architecture rule** per `Vault/INDUCTION.md` — vault references doctrine; does not duplicate.
+- **Operator handling rule** stated 2026-05-01 in chat — *"do not paste doctrine content in uno"* + *"never take outside the vault."*
+- **Fork-clean architectural requirement** — UnoAi's planned private R&D fork (operator-confirmed 2026-05-01) requires that doctrine content not land in product code; otherwise the fork either inherits it (defeats its purpose) or requires surgical removal (defeats the "configuration-not-surgery" principle of the Phase 4 build-time-configurability lock).
+
+**Crucial corroborating observation:** UnoAi *already* operates a "references-not-duplicates" pattern with doctrine — grep across the repo shows 80 occurrences of `LESSON-NNN` / `doctrine` references across 11 files (PROCEDURES.md, GLOSSARY.md, prompts/engineer-session-start.md, forms/INSPECTION.md, forms/SIGN_OFF.md, forms/DECISION.md, forms/SITE_LOG.md, forms/METHOD_STATEMENT.md, forms/INCIDENT.md, forms/DONE.md, state/current.md). The architecture is already operational; "doctrine to docs/" would have broken the existing pattern by introducing a duplicate canonical surface.
+
+**Recommended re-route** (operator decision; surfaced per (C) + R6): instead of pulling doctrine into UnoAi `docs/`:
+1. **Harden the engineer-session-start.md doctrine reference** — add a vault-relative path fallback for non-Anthropic environments (the path `/mnt/skills/user/eco-agentic-doctrine/SKILL.md` resolves only in Anthropic chat sessions; vault location at `C:\Users\Tyrien\Vault\Sensitive\1- very sensitive\eco-agentic-doctrine.md` is operator-machine-specific). Cross-environment reference shape per working agreement #17.
+2. **Add a UnoAi-side LESSON-to-surface index** in PROJECT.md "For agents reading the code" section — names which LESSONs apply to which UnoAi surface (LESSON-NNN identifier + UnoAi-surface mapping; no body content, no titles). Operators and agents see the principle name + UnoAi-side mapping; doctrine body lives in vault.
+3. **Drift discipline — anchor + validate** (added per Talos peer-review 2026-05-01):
+   - **(a) Anchor the LESSON-to-surface index to a vault commit SHA.** Index header records the doctrine-vault SHA the index was last reconciled against. Re-reconciliation is a deliberate operation, not silent drift.
+   - **(b) Validator check on broken `LESSON-NNN` references.** New validator check 12 candidate: walk the repo for `LESSON-NNN` / `CASE-NNN` identifier patterns; against a small repo-side `.doctrine-refs.json` manifest (or doctrine-vault SHA + identifier list), error on identifiers that no longer resolve in the anchored doctrine. Closes the validator-coverage gap on the doctrine-reference path and prevents stale identifier rot. Routing: MS-010 validator hardening cluster.
+   - **(c) Fork-inheritance question for Shiloh** (the private R&D fork; open architectural question, surface-don't-decide): is the fork inheriting the LESSON-to-surface index a feature (the fork inherits ECO doctrine awareness, builds its own deviations atop) or a leak (the index encodes UnoAi-specific safety mappings that don't apply to the fork's unconstrained-by-design configuration)? Operator decision; affects whether the index lands in a fork-shared surface or a UnoAi-build-only surface.
+   - **(d) Validator-coverage gap on doctrine-reference path** — same as (b); closes a gap that was invisible until the references-architecture became the canonical pattern.
+4. Document the routing decision as a DEC if accepted. **Talos recommends file as separate DEC now (don't roll into MS-010)** — Finding 2 is load-bearing; defer-to-MS-010 delays unnecessarily. Numbering subject to discipline #5 + the MS-009 spec's planned DEC-034 (deep-check methodology) + DEC-035 (DONE sign-off enforcement) — operator decides the filing batch + sequence (see Notes — operator-decision points).
+
+**Routing target:** **DEC filing in-section** per Talos peer-review (operator decision required — deviation from R6 surface-don't-decide). Fallback if operator declines in-section filing: MS-010 prep — re-evaluate INSP-001 MEDIUM-5; CHANGE_ORDER candidate at MS-010 entry, or new RFI for re-route shape.
+
+**Finding 3 (Builder reasoning observability — partial gap):** Per LESSON-019 + Trigger 11, Builder *reasoning traces* are not persisted (only actions are). Single-operator-single-Builder context limits the impact today, but the doctrine standard suggests reasoning observability is a trust foundation. **Routing candidate:** MS-011 working-agreement consolidation could include a "session-end reasoning summary in SITE_LOG handover note" working agreement — Builder writes a brief decision-log paragraph at sign-out covering judgement calls made during the session. Not blocking current MS-009 scope. Operator decides MS-011 inclusion.
+
+**Finding 4 (Builder behavioural instructions distributed):** Per LESSON-019/020 + Checklist item 19, behavioural instructions for all agents should be documented and auditable. Engineer Claude has a single session-start prompt (`prompts/engineer-session-start.md`). Builder's instructions emerge from session-start reading order across PROJECT.md + PROCEDURES.md + state/current.md + chat-instruction. **Routing candidate (revised per Talos peer-review 2026-05-01):** distributed sources are the right structural choice (each surface has its own purpose; consolidation could create drift). Solve the readability problem with **an anchored index/checklist surface** — same pattern as Finding 2's LESSON-to-surface index — that lists which sections of which files comprise Builder's behavioural-instruction set, anchored to repo commit SHAs at index-write time. Re-reconciliation when surfaces change is deliberate, not silent. **If consolidation is later pursued** (full `prompts/builder-session-start.md` analogous to Engineer prompt), drift mitigation is a precondition (multi-surface drift is the real failure mode of consolidation; addressing it first is the cheaper path). MS-011 working-agreement candidate. Not blocking current scope.
+
+**Finding 5 (Approval-fatigue risk in Phase 1+ MSes):** Per LESSON-015, human oversight degrades under operational load; approvals become reflexive. UnoAi's current approval cadence is already dense (per-section operator chat sign-offs in MS-009; per-step approval per working agreement #18). Phase 1+ MSes will introduce code review + test-artefact review on top, increasing approval volume. **Routing candidate:** flag for Phase 1 re-discussion agenda — review approval cadence design before Phase 1 starts; MS-011 working-agreement candidate for approval-batching guidance (which approvals can batch into a single chat exchange vs which require individual approval). Not blocking current scope.
+
+**Finding 6 (Phase 8 deploy-verification step alignment — revised per Talos peer-review 2026-05-01):** Per LESSON-005 (containment must be externally legible) + LESSON-019 (observability), the previously-flagged Phase 8 deploy-verification concern (operator chat 2026-05-01: build-time configurability shifts a small risk from "architectural" to "release process") aligns with doctrine. A misconfigured UnoAi build could deploy without honest-core / anti-override / crisis-classifier-enable correctly set. **Recommended (push the lever harder):** **build-time fail-closed as the PRIMARY gate, deploy-time confirmation as the backup.** Architectural enforcement before procedural confirmation. The build itself refuses to produce a deployable UnoAi artefact unless the safety-flag set is correctly configured (build-time check, not deploy-time check); deploy-time verification is then a confirmation surface, not the load-bearing gate. Build-time fail-closed is harder to silently bypass than deploy-time procedural; treats safety-flag correctness as part of the build contract, not a release-process checklist item. **Standalone DEC candidate per Talos** — split out from Phase 1 re-discussion; the architectural piece is decision-shaped (DEC), the operator-flagged piece (re-discussion of release-process design) stays as re-discussion item. Numbering subject to discipline #5 + MS-009 spec planned DECs (see Notes — operator-decision points).
 
 ### Notes
 
-(to be filled at Section 7 work — probe `/mnt/skills/user/eco-agentic-doctrine/SKILL.md` accessibility first; RFI if missing)
+- **Handling rule held throughout.** Doctrine read in-vault only at `C:\Users\Tyrien\Vault\Sensitive\1- very sensitive\eco-agentic-doctrine.md` (the clean re-paste; original `eoc-agent-doctrine.md` was removed by operator). No doctrine body content reproduced in this entry, in chat, or in Agent Profiles research logs. References use `LESSON-NNN` / `CASE-NNN` identifiers + Builder's own paraphrased UnoAi-side observations only. Lesson titles are not reproduced. Same architecture the vault itself runs on per `Vault/INDUCTION.md` line 52.
+- **Doctrine source change documented.** Operator moved doctrine from `3 - Slight sensitive` (where the `.skill` zip lived) to `1- very sensitive` (where the clean `.md` lives) during this session. Audit used the clean `.md` from `1- very sensitive`. Severity-tier escalation is operator's call; this Builder note documents the source-of-truth location for the audit.
+- **No in-section fixes per (C) audit-only + R6.** All gaps surfaced as routing candidates (MS-010 prep, MS-011 working-agreement consolidation, Phase 1 re-discussion agenda, Phase 8 prep). **In-section DEC filing is now a deviation candidate** — Talos peer-review 2026-05-01 recommends filing Finding 2 + Finding 6 as separate DECs in this session rather than rolling into MS-010 prep / re-discussion. Operator decides whether to deviate from R6's surface-don't-decide guard; see operator-decision points below. No INCs, RFIs, or CHANGE_ORDERs filed in this section regardless of DEC decision.
+
+- **Talos peer-review 2026-05-01 — substantive contributions folded into Findings 2, 4, 6.** Talos reviewed pre-commit per operator's review request; refinements landed in:
+  - **Finding 2** — added 4th surface (drift discipline: anchor index to vault SHA + validator check 12 candidate for broken LESSON-NNN refs + fork-inheritance question for the private R&D fork + validator-coverage gap closure routing).
+  - **Finding 4** — pushed back on consolidation; revised to anchored-index/checklist pattern (same shape as Finding 2's LESSON-to-surface index); consolidation requires drift mitigation as precondition if pursued.
+  - **Finding 6** — pushed lever harder; revised from "deploy-time verification step" to "build-time fail-closed PRIMARY + deploy-time confirmation BACKUP." Architectural enforcement before procedural confirmation. Standalone DEC candidate split from Phase 1 re-discussion.
+  - **Routing reorganisation** — Findings 2 + 6 routed as separate DECs (decision-shaped); Findings 3 + 4 stay MS-011 scope (kept separate, observability/transparency family but distinct concerns); Finding 5 + operator-flagged items stay Phase 1 re-discussion (preventing re-discussion-density bloat per Talos's cross-finding observation).
+  - **Vault-access caveat acknowledged.** Talos cannot validate LESSON classifications without doctrine vault access; reviewed UnoAi-side architectural soundness only. LESSON-013 / LESSON-017 / LESSON-020 spot-check requests remain open pending operator's vault-access decision.
+
+- **Operator-decision points (gating sign-out commit):**
+  1. **In-section DEC filing — yes / no?** Per Talos: file Finding 2's re-route DEC + Finding 6's architectural DEC in this session. Per R6: surface-don't-decide. Operator's call. **If yes:** new question (2). **If no:** route to MS-010 prep (Finding 2) + Phase 1 re-discussion + standalone DEC at MS-009 close-out (Finding 6).
+  2. **DEC numbering / batch — if in-section filing approved.** Per discipline #5 (no skip-numbering): Latest DEC = DEC-033. MS-009 spec planned DEC-034 (deep-check methodology) + DEC-035 (DONE sign-off enforcement, Section 5.9 shipped) — neither filed yet. Talos called the Finding 2/6 DECs "DEC-036 / DEC-037" anchored on the spec planning. Three plausible filing batches: **(a)** file all four in this session — DEC-034 (deep-check methodology) + DEC-035 (DONE sign-off enforcement) + DEC-036 (Finding 2 re-route) + DEC-037 (Finding 6 build-time fail-closed). Heavy in-section work but fully sequential. **(b)** file only Finding 2 + Finding 6 DECs as DEC-034 + DEC-035, override the MS-009 spec's nominal numbering for those two (which would re-anchor at filing time — DEC-036+ for spec-planned items at MS-009 close-out). Lighter in-session, deviates from spec planning. **(c)** something else — operator chooses.
+  3. **Fork-inheritance on the LESSON-to-surface index** (Finding 2 sub-point c — the private R&D fork). Genuine architectural question for the Phase 1 re-discussion agenda or earlier surfacing. Surface-don't-decide unless operator wants it resolved here.
+
+- **Operator decisions resolved 2026-05-01 (post-Talos peer-review confirm):**
+  - **(1) In-section DEC filing — NO.** R6 surface-don't-decide stands. DEC-036 (Finding 2 re-route) + DEC-037 (Finding 6 build-time fail-closed) land at MS-009 close-out (Section 8) or MS-010 prep, where DEC drafting will also address the fork-inheritance question in sub-point (c).
+  - **(2) DEC numbering — moot** (no in-section filing).
+  - **(3) Fork-inheritance — parked with Talos peer-review read captured for the future DEC-drafting gate:** *the private R&D fork does not inherit the LESSON-to-surface index — pointers to inaccessible LESSONs would be a contract the fork cannot fulfil; strip during fork generation or gate behind a build-time flag. Per Talos peer-review 2026-05-01.*
+  - **(4) Vault access for Talos's LESSON spot-checks — defer.** Spot-checks not load-bearing for the six findings; Builder attestation accepted on classifications.
+  - **(5) Commit message — unchanged.** `MS-009 Section 7: doctrine alignment (audit-only, fork-clean routing)`.
+  - **(6) Talos's refinements to Findings 2 / 4 / 6 — stand as folded in.** Nothing dropped.
+- **Architectural-context routing rule applied.** Per fork-clean architecture + vault-references-not-duplicates rule, any audit finding that would have routed to "pull doctrine into UnoAi" was re-routed as RFI/CHANGE_ORDER candidate for re-evaluation. Finding 2 is the explicit instance.
+- **Existing references-architecture validates the design choice.** Grep across UnoAi shows 80 doctrine-reference occurrences across 11 files. The repo already operates the "references doctrine; does not duplicate it" pattern that the vault architecture rule mandates. Pulling doctrine into UnoAi `docs/` would have introduced a duplicate canonical surface and broken the existing pattern. This is corroborating evidence for Finding 2's recommended re-route.
+- **Scope guards held:** INSP-001 / INSP-002 / INSP-003 findings beyond Section 7's doctrine-alignment scope: untouched (MS-010 territory). Section 8 (Phase 1 readiness gate): untouched (future session per single-section rule). Validator hardening (RFI-015 / INSP-002 MEDIUM-8): untouched (MS-010). Working-agreements consolidation: untouched (MS-011). DEC-034 candidate (agent signing on git surface): untouched (separate scope). Fork mechanics + the private R&D fork's build configuration details: untouched (Phase 1 re-discussion agenda).
+- **Counter advances this session:** dependent on operator-decision-point (1). **If in-section DEC filing approved:** Latest DEC bumps from DEC-033 to whatever the chosen filing batch ends at (DEC-035 minimum, DEC-037 maximum per the three plausible batches in operator-decision-point (2)). **If declined:** no counter advances; all DECs deferred per the routing fallback in Findings 2 + 6.
+- **Push posture:** immediate after commit per Section 4/5/6 precedent. Single commit at sign-out. Commit message draft: `MS-009 Section 7: doctrine alignment (audit-only, fork-clean routing)`.
 
 ---
 
