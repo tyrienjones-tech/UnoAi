@@ -215,12 +215,12 @@ Reaper-1 cross-reference grep during MS-002 post-apply sweep: `\$39|HMAC|pending
 **What happened:**
 Two related findings during MS-003 Scope A:
 
-1. **Migration:** Following operator's product-name decision (DEC-023, locked as **UnoAi**), the working folder migrated from `C:\Users\Tyrien\Desktop\Chat2U` to `C:\Users\Tyrien\Desktop\UnoAi`. The Chat2U folder is preserved as the rollback path until DONE-003 sign-off, after which operator decides retention.
+1. **Migration:** Following operator's product-name decision (DEC-023, locked as **UnoAi**), the working folder migrated from the legacy `Chat2U` folder to the current repo folder. The legacy `Chat2U` folder is preserved as the rollback path until DONE-003 sign-off, after which operator decides retention.
 
 2. **Auto-init commit on remote:** Cloning the empty UnoAi repo revealed that GitHub had pre-created an `Initial commit` (372902c) containing an auto-generated `README.md` ("# UnoAi / Name is place holder"). Operator's MS-003 said "no init files" but GitHub's repo-creation UI had inserted one (likely the "Add a README file" checkbox at create-time). This affects B8 push strategy: force-push to drop the auto-init vs layer our work as commit #2. Decision deferred to operator at B8 time per MS-003 Risk R10 (first-commit-defines-patterns).
 
 **Blast radius:**
-None to product. Documentation + working-folder migration only. No code committed yet, no remote history modified. All current work is local in `C:\Users\Tyrien\Desktop\UnoAi`.
+None to product. Documentation + working-folder migration only. No code committed yet, no remote history modified. All current work is local in the repo folder.
 
 **How detected:**
 - Migration: planned action under MS-003 Scope A.
@@ -588,7 +588,7 @@ Medium because: (a) procedural break sustained ~24 hours, (b) work-product disca
 **Date:** 2026-04-30 23:18 (filed during MS-009 Section 6 in-flight)
 **Severity:** medium (environmental issue; blocks fresh `npm install` on this machine; live UnoAi commits unaffected because they use pre-existing `node_modules`)
 **Discovered by:** Milo (Opus 4.7) during MS-009 Section 6 cold-clone hook test (Sub-scope 6B.3 Prettier synthetic test)
-**Detected by:** Section 6B.3 commit attempt produced `npm error Unexpected token 'return'` rather than expected Prettier `--check` output. Diagnosis via the npm-cache debug log named in the error message (`C:\Users\Tyrien\AppData\Local\npm-cache\_logs\2026-04-30T15_17_50_271Z-debug-0.log`)
+**Detected by:** Section 6B.3 commit attempt produced `npm error Unexpected token 'return'` rather than expected Prettier `--check` output. Diagnosis via the npm-cache debug log named in the error message (timestamped log file in the operator-environment npm-cache logs directory)
 
 ### What happened
 
@@ -596,7 +596,7 @@ MS-009 Section 6 is the cold-clone end-to-end test. Sub-scope 6A passed: clone, 
 
 Investigation traced the error to `npm install` itself failing in **both** the cold clone AND the live working tree with the same error. The live UnoAi repo's pre-commit hook chain has been working today (commits `423465a` and `61c7cba` both cleared the full five-stage hook chain) because those invocations use `node_modules/` already on disk from a prior successful install — they don't trigger the broken code path.
 
-The npm-cache debug log identifies the failing file: `C:\Program Files\nodejs\node_modules\npm\node_modules\@sigstore\sign\dist\witness\tsa\client.js:40`. The line content per the verbose stack:
+The npm-cache debug log identifies the failing file: `<nodejs-install>\node_modules\npm\node_modules\@sigstore\sign\dist\witness\tsa\client.js:40` (system-default nodejs install location). The line content per the verbose stack:
 
 ```
 $      return await this.tsa.createTimestamp(request);
@@ -623,7 +623,7 @@ MS-009 Section 6's cold-clone test methodology specifically surfaces fresh-envir
 
 1. **Pause-at-blocker invoked** per session prompt rules of engagement. Surfaced findings to operator.
 2. **Investigated via the source of truth** — the npm-cache debug log named in the error message. Pulled both the failure-path log (15:17:50) and a success-path log (12:43, from this morning's INC-010 commit's cspell run) for comparison. The success path used `npm exec cspell` (npx) which doesn't load `@sigstore/sign`; the failure path was `npm install` which does.
-3. **Identified root cause:** corrupted `client.js` at `C:\Program Files\nodejs\node_modules\npm\node_modules\@sigstore\sign\dist\witness\tsa\client.js:40`. Stray `$` token, likely from antivirus interference, half-completed npm self-update, or disk write hiccup.
+3. **Identified root cause:** corrupted `client.js` at `<nodejs-install>\node_modules\npm\node_modules\@sigstore\sign\dist\witness\tsa\client.js:40`. Stray `$` token, likely from antivirus interference, half-completed npm self-update, or disk write hiccup.
 4. **Operator (Tyrien) authorised Path A:** reinstall Node from nodejs.org. Cleanest fix; repairs npm and its bundled internals without touching UnoAi-side state. Reinstall in progress at filing time.
 5. **Section 6 resume planned** post-Node-reinstall: retry `npm install` in cold clone; if clean, continue 6B.3 through 6B.5 with proper hook diagnostics; complete 6C cleanup; sign out + commit + push.
 6. **This INC filed** during the Node-reinstall window so the audit trail captures the discovery regardless of the resume path.

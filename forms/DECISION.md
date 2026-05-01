@@ -313,7 +313,7 @@ These are locked at project start. Override only via a new DECISION entry that e
 ### DEC-023 — Product name locked: UnoAi
 - **Date:** 2026-04-27
 - **Decided by:** operator
-- **Decision:** Product name is **UnoAi**. Repo, marketing copy, ToS, and all user-facing content use this name. Working folder migrated from `C:\Users\Tyrien\Desktop\Chat2U` to `C:\Users\Tyrien\Desktop\UnoAi` under MS-003. Repo URL: <https://github.com/tyrienjones-tech/UnoAi>.
+- **Decision:** Product name is **UnoAi**. Repo, marketing copy, ToS, and all user-facing content use this name. Working folder migrated from the legacy `Chat2U` folder to the current repo folder under MS-003. Repo URL: <https://github.com/tyrienjones-tech/UnoAi>.
 - **Reversibility:** GitHub repo rename is technically possible with forwarding redirects, but post-launch rename damages brand recognition. Treat as locked at MVP.
 - **Affects:** README.md (now uses UnoAi for marketing surface), all marketing copy, ToS, future domain selection, repo URL already committed.
 - **Closes:** RFI-003.

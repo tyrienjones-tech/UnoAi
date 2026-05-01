@@ -175,8 +175,8 @@ RFI-009+ orphans   → 0
 - **Method statement:** MS-003
 
 **Acceptance criteria (copied from MS-003):**
-- `C:\Users\Tyrien\Desktop\UnoAi\` exists with all 4 root docs + LICENSE + CONTRIBUTING + .gitignore + scaffold output + `forms/` (7 templates with accumulated entries). ✓ Plus B7.5 additions: `.gitleaks.toml`, `.githooks/pre-commit`.
-- `C:\Users\Tyrien\Desktop\Chat2U\` unchanged from MS-002 closing state (rollback path preserved). ✓
+- The repo working folder exists with all 4 root docs + LICENSE + CONTRIBUTING + .gitignore + scaffold output + `forms/` (7 templates with accumulated entries). ✓ Plus B7.5 additions: `.gitleaks.toml`, `.githooks/pre-commit`.
+- The legacy `Chat2U` working folder unchanged from MS-002 closing state (rollback path preserved). ✓
 - All `Chat2U` references in forward-looking docs replaced with `UnoAi`. All `Companion` proper-noun product references replaced with `UnoAi`. Role-descriptor "companion" / "AI companion" preserved. Historical-record entries preserved verbatim. ✓
 - `forms/DECISION.md` includes DEC-023 (product name lock; closes RFI-003) + DEC-024 (gitleaks hook required) + DEC-025 (sensitive-content list). DEC-013 body updated from engineer-pre-fill to scaffold-time-actuals. ✓
 - `forms/RFI.md` shows RFI-003 ANSWERED via DEC-023 + Builder-note flagging RFI-009 follow-up. RFI-009 filed (TLD selection). ✓

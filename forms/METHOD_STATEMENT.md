@@ -87,13 +87,13 @@ Operator approval: pending
 - **Date:** 2026-04-27
 - **Agent:** Reaper-1
 - **Phase:** 0 prep (pre-0a)
-- **Task:** Assemble the project folder at `C:\Users\Tyrien\Desktop\Chat2U`, populate it from the latest source-of-truth files, and apply the cleanup fixes A–G named in the operator's prompt.
+- **Task:** Assemble the project folder for `Chat2U` (legacy product name; pre-DEC-023), populate it from the latest source-of-truth files, and apply the cleanup fixes A–G named in the operator's prompt.
 - **Linked RFIs / decisions:** DEC-006 (forms/ structure), DEC-008 (Known costs), DEC-011 (proof split), DEC-013 (placeholder), RFI-005, RFI-006 (newly authored).
 - **Operator pre-authorisation:** YES — the operator prompt explicitly authorised this single-MS cleanup pass before the first SITE_LOG entry.
 
 **Plan (numbered, terse):**
-1. Locate sources: latest 6 updated files in `C:\Users\Tyrien\Downloads\chat to you\C2U\`; 5 unchanged forms in `C:\Users\Tyrien\Downloads\chat to you\ARCH\files(7)\`.
-2. Create `C:\Users\Tyrien\Desktop\Chat2U\` and `C:\Users\Tyrien\Desktop\Chat2U\forms\`.
+1. Locate sources: latest 6 updated files in the operator-supplied source folder (C2U subdir); 5 unchanged forms in the operator-supplied source folder (ARCH/files(7) subdir).
+2. Create the project folder `Chat2U/` and `Chat2U/forms/`.
 3. Copy 4 root docs (README, PROJECT, PLAN, PROCEDURES) and 7 forms (SITE_LOG, METHOD_STATEMENT, DONE, DECISION, CHANGE_ORDER, RFI, INCIDENT) into the target layout.
 4. Verify each of A–G against the copied files.
 5. Apply only the gap fixes; record items already correct.
@@ -253,8 +253,8 @@ These are the five items in the Builder's reply preceding this MS — restated h
 **Plan (numbered, terse — Scope A first, then Scope B):**
 
 *Scope A — name + folder migration:*
-1. Clone empty repo: `git clone https://github.com/tyrienjones-tech/UnoAi.git` to `C:\Users\Tyrien\Desktop\UnoAi`. Verify clone succeeded; verify default branch.
-2. Copy migrated docs from `C:\Users\Tyrien\Desktop\Chat2U` → `C:\Users\Tyrien\Desktop\UnoAi`:
+1. Clone empty repo: `git clone https://github.com/tyrienjones-tech/UnoAi.git` to the repo folder. Verify clone succeeded; verify default branch.
+2. Copy migrated docs from the legacy `Chat2U` folder → the current repo folder:
    - 4 root docs: `README.md`, `PROJECT.md`, `PLAN.md`, `PROCEDURES.md`
    - `forms/` directory with all 7 templates and accumulated entries
    - Preserve all content (MS-001 + MS-002 history, all DECs, all RFIs, all INCIDENTs).
@@ -275,11 +275,11 @@ These are the five items in the Builder's reply preceding this MS — restated h
 11. SITE_LOG entry covering Scope A completion.
 
 *Scope B — repo scaffold:*
-12. Verify migrated files staged in `C:\Users\Tyrien\Desktop\UnoAi` (not committed yet).
+12. Verify migrated files staged in the repo folder (not committed yet).
 13. Add `LICENSE` at repo root: copyright header ("Copyright (c) 2026 Tyrien Jones / Licensed under the PolyForm Noncommercial License 1.0.0. / See LICENSE for full terms.") + canonical PolyForm NC text from operator-supplied source. **License body verbatim — no Builder edits to the license text itself.**
 14. Add `CONTRIBUTING.md` per B3 wording. Security email left as `[security contact TBD]` — RFI-009 to be filed at appropriate later phase. (Builder note: RFI-009 is referenced in B3's Builder-note; will check whether the operator wants it filed in MS-003 or deferred until the Phase 8 / launch window. Default: defer to launch.)
 15. Add `.gitignore` per B4 wording verbatim.
-16. Run SvelteKit scaffold in `C:\Users\Tyrien\Desktop\UnoAi`: `npm create svelte@latest .` (or current-tool-name if changed; will note actual tool used). Project type: Builder will pick **skeleton** unless **demo** offers verification value (default skeleton — cleaner state). Options per DEC-013 pre-fill: TS yes, ESLint yes, Prettier yes, Vitest yes, Playwright yes, Tailwind yes-if-offered. If Tailwind not offered by current scaffold tool, add manually as a separate step (Tailwind v3 vs v4 — Builder will pick v3 by default unless adapter-cloudflare or Svelte 5 has documented incompatibility; will note actual version installed).
+16. Run SvelteKit scaffold in the repo folder: `npm create svelte@latest .` (or current-tool-name if changed; will note actual tool used). Project type: Builder will pick **skeleton** unless **demo** offers verification value (default skeleton — cleaner state). Options per DEC-013 pre-fill: TS yes, ESLint yes, Prettier yes, Vitest yes, Playwright yes, Tailwind yes-if-offered. If Tailwind not offered by current scaffold tool, add manually as a separate step (Tailwind v3 vs v4 — Builder will pick v3 by default unless adapter-cloudflare or Svelte 5 has documented incompatibility; will note actual version installed).
 17. Run `npm install` to completion. Verify zero errors, zero peer-dependency warnings worth flagging.
 18. Run `npm run dev`. Verify dev server starts, default page renders. Capture port number for proof.
 19. Update DEC-013 body in `forms/DECISION.md`: replace engineer-pre-fill table with scaffold-time-actuals. Document tool used, exact options offered (incl. any not in pre-fill), Builder choices, SvelteKit version, adapter version, Tailwind version (or "added manually post-scaffold" with version), Vitest/Playwright versions.
@@ -310,7 +310,7 @@ These are the five items in the Builder's reply preceding this MS — restated h
 - `Desktop/UnoAi/{SvelteKit scaffold output}` — created by `npm create svelte@latest .` and `npm install`. Includes `package.json`, `package-lock.json`, `svelte.config.js`, `vite.config.js`, `tsconfig.json`, `src/`, `static/`, etc. Builder does not author these files; the scaffold tool does.
 
 **Files NOT touched:**
-- `C:\Users\Tyrien\Desktop\Chat2U\` — preserved as rollback path per operator instruction. Will not be deleted, edited, or moved.
+- The legacy `Chat2U` folder — preserved as rollback path per operator instruction. Will not be deleted, edited, or moved.
 
 **Expected diff size:** the FIRST commit will be very large because it bundles handover-package migration + LICENSE (~700 lines of license text) + CONTRIBUTING + .gitignore + full SvelteKit scaffold output (~30–60 generated files, several hundred lines including `package-lock.json`). Realistic: ~5,000–10,000 lines added in the initial commit, almost all from the lockfile and the license. Migration of handover docs is a near-zero net delta (mostly the same content with name swaps). Engineer-authored content delta is small.
 
@@ -328,11 +328,11 @@ These are the five items in the Builder's reply preceding this MS — restated h
 - **R10. First-commit pattern-setting.** Per rules of engagement, this commit defines patterns. If anything in scaffold output looks wrong (deps not pinning, weird config defaults, lockfile choices), Builder will pause and file an RFI before B8 commit. Specifically watching for: any `*` or `latest` version specifiers in `package.json` deps, any `.gitignore` entries that conflict with Builder's added one (resolve in favour of cumulative union), any default ESLint/Prettier configs that conflict with operator's preferences (none stated yet — defer to defaults).
 - **R11. The "Chat2U placeholder warning" removal (Scope A3 last bullet).** Some warnings live inside historical-record entries (e.g. MS-001's "Chat2U placeholder name leaking into user-facing content. Mitigation: scrubbed sample staging URL in DONE.md example") — those stay per the historical-record rule. Forward-looking placeholder warnings (e.g. anything in PROJECT.md current text saying "Chat2U is a placeholder, do not use in user-facing content") are stale and should be removed. Builder will distinguish at grep-and-classify time.
 - **R12. Cross-reference web post-migration.** Same kind of post-apply grep sweep as MS-001/MS-002. Will verify: all `DEC-NNN` references resolve, all `RFI-NNN` references resolve, all `MS-NNN` references resolve, no orphan `Companion` proper-noun uses remain (only role-descriptor "companion" and historical-record "Companion" should remain), no orphan `Chat2U` references remain except in historical-record entries.
-- **R13. Old folder retention.** `C:\Users\Tyrien\Desktop\Chat2U\` left intact per operator instruction. No edits, no deletions. INC-005 will note the rollback-path purpose.
+- **R13. Old folder retention.** The legacy `Chat2U` folder left intact per operator instruction. No edits, no deletions. INC-005 will note the rollback-path purpose.
 
 **Acceptance criteria (will be copied verbatim into DONE-003):**
-- `C:\Users\Tyrien\Desktop\UnoAi\` exists and contains: `README.md`, `LICENSE`, `CONTRIBUTING.md`, `PROJECT.md`, `PLAN.md`, `PROCEDURES.md`, `.gitignore`, `package.json`, `package-lock.json`, `svelte.config.js`, `vite.config.js`, `tsconfig.json`, `src/` (with SvelteKit scaffold contents), `static/`, `forms/` (with all 7 templates and accumulated entries from MS-001 / MS-002 history).
-- `C:\Users\Tyrien\Desktop\Chat2U\` exists and is unchanged from MS-002 closing state (rollback path preserved).
+- The repo folder exists and contains: `README.md`, `LICENSE`, `CONTRIBUTING.md`, `PROJECT.md`, `PLAN.md`, `PROCEDURES.md`, `.gitignore`, `package.json`, `package-lock.json`, `svelte.config.js`, `vite.config.js`, `tsconfig.json`, `src/` (with SvelteKit scaffold contents), `static/`, `forms/` (with all 7 templates and accumulated entries from MS-001 / MS-002 history).
+- The legacy `Chat2U` folder exists and is unchanged from MS-002 closing state (rollback path preserved).
 - All `Chat2U` references in forward-looking docs replaced with `UnoAi`. All `Companion` proper-noun product references replaced with `UnoAi`. Role-descriptor "companion" and "AI companion" preserved. Historical-record entries preserved verbatim.
 - `forms/DECISION.md` includes DEC-023 (or operator-confirmed number) — Product name locked: UnoAi. Body matches A4 verbatim. DEC-013 body updated from engineer-pre-fill to scaffold-time-actuals (tool used, options offered, choices made, versions installed).
 - `forms/RFI.md` shows RFI-003 status `ANSWERED 2026-04-27 via DEC-NNN`. RFI-003 entry includes a Builder-note flagging the domain-TLD follow-up question.
@@ -344,7 +344,7 @@ These are the five items in the Builder's reply preceding this MS — restated h
 - `npm run dev` starts a dev server; default Svelte page renders.
 - `git log --oneline` shows one commit on `main`.
 - Commit pushed to `https://github.com/tyrienjones-tech/UnoAi`; visible on GitHub.
-- DONE-003 contains: `git log --oneline` output, GitHub commit URL, `npm run dev` startup output, file list of `C:\Users\Tyrien\Desktop\UnoAi\`, DEC-013 update confirmation, DEC-NNN-product-name confirmation, INC-005 confirmation, B9 Cloudflare-Pages-deferral note.
+- DONE-003 contains: `git log --oneline` output, GitHub commit URL, `npm run dev` startup output, file list of the repo folder, DEC-013 update confirmation, DEC-NNN-product-name confirmation, INC-005 confirmation, B9 Cloudflare-Pages-deferral note.
 
 **Operator approval:** APPROVED 2026-04-27.
 **Approval notes:**
